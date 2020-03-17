@@ -1,0 +1,3 @@
+AppName "name here (no quotes!)"Exe "path to exe here" StartDir "directory with exe" icon 
+ShortcutPath  LaunchOptions IsHidden AllowDesktopConfig    AllowOverlay    openvr    Devkit 
+ DevkitGameID  LastPlayTime

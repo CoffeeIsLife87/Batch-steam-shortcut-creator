@@ -1,3 +1,12 @@
+result = ("")
+import os
+for root, dirs, files in os.walk("B:\itch apps"):
+    for file in files:
+        if file.endswith(".exe"):
+             result = (os.path.join(root, file))
+
+
+
 pathVDF = ("C:\\Program Files (x86)\\Steam\\userdata\\876672695\\config\\shortcuts.vdf ")
 name = ""
 path = ''

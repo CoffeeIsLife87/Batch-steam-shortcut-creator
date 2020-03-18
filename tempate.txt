@@ -1,0 +1,12 @@
+"C:\Program Files (x86)\Steam\userdata\876672695\config\shortcuts.vdf"
+Name:
+path: "B:\itch apps\folder\file.exe"
+start: "B:\itch apps\folder"
+path to icon: ""
+shortcut path: ""
+hidden: 0
+allow desktop config: 1
+allow steam overlay: 1
+in vr library: 0
+last play time: 0
+categories: ""

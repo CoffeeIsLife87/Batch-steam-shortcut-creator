@@ -1,4 +1,4 @@
-"C:\Program Files (x86)\Steam\userdata\876672695\config\shortcuts.vdf"
+"C:\Program Files (x86)\Steam\userdata\userIDnum\config\shortcuts.vdf"
 Name:
 path: "B:\itch apps\folder\file.exe"
 start: "B:\itch apps\folder"

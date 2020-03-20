@@ -8,7 +8,7 @@ for root, dirs, files in os.walk(dir1):
     for file in files:
         if file.endswith(".exe"):
              result = (os.path.join(root, file))
-             file1.write(result)
+             file1.write (result + '\n')
              
 file1.close()
 

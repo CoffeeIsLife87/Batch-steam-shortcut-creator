@@ -8,7 +8,7 @@ for root, dirs, files in os.walk(dir1):
              result = (os.path.join(root, file))
              print (result)
 
-pathVDF = ("C:\\Program Files (x86)\\Steam\\userdata\\876672695\\config\\shortcuts.vdf ")
+pathVDF = ("C:\\Program Files (x86)\\Steam\\userdata\\UserID\\config\\shortcuts.vdf ")
 name = ""
 path = ''
 start = ""

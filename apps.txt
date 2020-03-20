@@ -1,1 +1,2 @@
-B:\itch apps\void-golf\Void Golf\UnityCrashHandler32.exe 
+B:\itch apps\void-golf\Void Golf\Void Golf.exe
+er32.exe

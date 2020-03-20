@@ -1,14 +1,11 @@
-THIS IS NOT DONE YET
-
-IT DOES NOT FUNCTION AT ALL!!!
+almost functions
 
 This is a program that will take games from your itch library and add them to steam
 
-there are also a lot of things that need to be set before running to even have the directories correct
+making progress
 
+https://github.com/CorporalQuesadilla/Steam-Shortcut-Manager (please accept my pull request!!!)
 
+I need some help here
 
-
-https://github.com/CorporalQuesadilla/Steam-Shortcut-Manager/wiki/Steam-Shortcuts-Documentation
-https://github.com/CorporalQuesadilla/Steam-Shortcut-Manager
-see here for storage details
+I can't get (result) to print to a file

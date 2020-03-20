@@ -27,3 +27,4 @@ categories = input ("are there and cagetorgies you want the game in(I.E. RTS, FP
 
 
 print (pathVDF, name, " ",path, " ",start, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
+input ("press enter to close")

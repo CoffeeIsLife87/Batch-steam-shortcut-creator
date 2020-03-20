@@ -237,5 +237,4 @@ def main():
     inputTuple = inputPreperation(sys.argv, lastEntryInfo)
     addEntry(pathToShortcutsVDF, inputTuple)
 
-    print getURL(inputTuple)
-main()
+    print (inputTuple, main())

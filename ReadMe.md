@@ -8,4 +8,6 @@ https://github.com/CorporalQuesadilla/Steam-Shortcut-Manager (please accept my p
 
 I need some help here
 
-I can't get (result) to print to a file
+I got it to print to a file
+
+now I just need to write something to take the paths, split them, and make entries

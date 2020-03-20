@@ -1,12 +1,16 @@
+import sys
 result = ("")
 dir1 = input ('what is your itch.io folder (I.E. C:\\Users\\user\\itch\\games)')
+file1 = open('apps.txt','w')
 
 import os
 for root, dirs, files in os.walk(dir1):
     for file in files:
         if file.endswith(".exe"):
              result = (os.path.join(root, file))
-             print (result)
+             file1.write(result)
+             
+file1.close()
 
 pathVDF = ("C:\\Program Files (x86)\\Steam\\userdata\\UserID\\config\\shortcuts.vdf ")
 name = ""
@@ -27,4 +31,6 @@ categories = input ("are there and cagetorgies you want the game in(I.E. RTS, FP
 
 
 print (pathVDF, name, " ",path, " ",start, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
+file1.write("")
+file1.close()
 input ("press enter to close")

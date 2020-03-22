@@ -30,6 +30,33 @@ inVRLibrary = input ("if it is a VR game, press 1, otherwise press 0")
 categories = input ("are there and cagetorgies you want the game in(I.E. RTS, FPS, simulation)")
 
 
+#--------------------------------------------------------------------------------
+LineToRead = 1
+counter = 0
+amount = int(input("number of installed itch games"))
+file = open("apps.txt", 'r')
+print (" ")
+while (counter < amount):
+#    linetext = (file.readline(LineToRead))
+#    print (linetext.read)
+    if (file.readline(LineToRead) == ""):
+            counter += 1
+    else:
+            file.readline(LineToRead)
+            print (file.read())
+            LineToRead = LineToRead + 1
+#reads each line
+#-------------------------------------------------------------------------------
+def split_path(path):
+  full_path = path
+  path_to_exe, game_name = path.rsplit("\\", 1)
+  return full_path, path_to_exe, game_name.split(".")[0]
+
+
+#splits full path into smaller bits 
+#------------------------------------------------------------------------------
+
+
 print (pathVDF, name, " ",path, " ",start, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
 file1.write("")
 file1.close()

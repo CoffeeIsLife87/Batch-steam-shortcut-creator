@@ -1,3 +1,6 @@
+#
+
+
 import sys, subprocess
 result = ("")
 dir1 = input ('what is your itch.io folder (I.E. C:\\Users\\user\\itch\\games)')
@@ -23,6 +26,8 @@ inVRLibrary = ""
 last_playtime = "0 "
 categories = ""
 
+#this bit usually asks what the name and paths are
+
 #name = input ("what is the name of the game")
 #path = input ("paste the entire path to EXE(I.E. C:\\Users\\user\\games\\game.exe)")
 #start = input ("paste directory with exe in it(I.E. C:\\Users\\user\\games)")
@@ -31,34 +36,35 @@ categories = ""
 
 
 #--------------------------------------------------------------------------------
+
+def split_path(path):
+  full_path = path
+  path_to_exe, game_name = path.rsplit("\\", 1)
+  return full_path, path_to_exe, name.split(".")[0]
+  path_data = split_path(path)
+#splits full path into smaller bits 
+#--------------------------------------------------------------------------------
+
 LineToRead = 1
 counter = 0
 amount = int(input("number of installed itch games"))
 file = open("apps.txt", 'r')
 print (" ")
 while (counter < amount):
-#    linetext = (file.readline(LineToRead))
-#    print (linetext.read)
+#checks if the line is empty and moves the script forward if it is
     if (file.readline(LineToRead) == ""):
             counter += 1
+#reads what the line is and splits it
     else:
             file.readline(LineToRead)
-            print (file.read())
+            pathedit = (file.read())
+            exstension = splitpath(pathedit)
             LineToRead = LineToRead + 1
 file.close()
 #reads each line
 #-------------------------------------------------------------------------------
-def split_path(path):
-  full_path = path
-  path_to_exe, game_name = path.rsplit("\\", 1)
-  return full_path, path_to_exe, game_name.split(".")[0]
-  path_data = split_path(path)
 
-#splits full path into smaller bits 
-#------------------------------------------------------------------------------
-
-
-print (pathVDF, name, " ",path, " ",start, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
+extensions = (pathVDF, name, " ",path, " ",start, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
 close = input ("press enter to close")
 if (close == ""):
     subprocess.call(['cleanup.bat' 'r'])

@@ -1,0 +1,4 @@
+def split_path(path):
+  full_path = path
+  path_to_exe, game_name = path.rsplit("\\", 1)
+  return full_path, path_to_exe, game_name.split(".")[0]

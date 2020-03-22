@@ -14,18 +14,18 @@ for root, dirs, files in os.walk(dir1):
              
 file1.close()
 #-------------------------------------------------------------------------------
-#checks for steam ID or askes if not detected
-steamIDfile = open('steamID.txt', 'w+')
+#checks for steam ID or askes for it if it is not detected
+steamIDfile = open('steamID.txt', 'r+')
 if (steamIDfile.readline(1) == ""):
     steamIDpath = "C:\\Program Files (x86)\\Steam\\userdata"
     steamIDpath1 = os.path.realpath(steamIDpath)
     os.startfile(steamIDpath)
     steamID = str(input("copy and paste the numbers from the folder"))
     steamIDfile.write(steamID)
-    print (steamID)
     steamIDfile.close()
 else:
-    steamID = steamIDfile.readline(1)
+    steamID = steamIDfile.read()
+    print (steamID)
 #------------------------------------------------------------------------------
 
 pathVDF = ("C:\\Program Files (x86)\\Steam\\userdata\\", steamID, "\\config\\shortcuts.vdf ")
@@ -48,6 +48,7 @@ categories = ""
 #categories = input ("are there and cagetorgies you want the game in(I.E. RTS, FPS, simulation)")
 
 #--------------------------------------------------------------------------------
+#steam shortcut maker python script shortcut
 shortcut = (os.system('python shortcuts.py'))
 #--------------------------------------------------------------------------------
 
@@ -74,7 +75,7 @@ while (counter < amount):
             pathedit = (file.read())
             pathsplits = split_path(pathedit)
             extensions = (pathVDF, pathsplits, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
-            shortcut
+            os.system(f 'python shortcuts{extensions}')
             LineToRead = LineToRead + 1
 file.close()
 #reads each line
@@ -83,4 +84,4 @@ file.close()
 extensions = (pathVDF, pathsplits, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
 close = input ("press enter to close")
 if (close == ""):
-    subprocess.call(['cleanup.bat'])
+    subprocess.call('cleanup.bat')

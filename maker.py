@@ -1,6 +1,4 @@
-#
-
-
+#scans set directory for .exe files
 import sys, subprocess
 result = ("")
 dir1 = input ('what is your itch.io folder (I.E. C:\\Users\\user\\itch\\games)')
@@ -11,6 +9,7 @@ for root, dirs, files in os.walk(dir1):
     for file in files:
         if file.endswith(".exe"):
              result = (os.path.join(root, file))
+             #writes the results to a file
              file1.write (result + '\n')
              
 file1.close()
@@ -26,7 +25,7 @@ inVRLibrary = ""
 last_playtime = "0 "
 categories = ""
 
-#this bit usually asks what the name and paths are
+#this bit usually asks what the name and paths are but I disabled it for testing purposes
 
 #name = input ("what is the name of the game")
 #path = input ("paste the entire path to EXE(I.E. C:\\Users\\user\\games\\game.exe)")
@@ -58,7 +57,7 @@ while (counter < amount):
     else:
             file.readline(LineToRead)
             pathedit = (file.read())
-            exstension = splitpath(pathedit)
+            exstension = split_path(pathedit)
             LineToRead = LineToRead + 1
 file.close()
 #reads each line

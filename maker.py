@@ -1,5 +1,5 @@
 #scans set directory for .exe files
-import sys, subprocess
+import sys, subprocess, os
 result = ("")
 dir1 = input ('what is your itch.io folder (I.E. C:\\Users\\user\\itch\\games)')
 file1 = open('apps.txt','w')
@@ -33,22 +33,23 @@ categories = ""
 #inVRLibrary = input ("if it is a VR game, press 1, otherwise press 0")
 #categories = input ("are there and cagetorgies you want the game in(I.E. RTS, FPS, simulation)")
 
-
+#--------------------------------------------------------------------------------
+shortcut = os.system('python shortcuts.py')
 #--------------------------------------------------------------------------------
 
 def split_path(path):
   full_path = path
   path_to_exe, game_name = path.rsplit("\\", 1)
-  return full_path, path_to_exe, name.split(".")[0]
+  return name, full_path, path_to_exe.split(".")[0]
   path_data = split_path(path)
 #splits full path into smaller bits 
 #--------------------------------------------------------------------------------
 
 LineToRead = 1
 counter = 0
-amount = int(input("number of installed itch games"))
+amount = (1)
 file = open("apps.txt", 'r')
-print (" ")
+#while loop ensures that all of the dirs are scanned
 while (counter < amount):
 #checks if the line is empty and moves the script forward if it is
     if (file.readline(LineToRead) == ""):

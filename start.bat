@@ -3,7 +3,7 @@
 cd "C:\Users\heros\OneDrive\Documents\GitHub\autoItchtoSteamlibrary"
 
 @rem runs scanning tool to check for .exe files
-python scan.py
+python maker.py
 
 pause
 

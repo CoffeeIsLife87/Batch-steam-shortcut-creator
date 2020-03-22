@@ -1,2 +1,0 @@
-python "cleanup.py"
-close

@@ -25,7 +25,6 @@ if (steamIDfile.readline(1) == ""):
     steamIDfile.close()
 else:
     steamID = steamIDfile.read()
-    print (steamID)
 #------------------------------------------------------------------------------
 
 pathVDF = ("C:\\Program Files (x86)\\Steam\\userdata\\", steamID, "\\config\\shortcuts.vdf ")
@@ -75,13 +74,13 @@ while (counter < amount):
             pathedit = (file.read())
             pathsplits = split_path(pathedit)
             extensions = (pathVDF, pathsplits, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
-            os.system(f 'python shortcuts{extensions}')
+            os.system("python shortcuts.py{extensions}")
             LineToRead = LineToRead + 1
 file.close()
 #reads each line
 #-------------------------------------------------------------------------------
 
-extensions = (pathVDF, pathsplits, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
+#extensions = (pathVDF, pathsplits, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
 close = input ("press enter to close")
 if (close == ""):
-    subprocess.call('cleanup.bat')
+    os.system("python cleanup.py")

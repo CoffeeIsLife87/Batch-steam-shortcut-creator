@@ -1,9 +1,9 @@
-#scans set directory for .exe files
 import sys, subprocess, os
 result = ("")
 dir1 = input ('what is your itch.io folder (I.E. C:\\Users\\user\\itch\\games)')
 file1 = open('apps.txt','w')
 
+#scans directory for .exe files
 import os
 for root, dirs, files in os.walk(dir1):
     for file in files:
@@ -15,12 +15,17 @@ for root, dirs, files in os.walk(dir1):
 file1.close()
 #-------------------------------------------------------------------------------
 #checks for steam ID or askes if not detected
-steamIDfile = open('steamID.txt', 'w'
-if (steamIDfile.read(1) == ""):
+steamIDfile = open('steamID.txt', 'w+')
+if (steamIDfile.readline(1) == ""):
     steamIDpath = "C:\\Program Files (x86)\\Steam\\userdata"
     steamIDpath1 = os.path.realpath(steamIDpath)
     os.startfile(steamIDpath)
-    steamID = input("copy and paste the numbers from the folder")
+    steamID = str(input("copy and paste the numbers from the folder"))
+    steamIDfile.write(steamID)
+    print (steamID)
+    steamIDfile.close()
+else:
+    steamID = steamIDfile.readline(1)
 #------------------------------------------------------------------------------
 
 pathVDF = ("C:\\Program Files (x86)\\Steam\\userdata\\", steamID, "\\config\\shortcuts.vdf ")
@@ -43,7 +48,7 @@ categories = ""
 #categories = input ("are there and cagetorgies you want the game in(I.E. RTS, FPS, simulation)")
 
 #--------------------------------------------------------------------------------
-shortcut = os.system('python shortcuts.py')
+shortcut = (os.system('python shortcuts.py'))
 #--------------------------------------------------------------------------------
 
 def split_path(path):
@@ -69,7 +74,7 @@ while (counter < amount):
             pathedit = (file.read())
             pathsplits = split_path(pathedit)
             extensions = (pathVDF, pathsplits, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
-            shortcut = os.system('python shortcuts.py',extensions)
+            shortcut
             LineToRead = LineToRead + 1
 file.close()
 #reads each line
@@ -78,4 +83,4 @@ file.close()
 extensions = (pathVDF, pathsplits, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
 close = input ("press enter to close")
 if (close == ""):
-    subprocess.call(['cleanup.bat' 'r'])
+    subprocess.call(['cleanup.bat'])

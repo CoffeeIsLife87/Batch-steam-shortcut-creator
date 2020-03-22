@@ -1,6 +1,8 @@
 import sys, subprocess, os
 result = ("")
+#says where to scan
 dir1 = input ('what is your itch.io folder (I.E. C:\\Users\\user\\itch\\games)')
+#says where the results are written to
 file1 = open('apps.txt','w')
 
 #scans directory for .exe files
@@ -74,7 +76,7 @@ while (counter < amount):
             pathedit = (file.read())
             pathsplits = split_path(pathedit)
             extensions = (pathVDF, pathsplits, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
-            os.system("python shortcuts.py{extensions}")
+            #os.system("python shortcuts.py{extensions}")
             LineToRead = LineToRead + 1
 file.close()
 #reads each line

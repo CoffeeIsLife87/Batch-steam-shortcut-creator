@@ -13,8 +13,17 @@ for root, dirs, files in os.walk(dir1):
              file1.write (result + '\n')
              
 file1.close()
+#-------------------------------------------------------------------------------
+#checks for steam ID or askes if not detected
+steamIDfile = open('steamID.txt', 'w'
+if (steamIDfile.read(1) == ""):
+    steamIDpath = "C:\\Program Files (x86)\\Steam\\userdata"
+    steamIDpath1 = os.path.realpath(steamIDpath)
+    os.startfile(steamIDpath)
+    steamID = input("copy and paste the numbers from the folder")
+#------------------------------------------------------------------------------
 
-pathVDF = ("C:\\Program Files (x86)\\Steam\\userdata\\UserID\\config\\shortcuts.vdf ")
+pathVDF = ("C:\\Program Files (x86)\\Steam\\userdata\\", steamID, "\\config\\shortcuts.vdf ")
 name = ""
 path = ''
 start = ""
@@ -58,13 +67,15 @@ while (counter < amount):
     else:
             file.readline(LineToRead)
             pathedit = (file.read())
-            exstension = split_path(pathedit)
+            pathsplits = split_path(pathedit)
+            extensions = (pathVDF, pathsplits, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
+            shortcut = os.system('python shortcuts.py',extensions)
             LineToRead = LineToRead + 1
 file.close()
 #reads each line
 #-------------------------------------------------------------------------------
 
-extensions = (pathVDF, name, " ",path, " ",start, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
+extensions = (pathVDF, pathsplits, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
 close = input ("press enter to close")
 if (close == ""):
     subprocess.call(['cleanup.bat' 'r'])

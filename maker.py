@@ -52,8 +52,6 @@ def split_path(path):
   path_data = split_path(path)
 #splits full path into smaller bits 
 #--------------------------------------------------------------------------------
-
-LineToRead = 1
 counter = 0
 amount = 1
 file = open("apps.txt", 'r')
@@ -62,17 +60,16 @@ Efile = open("Exec.txt", 'w+')
 #while loop ensures that all of the dirs are scanned
 while (counter < amount):
 #checks if the line is empty and moves the script forward if it is
-    if (file.readline(LineToRead) == ""):
+    if (file.readline() == ""):
             counter += 1
 #reads what the line is and splits it
     else:
             pathtoedit = file.readline()
             splitpath = split_path(pathtoedit)
             print (splitpath)
-            extensions = (pathVDF, splitpath, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
+            extensions = (pathVDF, splitpath, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary, last_playtime, categories)
             supercmd = str((shortcut, extensions))
             Efile.write(supercmd+'\n')
-            LineToRead += 1
 file.close()
 #reads each line
 #--------------------------------------------------------------------------------

@@ -12,7 +12,7 @@ for root, dirs, files in os.walk(dir1):
         if file.endswith(".exe"):
              result = (os.path.join(root, file))
              #writes the results to a file
-             file1.write (result)
+             file1.write (result+'\n')
              
 file1.close()
 #-------------------------------------------------------------------------------

@@ -32,3 +32,6 @@ for root, dirs, files in os.walk(itchDIR):
         if file.endswith(".exe"):
             exepaths = (os.path.join(root, file))
             pathText.write(exepaths, '\n')
+
+
+print("ok boomer")

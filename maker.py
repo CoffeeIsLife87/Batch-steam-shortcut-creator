@@ -72,15 +72,13 @@ while (counter < amount):
             counter += 1
 #reads what the line is and splits it
     else:
-            pathtoedit = file.readline(LineToRead)
+            pathtoedit = file.readline()
             splitpath = split_path(pathtoedit)
             print (splitpath)
             extensions = (pathVDF, splitpath, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
             supercmd = str((shortcut, extensions))
-            print (supercmd)
-            debugcheck = input("")
-            print (debugcheck)
-            os.system(supercmd)
+            #print (supercmd)
+            #os.system(supercmd)
             LineToRead += 1
 file.close()
 #reads each line

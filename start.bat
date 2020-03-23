@@ -10,3 +10,4 @@ pause
 @rem If you have itch games installed on a second drive then change the B: to whatever drive you use
 @rem B:
 @rem cd "B:\itch apps"
+python cleanup.py

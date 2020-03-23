@@ -5,7 +5,7 @@ file1 = open('info\\apps.txt','w')
 #functions to define
 def split_path(path):
   full_path = path
-  path_to_exe, game_name = path.rsplit("\\", 1)
+  path_to_exe, name = path.rsplit("\\", 1)
   return name, full_path, path_to_exe.split(".")[0]
   path_data = split_path(path)
 #-------------------------------------------------------------------------------
@@ -25,8 +25,8 @@ for root, dirs, files in os.walk(itchDIR):
     for file in files:
         if file.endswith(".exe"):
              result = (os.path.join(root, file))
-             #writes the results to a file
-             file1.write (result+'\n')
+             split_path(result)
+             
              
 file1.close()
 #-------------------------------------------------------------------------------
@@ -57,14 +57,6 @@ categories = ""
 #--------------------------------------------------------------------------------
 #steam shortcut maker python script shortcut
 shortcut = ('python shortcuts.py')
-#--------------------------------------------------------------------------------
-
-def split_path(path):
-  full_path = path
-  path_to_exe, game_name = path.rsplit("\\", 1)
-  return name, full_path, path_to_exe.split(".")[0]
-  path_data = split_path(path)
-#splits full path into smaller bits 
 #--------------------------------------------------------------------------------
 #extensions = (pathVDF, splitpath, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary, last_playtime, categories)
 close = input ("press enter to close")

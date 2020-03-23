@@ -40,7 +40,6 @@ inVRLibrary = ""
 last_playtime = "0 "
 categories = ""
 
-#this bit usually asks what the name and paths are but I disabled it for testing purposes
 #--------------------------------------------------------------------------------
 #steam shortcut maker python script shortcut
 shortcut = ('python shortcuts.py')

@@ -1,0 +1,15 @@
+B:\itch apps\astronation\Astronation.exe
+B:\itch apps\astronation\unins000.exe
+B:\itch apps\dont-look-down\Itch demo 1.0\WindowsNoEditor\Dont_Look_Down.exe
+B:\itch apps\dont-look-down\Itch demo 1.0\WindowsNoEditor\Dont_Look_Down\Binaries\Win64\Dont_Look_Down-Win64-Shipping.exe
+B:\itch apps\dont-look-down\Itch demo 1.0\WindowsNoEditor\Engine\Binaries\Win64\UnrealCEFSubProcess.exe
+B:\itch apps\dont-look-down\Itch demo 1.0\WindowsNoEditor\Engine\Extras\Redist\en-us\UE4PrereqSetup_x64.exe
+B:\itch apps\drift-hunters\DriftHunters_v1.2_PC\Drift Hunters.exe
+B:\itch apps\everybodys-sad\everybody's sad\everybody's sad.exe
+B:\itch apps\freeclimb-vr\Climbaz.exe
+B:\itch apps\kenesis\Kenesis.exe
+B:\itch apps\tea-for-god\tea.exe
+B:\itch apps\Viva Project v0.7.7\UnityCrashHandler64.exe
+B:\itch apps\Viva Project v0.7.7\VivaProject.exe
+B:\itch apps\void-golf\Void Golf\UnityCrashHandler32.exe
+B:\itch apps\void-golf\Void Golf\Void Golf.exe

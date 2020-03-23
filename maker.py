@@ -1,10 +1,10 @@
 import sys, subprocess, os
 result = ("")
 #says where to scan
-dir1 = input ('what is your itch.io folder (I.E. C:\\Users\\user\\itch\\games)')
+dir1 = "B:\itch apps"    #input ('what is your itch.io folder (I.E. C:\\Users\\user\\itch\\games)')
 #says where the results are written to
 file1 = open('apps.txt','w')
-
+#-------------------------------------------------------------------------------
 #scans directory for .exe files
 import os
 for root, dirs, files in os.walk(dir1):
@@ -50,7 +50,7 @@ categories = ""
 
 #--------------------------------------------------------------------------------
 #steam shortcut maker python script shortcut
-shortcut = (os.system('python shortcuts.py'))
+shortcut = ('python shortcuts.py')
 #--------------------------------------------------------------------------------
 
 def split_path(path):
@@ -63,7 +63,7 @@ def split_path(path):
 
 LineToRead = 1
 counter = 0
-amount = (1)
+amount = 1
 file = open("apps.txt", 'r')
 #while loop ensures that all of the dirs are scanned
 while (counter < amount):
@@ -72,12 +72,16 @@ while (counter < amount):
             counter += 1
 #reads what the line is and splits it
     else:
-            file.readline(LineToRead)
-            pathedit = (file.read())
-            pathsplits = split_path(pathedit)
-            extensions = (pathVDF, pathsplits, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
-            os.system("python shortcuts.py{extensions}")
-            LineToRead = LineToRead + 1
+            pathtoedit = file.readline(LineToRead)
+            splitpath = split_path(pathtoedit)
+            print (splitpath)
+            extensions = (pathVDF, splitpath, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
+            supercmd = str((shortcut, extensions))
+            print (supercmd)
+            debugcheck = input("")
+            print (debugcheck)
+            os.system(supercmd)
+            LineToRead += 1
 file.close()
 #reads each line
 #-------------------------------------------------------------------------------

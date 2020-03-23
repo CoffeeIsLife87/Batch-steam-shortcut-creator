@@ -67,7 +67,7 @@ while (counter < amount):
             print (splitpath)
             extensions = (pathVDF, splitpath, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary, last_playtime, categories)
             supercmd = str((shortcut, extensions))
-            Efile.write(supercmd+'\n')
+            Efile.write(supercmd)
 file.close()
 #reads each line
 #--------------------------------------------------------------------------------

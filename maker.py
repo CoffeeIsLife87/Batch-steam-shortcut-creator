@@ -41,13 +41,6 @@ last_playtime = "0 "
 categories = ""
 
 #this bit usually asks what the name and paths are but I disabled it for testing purposes
-
-#name = input ("what is the name of the game")
-#path = input ("paste the entire path to EXE(I.E. C:\\Users\\user\\games\\game.exe)")
-#start = input ("paste directory with exe in it(I.E. C:\\Users\\user\\games)")
-#inVRLibrary = input ("if it is a VR game, press 1, otherwise press 0")
-#categories = input ("are there and cagetorgies you want the game in(I.E. RTS, FPS, simulation)")
-
 #--------------------------------------------------------------------------------
 #steam shortcut maker python script shortcut
 shortcut = ('python shortcuts.py')
@@ -65,6 +58,8 @@ LineToRead = 1
 counter = 0
 amount = 1
 file = open("apps.txt", 'r')
+Efile = open("Exec.txt", 'w+')
+
 #while loop ensures that all of the dirs are scanned
 while (counter < amount):
 #checks if the line is empty and moves the script forward if it is
@@ -77,14 +72,11 @@ while (counter < amount):
             print (splitpath)
             extensions = (pathVDF, splitpath, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
             supercmd = str((shortcut, extensions))
-            #print (supercmd)
-            #os.system(supercmd)
+            Efile.write(supercmd+'\n')
             LineToRead += 1
 file.close()
 #reads each line
-#-------------------------------------------------------------------------------
-
-#extensions = (pathVDF, pathsplits, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary," ", last_playtime, categories)
+#--------------------------------------------------------------------------------
 close = input ("press enter to close")
 if (close == ""):
     os.system("python cleanup.py")

@@ -1,7 +1,7 @@
 import sys, subprocess, os
 result = ("")
 #says where to scan
-dir1 = "B:\itch apps"    #input ('what is your itch.io folder (I.E. C:\\Users\\user\\itch\\games)')
+dir1 = input ('what is your itch.io folder (I.E. C:\\Users\\user\\itch\\games)')
 #says where the results are written to
 file1 = open('apps.txt','w')
 #-------------------------------------------------------------------------------
@@ -57,10 +57,8 @@ amount = 1
 file = open("apps.txt", 'r')
 Efile = open("Exec.txt", 'w+')
 
-#while loop ensures that all of the dirs are scanned
 while (counter < amount):
-#checks if the line is empty and moves the script forward if it is
-    if (file.readline() == ""):
+    if (file.readline() == ""):   #checks if the line is empty and moves the script forward if it is
             counter += 1
 #reads what the line is and splits it
     else:

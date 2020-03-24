@@ -15,10 +15,12 @@ while (check1 < 1):
     if (itchDIRfile.readline(1) == ""):
         itchDIR = input("copy and paste itch games directory ")
         itchDIRfile.write(itchDIR)
+        itchDIRfile.close
         check1 = 1
     else:
         itchDIR = itchDIRfile.readline()
         print (itchDIR)
+        itchDIRfile.close
         check1 = 1
 #-------------------------------------------------------------------------------
 #checks for steam ID or askes for it if it is not detected
@@ -35,6 +37,7 @@ while (check2 < 1):
         check2 = 1
     else:
         steamID = steamIDfile.read()
+        print (steamID)
         check2 = 1
 #-------------------------------------------------------------------------------
 #stuff to define

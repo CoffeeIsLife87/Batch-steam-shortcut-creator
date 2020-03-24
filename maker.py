@@ -12,7 +12,7 @@ def split_path(path):
 check1 = 0
 itchDIRfile = open("info\\itchDIR.txt", 'r+')
 while (check1 < 1):
-    if itchDIRfile.readline(1) == " ":
+    if (itchDIRfile.readline(1) == " "):
         itchDIR = input("copy and paste itch games directory ")
         itchDIRfile.write(itchDIR)
         check1 = 1

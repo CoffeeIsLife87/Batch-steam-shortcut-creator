@@ -44,7 +44,7 @@ allow_steam_overlay = "1 "
 inVRLibrary = "0 "
 last_playtime = "0 "
 categories = ""
-#this is a template
+#this is a template in case I have to move stuff around
 #extensions = (pathVDF+splitresult+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
 #-------------------------------------------------------------------------------
 #scans directory for .exe files

@@ -8,6 +8,7 @@ def split_path(path):
   path_to_exe, name = path.rsplit("\\", 1)
   return name, full_path, path_to_exe.split(".")[0]
 #-------------------------------------------------------------------------------
+#checking bits
 check1 = 0
 itchDIRfile = open("info\\itchDIR.txt", 'r+')
 while (check1 < 1):
@@ -17,17 +18,6 @@ while (check1 < 1):
         check1 = 1
     else:
         itchDIR = itchDIRfile.readline()
-#-------------------------------------------------------------------------------
-#scans directory for .exe files
-import os
-for root, dirs, files in os.walk(itchDIR):
-    for file in files:
-        if file.endswith(".exe"):
-             result = (os.path.join(root, file))
-             split_path(result)
-             
-             
-file1.close()
 #-------------------------------------------------------------------------------
 #checks for steam ID or askes for it if it is not detected
 steamIDfile = open('info\\steamID.txt', 'r+')
@@ -40,6 +30,20 @@ if (steamIDfile.readline(1) == ""):
     steamIDfile.close()
 else:
     steamID = steamIDfile.read()
+#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+#scans directory for .exe files
+import os
+for root, dirs, files in os.walk(itchDIR):
+    for file in files:
+        if file.endswith(".exe"):
+             result = (os.path.join(root, file))
+             splitresult = split_path(result)
+             print (splitresult)
+             
+             
+file1.close()
+
 #------------------------------------------------------------------------------
 
 pathVDF = ("C:\\Program Files (x86)\\Steam\\userdata\\", steamID, "\\config\\shortcuts.vdf ")

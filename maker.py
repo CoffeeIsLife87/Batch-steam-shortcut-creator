@@ -10,20 +10,18 @@ shortcut = ('python shortcuts.py')
 #-------------------------------------------------------------------------------
 #checks for itch.io directory to scan
 itchDIRfile = open('info\\itchDIR.txt', 'r+')
-itchDIRcheck = (itchDIRfile.readline()
+itchDIRcheck = itchDIRfile.readline()
 if (itchDIRcheck == ""):
     itchDIR = input("copy and paste itch games directory ")
     itchDIRfile.write(itchDIR)
     itchDIRfile.close
-    else:
-    itchDIR = itchDIRfile.readline()
+else:
+    itchDIR = itchDIRcheck
     print (itchDIR)
-    itchDIRfile.close
 #-------------------------------------------------------------------------------
 #checks for steam ID or askes for it if it is not detected
 steamIDfile = open('info\\steamID.txt', 'r+')
 steamIDcheck = steamIDfile.readline()
-
 if (steamIDcheck == ""):
     steamIDpath = "C:\\Program Files (x86)\\Steam\\userdata"
     steamIDpath = os.path.realpath(steamIDpath)
@@ -32,7 +30,7 @@ if (steamIDcheck == ""):
     steamIDfile.write(steamID)
     steamIDfile.close()
 else:
-    steamID = steamIDfile.read()
+    steamID = steamIDcheck
     print (steamID)
 #-------------------------------------------------------------------------------
 #stuff to define

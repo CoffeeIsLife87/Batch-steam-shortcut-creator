@@ -1,6 +1,4 @@
 import sys, subprocess, os
-#says where the results are written to
-file1 = open('info\\apps.txt','w')
 #-------------------------------------------------------------------------------
 #functions to define
 def split_path(path):

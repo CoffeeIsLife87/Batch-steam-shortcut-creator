@@ -3,8 +3,8 @@ import sys, subprocess, os
 #functions to define
 def split_path(path):
   full_path = path
-  path_to_exe, name = path.rsplit("\\", 1)
-  return name, full_path, path_to_exe.split(".")[0]
+  start, name = path.rsplit("\\", 1)
+  return name, path, start.split(".")[0]
 
 shortcut = ('python shortcuts.py')
 #-------------------------------------------------------------------------------
@@ -34,17 +34,17 @@ else:
     print (steamID)
 #-------------------------------------------------------------------------------
 #stuff to define
-#pathVDF = ("C:\\Program Files (x86)\\Steam\\userdata\\", steamID, "\\config\\shortcuts.vdf ")
+pathVDF = ("C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf ")
 name = ""
 path = ''
 start = ""
 hidden = "0 "
 allow_desktop_config = "1 "
 allow_steam_overlay = "1 "
-inVRLibrary = ""
+inVRLibrary = "0 "
 last_playtime = "0 "
 categories = ""
-#extensions = (pathVDF, splitpath, " ", hidden, allow_desktop_config, allow_steam_overlay, inVRLibrary, last_playtime, categories)
+#extensions = (pathVDF+splitresult+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
 #-------------------------------------------------------------------------------
 #scans directory for .exe files
 import os
@@ -53,7 +53,10 @@ for root, dirs, files in os.walk(itchDIR):
         if file.endswith(".exe"):
              result = (os.path.join(root, file))
              splitresult = split_path(result)
-             print (splitresult)
-
+             #------------------------------------------------------------------
+             #from here @this indentation point, I need to have all the variables set
+             extensions = (pathVDF,splitresult," "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
+             print (extensions)
+             input("")
 #--------------------------------------------------------------------------------
 close = input ("press enter to close")

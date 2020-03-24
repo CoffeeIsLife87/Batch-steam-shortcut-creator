@@ -16,18 +16,23 @@ while (check1 < 1):
         check1 = 1
     else:
         itchDIR = itchDIRfile.readline()
+        check1 = 1
 #-------------------------------------------------------------------------------
 #checks for steam ID or askes for it if it is not detected
 steamIDfile = open('info\\steamID.txt', 'r+')
-if (steamIDfile.readline(1) == ""):
-    steamIDpath = "C:\\Program Files (x86)\\Steam\\userdata"
-    steamIDpath1 = os.path.realpath(steamIDpath)
-    os.startfile(steamIDpath)
-    steamID = str(input("copy and paste the numbers from the folder"))
-    steamIDfile.write(steamID)
-    steamIDfile.close()
-else:
-    steamID = steamIDfile.read()
+check2 = 0
+while (check2 < 1):
+    if (steamIDfile.readline(1) == ""):
+        steamIDpath = "C:\\Program Files (x86)\\Steam\\userdata"
+        steamIDpath1 = os.path.realpath(steamIDpath)
+        os.startfile(steamIDpath)
+        steamID = str(input("copy and paste the numbers from the folder"))
+        steamIDfile.write(steamID)
+        steamIDfile.close()
+        check2 = 1
+    else:
+        steamID = steamIDfile.read()
+        check2 = 1
 #------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 #scans directory for .exe files

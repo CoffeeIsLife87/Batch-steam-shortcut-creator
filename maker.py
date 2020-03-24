@@ -8,7 +8,7 @@ def split_path(path):
   return '"'+name.split(".")[0]+'"'+" "+'"'+path+'"'+" "+'"'+start+'"'
 
 #this will be used later for running the second python script with the arguments after it
-shortcut = ('python shortcuts.py')
+shortcut = ('py -2 shortcuts.py')
 #-------------------------------------------------------------------------------
 #checks for itch.io directory to scan and askes for one if it is not detected
 itchDIRfile = open('info\\itchDIR.txt', 'r+')

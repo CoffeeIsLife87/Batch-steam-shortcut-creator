@@ -8,40 +8,35 @@ def split_path(path):
 
 shortcut = ('python shortcuts.py')
 #-------------------------------------------------------------------------------
-#checking bits
-check1 = 0
+#checks for itch.io directory to scan
 itchDIRfile = open('info\\itchDIR.txt', 'r+')
-while (check1 < 1):
-    if (itchDIRfile.readline(1) == ""):
-        itchDIR = input("copy and paste itch games directory ")
-        itchDIRfile.write(itchDIR)
-        itchDIRfile.close
-        check1 = 1
+itchDIRcheck = (itchDIRfile.readline()
+if (itchDIRcheck == ""):
+    itchDIR = input("copy and paste itch games directory ")
+    itchDIRfile.write(itchDIR)
+    itchDIRfile.close
     else:
-        itchDIR = itchDIRfile.readline()
-        print (itchDIR)
-        itchDIRfile.close
-        check1 = 1
+    itchDIR = itchDIRfile.readline()
+    print (itchDIR)
+    itchDIRfile.close
 #-------------------------------------------------------------------------------
 #checks for steam ID or askes for it if it is not detected
 steamIDfile = open('info\\steamID.txt', 'r+')
-check2 = 0
-while (check2 < 1):
-    if (steamIDfile.readline(1) == ""):
-        steamIDpath = "C:\\Program Files (x86)\\Steam\\userdata"
-        steamIDpath1 = os.path.realpath(steamIDpath)
-        os.startfile(steamIDpath)
-        steamID = str(input("copy and paste the numbers from the folder"))
-        steamIDfile.write(steamID)
-        steamIDfile.close()
-        check2 = 1
-    else:
-        steamID = steamIDfile.read()
-        print (steamID)
-        check2 = 1
+steamIDcheck = steamIDfile.readline()
+
+if (steamIDcheck == ""):
+    steamIDpath = "C:\\Program Files (x86)\\Steam\\userdata"
+    steamIDpath = os.path.realpath(steamIDpath)
+    os.startfile(steamIDpath)
+    steamID = str(input("copy and paste the numbers from the folder"))
+    steamIDfile.write(steamID)
+    steamIDfile.close()
+else:
+    steamID = steamIDfile.read()
+    print (steamID)
 #-------------------------------------------------------------------------------
 #stuff to define
-pathVDF = ("C:\\Program Files (x86)\\Steam\\userdata\\", steamID, "\\config\\shortcuts.vdf ")
+#pathVDF = ("C:\\Program Files (x86)\\Steam\\userdata\\", steamID, "\\config\\shortcuts.vdf ")
 name = ""
 path = ''
 start = ""

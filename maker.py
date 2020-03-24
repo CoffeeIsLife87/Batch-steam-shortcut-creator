@@ -7,7 +7,6 @@ def split_path(path):
   full_path = path
   path_to_exe, name = path.rsplit("\\", 1)
   return name, full_path, path_to_exe.split(".")[0]
-  path_data = split_path(path)
 #-------------------------------------------------------------------------------
 check1 = 0
 itchDIRfile = open("info\\itchDIR.txt", 'r+')

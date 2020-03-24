@@ -4,7 +4,7 @@ import sys, subprocess, os
 def split_path(path):
   full_path = path
   start, name = path.rsplit("\\", 1)
-  return name, path, start.split(".")[0]
+  return name.split(".")[0], path, start
 
 shortcut = ('python shortcuts.py')
 #-------------------------------------------------------------------------------
@@ -34,11 +34,11 @@ else:
     print (steamID)
 #-------------------------------------------------------------------------------
 #stuff to define
-pathVDF = ("C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf ")
+pathVDF = ("C:/Program Files (x86)/Steam/userdata/"+steamID+"/config/shortcuts.vdf ")
 name = ""
 path = ''
 start = ""
-hidden = "0 "
+hidden = " 0 "
 allow_desktop_config = "1 "
 allow_steam_overlay = "1 "
 inVRLibrary = "0 "
@@ -56,7 +56,7 @@ for root, dirs, files in os.walk(itchDIR):
              splitresult = split_path(result)
              #------------------------------------------------------------------
              #from here @this indentation point, I need to have all the variables set
-             extensions = (pathVDF,splitresult," "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
+             extensions = (pathVDF,splitresult, hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
              print (extensions)
              input("")
 #--------------------------------------------------------------------------------

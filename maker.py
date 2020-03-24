@@ -43,9 +43,6 @@ for root, dirs, files in os.walk(itchDIR):
              result = (os.path.join(root, file))
              splitresult = split_path(result)
              print (splitresult)
-             
-             
-file1.close()
 
 #------------------------------------------------------------------------------
 

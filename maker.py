@@ -10,14 +10,15 @@ shortcut = ('python shortcuts.py')
 #-------------------------------------------------------------------------------
 #checking bits
 check1 = 0
-itchDIRfile = open("info\\itchDIR.txt", 'r+')
+itchDIRfile = open('info\\itchDIR.txt', 'r+')
 while (check1 < 1):
-    if (itchDIRfile.readline(1) == " "):
+    if (itchDIRfile.readline(1) == ""):
         itchDIR = input("copy and paste itch games directory ")
         itchDIRfile.write(itchDIR)
         check1 = 1
     else:
         itchDIR = itchDIRfile.readline()
+        print (itchDIR)
         check1 = 1
 #-------------------------------------------------------------------------------
 #checks for steam ID or askes for it if it is not detected

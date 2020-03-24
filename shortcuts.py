@@ -78,8 +78,9 @@ def findLastEntryNumberAndPosition(pathToShortcutsVDF):
     foundChars = 1
     target = '\x00\x01appname'
     lookingfor = 'target'
-    lastEntryNumber = ''
-
+    lastEntryNumber = 0
+    lastEntryPosition = 0
+    
     f = open(str(pathToShortcutsVDF), 'r')
     fileContents = f.read()
 

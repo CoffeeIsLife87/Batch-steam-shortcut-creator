@@ -19,8 +19,7 @@
 #              Argument                 Explanation
 #              --------                 -----------
 #              Path to Shortcuts.vdf    Requires Your personal ID - steamID3 [U:1:876672695] from https://steamidfinder.com/
-#                                           This is for the local path to your shortcuts.vdf file we're modifying,
-#                                           located in "C:\Program Files (x86)\Steam\userdata\876672695\config\shortcuts.vdf". Use double quotes.
+#                                           This is for the local path to your shortcuts.vdf file we're modifying, Use double quotes.
 #              Name of program          Whatever you want to call it. In double quotes if it has spaces or other funky characters
 #              Path to program or URL   In double quotes if the path has spaces or other funky characters
 #              Path to start program    Basically the folder it's in (use double quotes)
@@ -237,4 +236,5 @@ def main():
     inputTuple = inputPreperation(sys.argv, lastEntryInfo)
     addEntry(pathToShortcutsVDF, inputTuple)
 
-    print (inputTuple, main())
+    print (inputTuple)
+main()

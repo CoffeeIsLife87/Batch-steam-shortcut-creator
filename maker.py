@@ -46,7 +46,7 @@ allow_desktop_config = "1 "
 allow_steam_overlay = "1 "
 inVRLibrary = "0 " # 0 = no, 1 = yes
 last_playtime = "0 " 
-categories = ""
+categories = '""'
 #this is a template in case I have to move stuff around
 #extensions = (pathVDF+splitresult+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
 #-------------------------------------------------------------------------------
@@ -58,9 +58,9 @@ for root, dirs, files in os.walk(itchDIR):
              splitresult = split_path(result)
              #------------------------------------------------------------------
              #it is important that it is at this indentation level or it will only set the first one
-             extensions = (" "+pathVDF+splitresult+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
+             extensions = (" "+pathVDF+splitresult+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
              #This is when it uses the "shortcut" string thing I set earlier and it uses "extensions as the arguments"
-             os.system(shortcut+extensions)
+             os.system('cmd /c'+'"'+shortcut+extensions+'"')
 #--------------------------------------------------------------------------------
 #just a couple of words for the user
 print ("thanks for using my tool")

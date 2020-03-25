@@ -65,4 +65,6 @@ for root, dirs, files in os.walk(itchDIR):
 #just a couple of words for the user
 print ("thanks for using my tool")
 print ("glad I could help you automate some stuff")
+print ("")
+print ("")
 close = input ("press enter to close")

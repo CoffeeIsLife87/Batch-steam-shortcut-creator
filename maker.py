@@ -59,8 +59,8 @@ for root, dirs, files in os.walk(itchDIR):
              #this is the VR check
              inVRLibrary = "0 "
              DLLcheck, junk = result.rsplit("\\", 1)
-             for root, dirs, files in os.walk(DLLcheck):
-                 for file in files:
+             for base, sub, FL in os.walk(DLLcheck):
+                 for file in FL:
                      if file.endswith(".dll"):
                          DLLcheck1 = file
                          if (DLLcheck1 == "openvr_api.dll"):

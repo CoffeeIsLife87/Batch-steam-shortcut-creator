@@ -55,7 +55,6 @@ for root, dirs, files in os.walk(itchDIR):
     for file in files:
         if file.endswith(".exe"):
              result = (os.path.join(root, file))
-             print (result)
              #-----------------------------------------------------------------
              #if you find something you know people will never use please add it to the blacklist for me
              blacklist = ("unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe")

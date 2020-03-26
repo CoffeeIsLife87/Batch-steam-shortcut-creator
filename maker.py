@@ -44,7 +44,6 @@ start = ""# same
 hidden = " 0 "
 allow_desktop_config = "1 "
 allow_steam_overlay = "1 "
-inVRLibrary = "0 " # 0 = no, 1 = yes
 last_playtime = "0 " 
 categories = '""'
 #this is a template in case I have to move stuff around
@@ -55,15 +54,28 @@ for root, dirs, files in os.walk(itchDIR):
     for file in files:
         if file.endswith(".exe"):
              result = (os.path.join(root, file))
+             
+             #-------------------------------------------------------------------
+             #this is the VR check
+             inVRLibrary = "0 "
+             DLLcheck, junk = result.rsplit("\\", 1)
+             for root, dirs, files in os.walk(DLLcheck):
+                 for file in files:
+                     if file.endswith(".dll"):
+                         DLLcheck1 = file
+                         if (DLLcheck1 == "openvr_api.dll"):
+                            inVRLibrary = ("1 ")
              #-----------------------------------------------------------------
              #if you find something you know people will never use please add it to the blacklist for me
-             blacklist = ("unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe")
+             blacklist = ("unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe")
              if result.endswith(blacklist):
                  pass
              else:
                  splitresult = split_path(result)
                  extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
                  #This is when it uses the "shortcut" string thing I set earlier and it uses "extensions as the arguments"
+                 #the line below is for testing while coding
+                 #print (shortcut+extensions)
                  os.system('cmd /c'+'"'+shortcut+extensions+'"')
              #------------------------------------------------------------------
              #take away the # on the lines 70-72 below if the blacklist breaks the code and add # on lines 60-65 and 67 above (66 is allready #ed out)

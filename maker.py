@@ -59,7 +59,7 @@ for root, dirs, files in os.walk(itchDIR):
              #if you find something you know people will never use please add it to the blacklist for me
              blacklist = ("unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe")
              if result.endswith(blacklist):
-                 print ("item blacklisted")
+                 pass
              else:
                  splitresult = split_path(result)
                  extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)

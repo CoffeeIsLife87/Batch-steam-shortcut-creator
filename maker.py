@@ -55,6 +55,7 @@ for root, dirs, files in os.walk(itchDIR):
     for file in files:
         if file.endswith(".exe"):
              result = (os.path.join(root, file))
+             print (result)
              #-----------------------------------------------------------------
              #if you find something you know people will never use please add it to the blacklist for me
              blacklist = ("unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe")
@@ -62,7 +63,7 @@ for root, dirs, files in os.walk(itchDIR):
                  print ("item blacklisted")
              else:
                  splitresult = split_path(result)
-                 extensions = (" "+pathVDF+splitresult+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
+                 extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
                  #This is when it uses the "shortcut" string thing I set earlier and it uses "extensions as the arguments"
                  os.system('cmd /c'+'"'+shortcut+extensions+'"')
              #------------------------------------------------------------------

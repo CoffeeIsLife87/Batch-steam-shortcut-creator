@@ -19,7 +19,8 @@ if (itchDIRcheck == ""):
     itchDIRfile.close
 else:
     itchDIR = itchDIRcheck
-    print (itchDIR)
+    #the print below is for debugging
+    #print (itchDIR)
 #-------------------------------------------------------------------------------
 #checks for steam ID or askes for it if it is not detected
 steamIDfile = open('info\\steamID.txt', 'r+')
@@ -34,7 +35,8 @@ if (steamIDcheck == ""):
     steamIDfile.close()
 else:
     steamID = steamIDcheck
-    print (steamID)
+    #the print below is for debugging
+    #print (steamID)
 #-------------------------------------------------------------------------------
 # A bunch of variables that will be needed later
 pathVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
@@ -65,6 +67,7 @@ for root, dirs, files in os.walk(itchDIR):
                          DLLcheck1 = file
                          if (DLLcheck1 == "openvr_api.dll"):
                             inVRLibrary = ("1 ")
+             #if you know how to make it so it adds a VR tag for "OVRplugin.dll" as well as "openvr_api.dll" please make a pull request
              #-----------------------------------------------------------------
              #if you find something you know people will never use please add it to the blacklist for me
              blacklist = ("unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe")
@@ -77,11 +80,6 @@ for root, dirs, files in os.walk(itchDIR):
                  #the line below is for testing while coding
                  #print (shortcut+extensions)
                  os.system('cmd /c'+'"'+shortcut+extensions+'"')
-             #------------------------------------------------------------------
-             #take away the # on the lines 70-72 below if the blacklist breaks the code and add # on lines 60-65 and 67 above (66 is allready #ed out)
-             #splitresult = split_path(result)
-             #extensions = (" "+pathVDF+splitresult+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
-             #os.system('cmd /c'+'"'+shortcut+extensions+'"')
 #--------------------------------------------------------------------------------
 #just a couple of words for the user
 print ("thanks for using my tool")

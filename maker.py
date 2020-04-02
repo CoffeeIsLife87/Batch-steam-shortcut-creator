@@ -1,6 +1,8 @@
 import sys, os
 #-------------------------------------------------------------------------------
 #functions to define
+
+#this splits the path into a name, a full path, and the directory the game is in
 def split_path(path):
   full_path = path
   start, name = path.rsplit("\\", 1)
@@ -37,9 +39,14 @@ else:
     steamID = steamIDcheck
     #the print below is for debugging
     #print (steamID)
+#if you installed steam somewhere other than the default location then uncomment the following lines and put the path the your "shortcuts.vdf file"
+#emergencyVDF = ('"'+"your path here"+'"'+" ")
+#pathVDF = emergencyVDF
+#-------------------------------------------------------------------------------
+#comment out line 47 if you need to use emergencyVDF
+pathVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
 #-------------------------------------------------------------------------------
 # A bunch of variables that will be needed later
-pathVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
 name = "" #this gets defined later
 path = ''# same
 start = ""# same

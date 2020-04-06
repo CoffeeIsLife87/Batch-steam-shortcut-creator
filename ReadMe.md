@@ -8,6 +8,6 @@ I used python 3.8.2 but I think and python 3.7.x will work
 
 now it adds icons
 
-I use [shortcut manager](https://github.com/CorporalQuesadilla/Steam-Shortcut-Manager) as well as [documentation(https://www.youtube.com/watch?v=dQw4w9WgXcQ)] for setting the shortcuts
+I use [shortcut manager](https://github.com/CorporalQuesadilla/Steam-Shortcut-Manager) as well as [documentation](https://www.youtube.com/watch?v=dQw4w9WgXcQ) for setting the shortcuts
 
 VR support is added (fixed not working for some games)

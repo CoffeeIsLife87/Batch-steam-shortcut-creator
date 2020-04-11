@@ -54,7 +54,8 @@ hidden = " 0 "
 allow_desktop_config = "1 "
 allow_steam_overlay = "1 "
 last_playtime = "0 " 
-categories = '""'
+#I have the categories set as non steam game but if you want to set it as something else feel free
+categories = '"Non-Steam-Game"'
 #this is a template in case I have to move stuff around
 #extensions = (pathVDF+splitresult+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
 #-------------------------------------------------------------------------------
@@ -62,10 +63,10 @@ categories = '""'
 for root, dirs, files in os.walk(itchDIR):
     for file in files:
         if file.endswith(".exe"):
-             result = (os.path.join(root, file))
-             
-             #-------------------------------------------------------------------
-             #this is the VR check
+             result = (os.path.join(root, file))             
+#-----------------------------------------------------------------------------------------------
+# the next subsection if a VR check to add the game to your VR library if it has a certain .dll file
+             #this is the openVR_api check
              inVRLibrary = "0 "
              DLLcheck, junk = result.rsplit("\\", 1)
              for base, sub, FL in os.walk(DLLcheck):
@@ -74,10 +75,17 @@ for root, dirs, files in os.walk(itchDIR):
                          DLLcheck1 = file
                          if (DLLcheck1 == "openvr_api.dll"):
                             inVRLibrary = ("1 ")
-             #if you know how to make it so it adds a VR tag for "OVRplugin.dll" as well as "openvr_api.dll" please make a pull request
+             #this is the OVRplugin check
+             DLLcheck, junk = result.rsplit("\\", 1)
+             for base, sub, FL in os.walk(DLLcheck):
+                 for file in FL:
+                     if file.endswith(".dll"):
+                         DLLcheck1 = file
+                         if (DLLcheck1 == "OVRPlugin.dll"):
+                             inVRLibrary = ("1 ")
              #-----------------------------------------------------------------
              #if you find something you know people will never use please add it to the blacklist for me
-             blacklist = ("unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe")
+             blacklist = ("unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe","uninstall.exe","vc_redist","oalinst.exe")
              if result.endswith(blacklist):
                  pass
              else:
@@ -90,7 +98,14 @@ for root, dirs, files in os.walk(itchDIR):
 #--------------------------------------------------------------------------------
 #just a couple of words for the user
 print ("thanks for using my tool")
-print ("glad I could help you automate some stuff")
+print ("let me know if something broke @ https://github.com/herosilas12/autoItchtoSteamlibrary")
+print ("")
+print ("")
+print ("")
+print ("")
+print ("")
+print ("")
+print ("")
 print ("")
 print ("")
 close = input ("press enter to close")

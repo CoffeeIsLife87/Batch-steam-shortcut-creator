@@ -1,16 +1,27 @@
 import sys, os
 #-------------------------------------------------------------------------------
-#functions to define
 
-#this splits the path into a name, a full path, and the directory the game is in
+# ToDo
+
+# fix not being able to add games with path/name with "&" symbol
+# add detection for non-standard installations of steam
+# add the option to add all the games to favorite (is there a tag for that?)
+# allow multiple path to scan 
+# be able to remove game/tools after you delete them
+
+#let me know if there is something else you want me to add
+
+#-------------------------------------------------------------------------------
+#functions
+
+#this splits the path into a name, a full path, and the directory the game is in (credit to someone in the python discord for this bit)
 def split_path(path):
-  full_path = path
+  path = path
   start, name = path.rsplit("\\", 1)
   #that makes sure that everything is spaced properly as well as adds double quotes to the names/paths
   return '"'+name.split(".")[0]+'"'+" "+'"'+path+'"'+" "+'"'+start+'"'
 
-#this will be used later for running the second python script with the arguments after it
-shortcut = ('py -2 shortcuts.py')
+shortcut = ('py -2 shortcuts.py') #this will be used later for running the second python script with the arguments after it
 #-------------------------------------------------------------------------------
 #checks for itch.io directory to scan and askes for one if it is not detected
 itchDIRfile = open('info\\itchDIR.txt', 'r+')
@@ -21,8 +32,7 @@ if (itchDIRcheck == ""):
     itchDIRfile.close
 else:
     itchDIR = itchDIRcheck
-    #the print below is for debugging
-    #print (itchDIR)
+    #print (itchDIR) #for debugging
 #-------------------------------------------------------------------------------
 #checks for steam ID or askes for it if it is not detected
 steamIDfile = open('info\\steamID.txt', 'r+')
@@ -37,8 +47,8 @@ if (steamIDcheck == ""):
     steamIDfile.close()
 else:
     steamID = steamIDcheck
-    #the print below is for debugging
-    #print (steamID)
+    #print (steamID) #for debugging
+
 #if you installed steam somewhere other than the default location then uncomment the following lines and put the path the your "shortcuts.vdf file"
 #emergencyVDF = ('"'+"your path here"+'"'+" ")
 #pathVDF = emergencyVDF
@@ -50,14 +60,13 @@ pathVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\s
 name = "" #this gets defined later
 path = ''# same
 start = ""# same
-hidden = " 0 "
+hidden = " 0 " #change the "0" to a "1" for hidden if you want to hide all the games that this tool adds 
 allow_desktop_config = "1 "
 allow_steam_overlay = "1 "
 last_playtime = "0 " 
-#I have the categories set as non steam game but if you want to set it as something else feel free
-categories = '"Non-Steam-Game"'
-#this is a template in case I have to move stuff around
-#extensions = (pathVDF+splitresult+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
+categories = '"non-steam-game"' #I have the categories set as non steam game but if you want to set it as something else feel free
+
+#extensions = (pathVDF+cleanresult+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories) #this is a template in case I have to move stuff around
 #-------------------------------------------------------------------------------
 #scans set directory for .exe files
 for root, dirs, files in os.walk(itchDIR):
@@ -65,7 +74,7 @@ for root, dirs, files in os.walk(itchDIR):
         if file.endswith(".exe"):
              result = (os.path.join(root, file))             
 #-----------------------------------------------------------------------------------------------
-# the next subsection if a VR check to add the game to your VR library if it has a certain .dll file
+# the next subsection if a VR check to add the game to your VR library if it's sub/root folders have a certain .dll file (no its not flawless, but it gets the job done for now)
              #this is the openVR_api check
              inVRLibrary = "0 "
              DLLcheck, junk = result.rsplit("\\", 1)
@@ -84,27 +93,31 @@ for root, dirs, files in os.walk(itchDIR):
                          if (DLLcheck1 == "OVRPlugin.dll"):
                              inVRLibrary = ("1 ")
              #-----------------------------------------------------------------
-             #if you find something you know people will never use please add it to the blacklist for me
-             blacklist = ("unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe","uninstall.exe","vc_redist","oalinst.exe")
-             if result.endswith(blacklist):
-                 pass
+             if ("&" in (result)):
+                 andcheck = 1
              else:
-                 splitresult = split_path(result)
-                 extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
-                 #This is when it uses the "shortcut" string thing I set earlier and it uses "extensions as the arguments"
-                 #the line below is for testing while coding
-                 #print (shortcut+extensions)
-                 os.system('cmd /c'+'"'+shortcut+extensions+'"')
+                    #the below lines are for ensuring you don't have a 1,000,000,000 setup/uninstaller tools
+                    #if you find something you know people will never use please add it to the blacklist for me
+                 blacklist = ("unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe","uninstall.exe","vc_redist","oalinst.exe","UE4Game-Win64-Shipping.exe")
+                 if result.endswith(blacklist):
+                    pass
+                 else:
+                    splitresult = split_path(result)
+                    #some notes: the "result" after "splitresult" is to set the game icon
+                    extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
+                    #print (shortcut+extensions) #this line is for checking the output without it making shortcuts coding (the line below must be commented out or it will still make shortcuts)
+                    os.system('cmd /c'+'"'+shortcut+extensions+'"')
+             
+
 #--------------------------------------------------------------------------------
 #just a couple of words for the user
+print ("")
 print ("thanks for using my tool")
+print ("")
 print ("let me know if something broke @ https://github.com/herosilas12/autoItchtoSteamlibrary")
 print ("")
-print ("")
-print ("")
-print ("")
-print ("")
-print ("")
+if (andcheck == 1):
+    print ('BTW one of the apps/games you wanted to add to steam contained the "&" symbol, which for some reason breaks the script so you will have to add that app/game manually. sorry for the inconvienience')
 print ("")
 print ("")
 print ("")

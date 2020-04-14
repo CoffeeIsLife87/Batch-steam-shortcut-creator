@@ -1,0 +1,86 @@
+team Shortcuts Documentation
+CorporalQuesadilla edited this page on Aug 20, 2018 · 7 revisions
+Introduction
+Steam shortcuts allow games and other applications to be launched through Steam. This is beneficial for multiple reasons, such as having a unified library for all games on your computer or easy-to-modify custom controller mappings for non-Steam games.
+
+These shortcuts can also be accessed by following a steam:// URL based on its local path and name - see below for more info.
+
+The miniature database holding all the information about the non-Steam shortcuts for that device are stored locally in Steam\userdata\ID_HERE\config\shortcuts.vdf
+
+File Structure
+The file is a simple, single-line database (there are never any line breaks). It uses a few weird ASCII characters as delimiters and to denote data types. I show the UTF-8 (I think?) encoded representation of these characters to represent them in this document, as they typically are rendered completely invisible by most text editors or browsers. This is also the representation used in my program (Python based) to insert/read these characters.
+
+Header
+The file always begins with
+
+\x00shortcuts\x00
+and is immediately followed by the Body.
+
+Body
+This contains all shortcut entries consecutively (see entry structure below) and ends with the Footer.
+
+Footer
+Immediately following the body are the two following characters, signifying the end of the file.
+
+\x08\x08
+Shortcut Entry Structure
+Each entry follows this pattern following pattern. I think making an actual table makes this harder to understand, so I'll show you an excerpt of my code. As long as you understand basic concatenation, you should be able to read this.
+
+    # Key                # Data Type  # Internal Name       # Delimiter     # Input             # Delimiter
+    full_entryID        =                                      '\x00'  +  var_entryID        +  '\x00'
+    full_appName        =  '\x01'  +  'appname'             +  '\x00'  +  var_appName        +  '\x00'
+    full_quotedPath     =  '\x01'  +  'exe'                 +  '\x00'  +  var_unquotedPath   +  '\x00'
+    full_startDir       =  '\x01'  +  'StartDir'            +  '\x00'  +  var_startDir       +  '\x00'
+    full_iconPath       =  '\x01'  +  'icon'                +  '\x00'  +  var_iconPath       +  '\x00'
+    full_shortcutPath   =  '\x01'  +  'ShortcutPath'        +  '\x00'  +  var_shortcutPath   +  '\x00'
+    full_launchOptions  =  '\x01'  +  'LaunchOptions'       +  '\x00'  +  var_launchOptions  +  '\x00'
+    full_isHidden       =  '\x02'  +  'IsHidden'            +  '\x00'  +  var_isHidden       +  '\x00\x00\x00'
+    full_allowDeskConf  =  '\x02'  +  'AllowDesktopConfig'  +  '\x00'  +  var_allowDeskConf  +  '\x00\x00\x00'
+    full_allowOverlay   =  '\x02'  +  'AllowOverlay'        +  '\x00'  +  var_allowOverlay   +  '\x00\x00\x00'
+    full_openVR         =  '\x02'  +  'OpenVR'              +  '\x00'  +  var_openVR         +  '\x00\x00\x00'
+    full_lastPlayTime   =  '\x02'  +  'LastPlayTime'        +  '\x00'  +  var_lastPlayTime
+    full_tags           =  '\x00'  +  'tags'                +  '\x00'  +  var_tags           +  '\x08\x08'
+
+    newEntry = full_entryID + full_appName + full_quotedPath + full_startDir + full_iconPath + full_shortcutPath + full_launchOptions + full_isHidden + full_allowDeskConf + full_allowOverlay + full_openVR + full_tags
+    return newEntry
+As you can see, there are several parts to an entry, all on one line using special delimiters. Each entry is consecutive - the delimiters between entries are included with the above formula. As such, my program simply inserts entries before the final two characters of the file. I also try to detect the last known entryID and increment that by 1.
+
+Notes
+The data type always comes before the attribute it refers to. For the record, \x01 indicates String, \x02 indicates boolean, \x00 indicates list..
+Most Strings seem like they must be encapsulated in double quotes. Some, like Launch Options or App Name, seem to work fine without it.
+Bools treat '\x01' as True and '\x00' as False.
+Lists are as follows: '\x01' + index + '\x00' + Contents + '\x00'. Just repeat this for multiple entries and increment the index. The only list is the 'tags' - the categories you want it to appear under. Contents refers to the string representing the category name.
+I have no idea about Date. Not sure why LastPlayTime is marked as a bool - it's just 4 characters, usually ending in '[' (maybe?). All 4 being '\x00' is fine too (default for "Never Played"?).
+Attributes
+Attribute	Explanation	Data Type
+Entry ID	The shortcut's ID. First shortcut is 0. Not sure if there's any harm skipping around.	Integer
+App Name	Name of the shortcut	String
+exe	Quoted path to the executable OR its URL. Yes, even steam:// links work!	String - Quoted Path
+StartDir	Quoted path to the directory above lies in.	String - Quoted Path
+icon	Optional place to source the icon. Empty string is fine, but anything else seems to need double quote encapsulation. BTW, I'm not sure where the Grid/BigPicture image comes from. Maybe this path?	String - Quoted Path
+Shortcut Path	No idea what this is. Leaving blank (literally 'the empty string') works fine	String - Quoted Path?
+Launch Options	Any arguments to pass to the executable. Again, probably in quotes.	String - Quoted?
+Is Hidden	If it's in the "Hidden" subset of the library.	Boolean
+Allow Desktop Config	Use controller's Desktop Configurations in this game.	Boolean
+Allow Steam Overlay	Allows hotkey (typically shift+tab) to open Steam overlay in-game.	Boolean
+In VR library	For the 'VR Library' Category.	Boolean
+Last Play Time	Date last played. "Never played" is four consecutive \x00.	DateTime?
+Tags	Any categories you want it to appear in.	List
+URL Structure
+Every shortcut, when placed on the desktop, is given a steam:// shortcut. I don't understand quite how this works, just that it's a CRC of App Name and exe. My code can successfully generate this when adding shortcuts. However, it uses an excerpt of code from Scott Rice's ICE program. Below is his explanation - see the getURL function in shortcuts.py for how I use it in context, or his project's file of interest here.
+
+"""
+This filename [sic - in this case, refers to URL appID] is a 64bit
+integer, where the first 32bits are a CRC32 based off of the name and
+target (with the added condition that the first bit is always high), and
+the last 32bits are 0x02000000.
+"""
+# This will seem really strange (where I got all of these values), but I
+# got the xor_in and xor_out from disassembling the steamui library for
+# OSX. The reflect_in, reflect_out, and poly I figured out via trial and
+# error.
+algorithm = crc_algorithms.Crc(width = 32, poly = 0x04C11DB7, reflect_in = True, xor_in = 0xffffffff, reflect_out = True, xor_out = 0xffffffff)
+input_string = ''.join([inputTuple[2],inputTuple[1]])
+top_32 = algorithm.bit_by_bit(input_string) | 0x80000000
+full_64 = (top_32 << 32) | 0x02000000
+return str(full_64)

@@ -1,2 +1,2 @@
-@rem runs tool 
+@rem runs tool , that's it
 python maker.py

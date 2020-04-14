@@ -178,8 +178,8 @@ def inputPreperation(args, lastEntryInfo):
     var_unquotedPath    = '"' + args[3] + '"'
     var_startDir        = '"' + args[4] + '"'
     var_iconPath        = '"' + args[5] + '"'
-    var_shortcutPath    = '"' + args[6] + '"' # quoted? what is this?
-    var_launchOptions   =       args[7]
+    var_shortcutPath    = '"' + args[6] + '"' # quoted? what is this? 
+    var_launchOptions   =       args[7]       # if I had to guess I would say this is the name/paths
 
     # Boolean checks
     if args[8] == '1':

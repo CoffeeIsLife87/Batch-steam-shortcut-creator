@@ -1,4 +1,7 @@
-team Shortcuts Documentation
+this file looks kinda jank so if you want the actual wiki you can find it at https://github.com/CorporalQuesadilla/Steam-Shortcut-Manager/wiki/Steam-Shortcuts-Documentation
+
+
+steam Shortcuts Documentation
 CorporalQuesadilla edited this page on Aug 20, 2018 · 7 revisions
 Introduction
 Steam shortcuts allow games and other applications to be launched through Steam. This is beneficial for multiple reasons, such as having a unified library for all games on your computer or easy-to-modify custom controller mappings for non-Steam games.

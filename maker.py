@@ -10,6 +10,18 @@ import sys, os
 # be able to remove game/tools after you delete them
 
 #let me know if there is something else you want me to add
+cleanoutcheck = 1
+cleanout = input("would you like to clean out deleted apps? ")
+while (cleanoutcheck == 1):
+    if cleanout == "yes" or "no":
+        if cleanout == "yes":
+            DoCleanout = 1
+            cleanoutcheck = 0
+        else:
+            DoCleanout = 0
+            cleanoutcheck = 0
+    else:
+        cleanout = input('this is a "yes" or "no" question (it might be caps sensitive) ')
 
 #-------------------------------------------------------------------------------
 #functions
@@ -94,10 +106,10 @@ for root, dirs, files in os.walk(itchDIR):
                              inVRLibrary = ("1 ")
              #-----------------------------------------------------------------
              if ("&" in (result)):
-                 andcheck = 1
+                 (andcheck == 1)
              else:
-                    #the below lines are for ensuring you don't have a 1,000,000,000 setup/uninstaller tools
-                    #if you find something you know people will never use please add it to the blacklist for me
+                #the below lines are for ensuring you don't have a 1,000,000,000 setup/uninstaller tools
+                #if you find something you know people will never use please add it to the blacklist for me
                  blacklist = ("ffmpeg.exe","unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe","uninstall.exe","vc_redist","oalinst.exe","UE4Game-Win64-Shipping.exe","pythonw.exe","python.exe","Spatial Media Metadata Injector.exe","zsync.exe","zsyncmake.exe")
                  if result.endswith(blacklist):
                     pass

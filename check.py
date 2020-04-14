@@ -42,25 +42,42 @@ VDFsplit = readVDF.read()# shortcuts.vdf is a single line file so we don't have 
 #check for the path found by the itchdir scan
 #if a file is present in shortcuts.VDF that is not in the itch dir then it will be removed based on the opening \x08\x08 and the \x08\x08 that triggers the beginning of the next shortcut
 
+#this does the opisite of what I want
+#as of right now it checks the dirs for files and make sure they are on shortcuts.vdf
+#I want it to do the oposite
 def SplitIntoATon(pathVDF):
     for root, dirs, files in os.walk(itchDIR):
         for file in files:
             if file.endswith(".exe"):
                  result = (os.path.join(root, file))
                  check = VDFsplit.find(result)
-                 if result.endswith(blacklist):
-                     pass
+                 if (check == -1):
+                     print(result)
                  else:
-                     if "windows-i686" in result:
-                         pass
-                     else:
-                        if (check == -1):
-                            print(result)
-                        else:
-                            print("good")
+                     print("good")
 
                  
     if (check == -1):
-        return ("none have been found")
+        found = ("I was able to clean out")
+    else:
+        found = ("none have been found")
+    return (found)
+
+
+
+full_appName        =  '\x01'  +  'appname'             +  '\x00'  +  '\x00'
+full_quotedPath     =  '\x01'  +  'exe'                 +  '\x00'  +  '\x00'
+full_startDir       =  '\x01'  +  'StartDir'            +  '\x00'  +  '\x00'
+full_iconPath       =  '\x01'  +  'icon'                +  '\x00'  +  '\x00'
+full_shortcutPath   =  '\x01'  +  'ShortcutPath'        +  '\x00'  +  '\x00'
+full_launchOptions  =  '\x01'  +  'LaunchOptions'       +  '\x00'  +  '\x00'
+full_isHidden       =  '\x02'  +  'IsHidden'            +  '\x00'  +  '\x00\x00\x00'
+full_allowDeskConf  =  '\x02'  +  'AllowDesktopConfig'  +  '\x00'  +  '\x00\x00\x00'
+full_allowOverlay   =  '\x02'  +  'AllowOverlay'        +  '\x00'  +  '\x00\x00\x00'
+full_openVR         =  '\x02'  +  'OpenVR'              +  '\x00'  +  '\x00\x00\x00'
+full_lastPlayTime   =  '\x02'  +  'LastPlayTime'        +  '\x00'
+full_tags           =  '\x00'  +  'tags'                +  '\x00'  +  '\x08\x08'
+
+startswith + full_appName + full_quotedPath + full_startDir + full_iconPath + full_shortcutPath + full_launchOptions + full_isHidden + full_allowDeskConf + full_allowOverlay + full_openVR + full_tags
 
 print (SplitIntoATon(pathVDF))

@@ -31,17 +31,16 @@ pathVDF = ("C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\short
 #-------------------------------------------------------------------
 
 startswith = ('\x08\x08') #this will be useful for finding a starting/ending point for deletion when something is missing
-readVDF = open(str(pathVDF))
-VDFsplit = readVDF.read()
+readVDF = open(str(pathVDF))#this is what we are reading off of
+VDFsplit = readVDF.read()# shortcuts.vdf is a single line file so we don't have to use .readline()
 
 
 #check for a path in itchDIR
-#read the file
-#start checking for startswith var backwards through the file
+#read the shortcuts.vdf file
+#start checking for startswith var backwards through the file (this is just a rough draft that I wanted to remember. you don't have to follow this)
 #when found set the character position
 #check for the path found by the itchdir scan
-#if a file is present in the shortcuts.VDF file that is not in the itch dir then it will be removed based on the opening \x08\x08 and the following \x08\x08
-
+#if a file is present in shortcuts.VDF that is not in the itch dir then it will be removed based on the opening \x08\x08 and the \x08\x08 that triggers the beginning of the next shortcut
 
 def SplitIntoATon(pathVDF):
     for root, dirs, files in os.walk(itchDIR):
@@ -50,8 +49,9 @@ def SplitIntoATon(pathVDF):
                  result = (os.path.join(root, file))
                  check = VDFsplit.find(result)
                  if (check == -1):
-                     return ("NOT THERE")
-                 else:
-                     return ("I found it and it is at collumn "+str(check))
+                     pass
+                 #else:
+                  #   return ("I found it and it is at collumn "+str(check))
+
 
 print (SplitIntoATon(pathVDF))

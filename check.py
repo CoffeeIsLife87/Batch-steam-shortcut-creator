@@ -1,5 +1,5 @@
 import sys,os #because that is what you do
-
+blacklist = ("ffmpeg.exe","unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe","uninstall.exe","vc_redist","oalinst.exe","UE4Game-Win64-Shipping.exe","pythonw.exe","python.exe","Spatial Media Metadata Injector.exe","zsync.exe","zsyncmake.exe")
 #-------------------------------------------------------------------
 #checks for itch.io directory to scan and askes for one if it is not detected
 itchDIRfile = open('info\\itchDIR.txt', 'r+')
@@ -48,10 +48,19 @@ def SplitIntoATon(pathVDF):
             if file.endswith(".exe"):
                  result = (os.path.join(root, file))
                  check = VDFsplit.find(result)
-                 if (check == -1):
+                 if result.endswith(blacklist):
                      pass
-                 #else:
-                  #   return ("I found it and it is at collumn "+str(check))
+                 else:
+                     if "windows-i686" in result:
+                         pass
+                     else:
+                        if (check == -1):
+                            print(result)
+                        else:
+                            print("good")
 
+                 
+    if (check == -1):
+        return ("none have been found")
 
 print (SplitIntoATon(pathVDF))

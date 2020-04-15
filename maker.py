@@ -63,7 +63,6 @@ readVDF = ('info\\shortcuts.vdf')
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 # this replaces my windows username with the actual user's windows username
 readVDF1 = open('info\\shortcuts.vdf', 'r+')
-writeVDF = open('info\\shortcuts.vdf', 'w')
 readVDF2 = readVDF1.read()
 #print(readVDF2) #debugging
 
@@ -85,8 +84,9 @@ Full = (CWD+SplitFull)
 #print (SplitFull) #debugging
 
 NewShortCut = readVDF2.replace(StartDefault,Start)
-NewShortCut = NewShortCut.replace(FullDefault,Full)
+NewShortCut1 = NewShortCut.replace(FullDefault,Full)
 print (NewShortCut) #debugging
+writeVDF = open('info\\shortcuts.vdf', 'w')
 writeVDF.write(NewShortCut)
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 #this is cleanup 

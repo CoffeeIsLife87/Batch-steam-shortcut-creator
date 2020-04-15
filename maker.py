@@ -7,6 +7,7 @@
 # add the option to add all the games to favorite (is there a tag for that?)
 # allow multiple paths to scan 
 # be able to remove game/tools after you delete them (I think this one is done)
+# add support for running the program anywhere
 
 #let me know if there is something else you want me to add
 
@@ -61,9 +62,7 @@ else:
 pathVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
 readVDF = ('autoItchtoSteamlibrary\\info\\shortcuts.vdf')
 #----------------------------------------------------------------------------------------------------------------------------------------------------
-#setpath
 # this replaces my windows username with the actual user's windows username
-LocalOfScript = (os.getcwd()+)
 readVDF1 = open('autoItchtoSteamlibrary\\info\\shortcuts.vdf', 'r+')
 readVDF2 = readVDF1.read()
 #print (readVDF2) #debugging
@@ -190,8 +189,6 @@ for root, dirs, files in os.walk(itchDIR):
                         extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories+readVDF)
                         #print (shortcut+extensions) #this line is for checking the output without it making shortcuts coding (the line below must be commented out or it will still make shortcuts)
                         os.system('cmd /c'+'"'+shortcut+extensions+'"')
-#os.system('cmd /c '+'"C:\\Program Files (x86)\\Steam\\steam.exe"')
-
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 #just a couple of words for the user
 print ("")

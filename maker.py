@@ -1,4 +1,3 @@
-import sys, os
 #-------------------------------------------------------------------------------
 
 # ToDo
@@ -10,18 +9,54 @@ import sys, os
 # be able to remove game/tools after you delete them
 
 #let me know if there is something else you want me to add
+
+
+#----------------------------------------------------------------------------------------------
+import sys, os
+#os.system('cmd /c '+'"C:\\Program Files (x86)\\Steam\\steam.exe" -shutdown')
+#----------------------------------------------------------------------------------------------
+#checks whether or not the user want the cleanout behaviour by default
+DefaultCleanBehaviour = open('autoItchtoSteamlibrary\\info\\CleanoutByDefault.txt', 'r+')
+Defaultcheck = DefaultCleanBehaviour.readline()
+
+cleanout = Defaultcheck
 cleanoutcheck = 1
-cleanout = input("would you like to clean out deleted apps? ")
-while (cleanoutcheck == 1):
-    if cleanout == "yes" or "no":
-        if cleanout == "yes":
-            DoCleanout = 1
-            cleanoutcheck = 0
+if cleanout == "":
+    cleanout = input("would you like to clean out deleted apps? ")
+    while (cleanoutcheck == 1):
+        if cleanout == "yes" or "no":
+            if cleanout == "yes":
+                DoCleanout = 1
+                cleanoutcheck = 0
+            else:
+                DoCleanout = 0
+                cleanoutcheck = 0
         else:
-            DoCleanout = 0
-            cleanoutcheck = 0
-    else:
-        cleanout = input('this is a "yes" or "no" question (it might be caps sensitive) ')
+            cleanout = input('this is a "yes" or "no" question (it might be caps sensitive) ')
+
+if (Defaultcheck == ""):
+    cleanoutcheck = 1
+    Defaultcheck = input("Do you want the have shortcuts cleaned out by default (useful if you uninstall things all the time for testing ) ")
+    while (cleanoutcheck == 1):
+        if Defaultcheck == "yes" or "no":
+            if Defaultcheck == "yes":
+                DoCleanout = 1
+                DefaultCleanBehaviour.write(Defaultcheck)
+                DefaultCleanBehaviour.close
+                cleanoutcheck = 0
+            else:
+                DoCleanout = 0
+                DefaultCleanBehaviour.write(Defaultcheck)
+                DefaultCleanBehaviour.close
+        else:
+            Defaultcheck = input('this is, once again, a "yes" or "no" question (it might be caps sensitive) ')
+    DefaultCleanBehaviour.write(Defaultcheck)
+    DefaultCleanBehaviour.close
+else:
+    cleanout = Defaultcheck
+    if Defaultcheck == "yes":
+        DoCleanout = 1
+#print (Defaultcheck) #for debugging
 
 #-------------------------------------------------------------------------------
 #functions
@@ -33,10 +68,10 @@ def split_path(path):
   #that makes sure that everything is spaced properly as well as adds double quotes to the names/paths
   return '"'+name.split(".")[0]+'"'+" "+'"'+path+'"'+" "+'"'+start+'"'
 
-shortcut = ('py -2 shortcuts.py') #this will be used later for running the second python script with the arguments after it
+shortcut = ('py -2 autoItchtoSteamlibrary\\shortcuts.py') #this will be used later for running the second python script with the arguments after it
 #-------------------------------------------------------------------------------
 #checks for itch.io directory to scan and askes for one if it is not detected
-itchDIRfile = open('info\\itchDIR.txt', 'r+')
+itchDIRfile = open('autoItchtoSteamlibrary\\info\\itchDIR.txt', 'r+')
 itchDIRcheck = itchDIRfile.readline()
 if (itchDIRcheck == ""):
     itchDIR = input("copy and paste itch games directory ")
@@ -47,7 +82,7 @@ else:
     #print (itchDIR) #for debugging
 #-------------------------------------------------------------------------------
 #checks for steam ID or askes for it if it is not detected
-steamIDfile = open('info\\steamID.txt', 'r+')
+steamIDfile = open('autoItchtoSteamlibrary\\info\\steamID.txt', 'r+')
 steamIDcheck = steamIDfile.readline()
 if (steamIDcheck == ""):
     steamIDpath = "C:\\Program Files (x86)\\Steam\\userdata"
@@ -67,6 +102,20 @@ else:
 #-------------------------------------------------------------------------------
 #comment out line 47 if you need to use emergencyVDF
 pathVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
+#-------------------------------------------------------------------------------
+#this portion is not done
+starter = "\x00shortcuts\x00"
+editVDF = ("C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf")
+edit = open(editVDF, 'r+')
+
+#line 384 is the final character of placeholder
+
+find = edit.read()
+print (find.find("\x00shortcuts\x00"))
+print (find)
+if DoCleanout == 1:
+    edit.writelines()
+    edit.close()
 #-------------------------------------------------------------------------------
 # A bunch of variables that will be needed later
 name = "" #this gets defined later
@@ -106,20 +155,27 @@ for root, dirs, files in os.walk(itchDIR):
                              inVRLibrary = ("1 ")
              #-----------------------------------------------------------------
              if ("&" in (result)):
-                 (andcheck == 1)
+                 andcheck = "there is an &"
              else:
+                 andcheck = "no and"
                 #the below lines are for ensuring you don't have a 1,000,000,000 setup/uninstaller tools
                 #if you find something you know people will never use please add it to the blacklist for me
                  blacklist = ("ffmpeg.exe","unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe","uninstall.exe","vc_redist","oalinst.exe","UE4Game-Win64-Shipping.exe","pythonw.exe","python.exe","Spatial Media Metadata Injector.exe","zsync.exe","zsyncmake.exe")
                  if result.endswith(blacklist):
                     pass
                  else:
-                    splitresult = split_path(result)
-                    #some notes: the "result" after "splitresult" is to set the game icon
-                    extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
-                    #print (shortcut+extensions) #this line is for checking the output without it making shortcuts coding (the line below must be commented out or it will still make shortcuts)
-                    os.system('cmd /c'+'"'+shortcut+extensions+'"')
-             
+                     if 'windows-i686' in result:
+ # "windows-i686" means that this is a strictly 64bit version of the app/game and often times there 
+ # will be a non exsclusive version of the game as well so I blacklisted this to avoid 
+                         pass
+                     else:
+                        splitresult = split_path(result)
+                        #some notes: the "result" after "splitresult" is to set the game icon
+                        extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
+                        #print (shortcut+extensions) #this line is for checking the output without it making shortcuts coding (the line below must be commented out or it will still make shortcuts)
+                        #os.system('cmd /c'+'"'+shortcut+extensions+'"')
+#os.system('cmd /c '+'"C:\\Program Files (x86)\\Steam\\steam.exe" -shutdown')
+#os.system('cmd /c '+'"C:\\Program Files (x86)\\Steam\\steam.exe"')
 
 #--------------------------------------------------------------------------------
 #just a couple of words for the user
@@ -128,7 +184,7 @@ print ("thanks for using my tool")
 print ("")
 print ("let me know if something broke @ https://github.com/herosilas12/autoItchtoSteamlibrary")
 print ("")
-if (andcheck == 1):
+if (andcheck == "there is an &"):
     print ('BTW one of the apps/games you wanted to add to steam contained the "&" symbol, which for some reason breaks the script so you will have to add that app/game manually. sorry for the inconvienience')
 print ("")
 print ("")

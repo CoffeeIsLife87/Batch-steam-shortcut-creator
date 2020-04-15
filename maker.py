@@ -5,7 +5,7 @@
 # fix not being able to add games with path/name with "&" symbol
 # add detection for non-standard installations of steam
 # add the option to add all the games to favorite (is there a tag for that?)
-# allow multiple path to scan 
+# allow multiple paths to scan 
 # be able to remove game/tools after you delete them
 
 #let me know if there is something else you want me to add

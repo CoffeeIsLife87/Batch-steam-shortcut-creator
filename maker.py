@@ -7,7 +7,6 @@
 # add the option to add all the games to favorite (is there a tag for that?)
 # allow multiple paths to scan 
 # be able to remove game/tools after you delete them (I think this one is done)
-# add support for running the program anywhere
 
 #let me know if there is something else you want me to add
 
@@ -26,10 +25,10 @@ def split_path(path):
   #that makes sure that everything is spaced properly as well as adds double quotes to the names/paths
   return '"'+name.split(".")[0]+'"'+" "+'"'+path+'"'+" "+'"'+start+'"'
 
-shortcut = ('py -2 autoItchtoSteamlibrary\\shortcuts.py') #this will be used later for running the second python script with the arguments after it
+shortcut = ('py -2 shortcuts.py') #this will be used later for running the second python script with the arguments after it
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 #checks for itch.io directory to scan and askes for one if it is not detected
-itchDIRfile = open('autoItchtoSteamlibrary\\info\\itchDIR.txt', 'r+')
+itchDIRfile = open('info\\itchDIR.txt', 'r+')
 itchDIRcheck = itchDIRfile.readline()
 if (itchDIRcheck == ""):
     itchDIR = input("copy and paste itch games directory ")
@@ -40,7 +39,7 @@ else:
     #print (itchDIR) #for debugging
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 #checks for steam ID or askes for it if it is not detected
-steamIDfile = open('autoItchtoSteamlibrary\\info\\steamID.txt', 'r+')
+steamIDfile = open('info\\steamID.txt', 'r+')
 steamIDcheck = steamIDfile.readline()
 if (steamIDcheck == ""):
     steamIDpath = "C:\\Program Files (x86)\\Steam\\userdata"
@@ -60,10 +59,10 @@ else:
 #-------------------------------------------------------------------------------
 #comment out line 47 if you need to use emergencyVDF
 pathVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
-readVDF = ('autoItchtoSteamlibrary\\info\\shortcuts.vdf')
+readVDF = ('info\\shortcuts.vdf')
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 # this replaces my windows username with the actual user's windows username
-readVDF1 = open('autoItchtoSteamlibrary\\info\\shortcuts.vdf', 'r+')
+readVDF1 = open('info\\shortcuts.vdf', 'r+')
 readVDF2 = readVDF1.read()
 #print (readVDF2) #debugging
 User = getpass.getuser()
@@ -75,7 +74,7 @@ readVDF1.write(readVDF2.replace("heros",User))
 
 # this portion is not done yet and may never be done
 #checks whether or not the user want the cleanout behaviour by default
-DefaultCleanBehaviour = open('autoItchtoSteamlibrary\\info\\CleanoutByDefault.txt', 'r+')
+DefaultCleanBehaviour = open('info\\CleanoutByDefault.txt', 'r+')
 Defaultcheck = DefaultCleanBehaviour.readline()
 
 cleanout = Defaultcheck
@@ -87,7 +86,7 @@ if cleanout == "":
             if cleanout == "yes":
                 DoCleanout = 1
                 cleanoutcheck = 0
-            else:
+            if cleanout == "no":
                 DoCleanout = 0
                 cleanoutcheck = 0
         else:
@@ -103,7 +102,7 @@ if (Defaultcheck == ""):
                 DefaultCleanBehaviour.write(Defaultcheck)
                 DefaultCleanBehaviour.close
                 cleanoutcheck = 0
-            else:
+            if Defaultcheck == "no":
                 DoCleanout = 0
                 DefaultCleanBehaviour.write(Defaultcheck)
                 DefaultCleanBehaviour.close
@@ -123,7 +122,7 @@ if DoCleanout == 1: #this will clear out old shortcuts if you deleted some apps
     FullVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"')
     #------------------------------------------------------------------------------
     #thing/path of thing to copy
-    shortcuts = ("autoItchtoSteamlibrary\\info\\shortcuts.vdf") #this is the file being copied
+    shortcuts = ("info\\shortcuts.vdf") #this is the file being copied
     splitVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config") #this is where it gets copied to 
     CWD = os.getcwd() #this adds the full path
     copier = (CWD+"\\"+shortcuts+" "+splitVDF) # I don't know why this is how I did it

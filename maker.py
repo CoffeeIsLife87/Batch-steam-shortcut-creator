@@ -15,47 +15,48 @@
 import sys, os
 #os.system('cmd /c '+'"C:\\Program Files (x86)\\Steam\\steam.exe" -shutdown')
 #----------------------------------------------------------------------------------------------
+# this portion is not done yet and may never be done
 #checks whether or not the user want the cleanout behaviour by default
-DefaultCleanBehaviour = open('autoItchtoSteamlibrary\\info\\CleanoutByDefault.txt', 'r+')
-Defaultcheck = DefaultCleanBehaviour.readline()
+#DefaultCleanBehaviour = open('autoItchtoSteamlibrary\\info\\CleanoutByDefault.txt', 'r+')
+#Defaultcheck = DefaultCleanBehaviour.readline()
 
-cleanout = Defaultcheck
-cleanoutcheck = 1
-if cleanout == "":
-    cleanout = input("would you like to clean out deleted apps? ")
-    while (cleanoutcheck == 1):
-        if cleanout == "yes" or "no":
-            if cleanout == "yes":
-                DoCleanout = 1
-                cleanoutcheck = 0
-            else:
-                DoCleanout = 0
-                cleanoutcheck = 0
-        else:
-            cleanout = input('this is a "yes" or "no" question (it might be caps sensitive) ')
+#cleanout = Defaultcheck
+#cleanoutcheck = 1
+#if cleanout == "":
+#    cleanout = input("would you like to clean out deleted apps? ")
+#    while (cleanoutcheck == 1):
+#        if cleanout == "yes" or "no":
+#            if cleanout == "yes":
+#                DoCleanout = 1
+#                cleanoutcheck = 0
+#            else:
+#                DoCleanout = 0
+#                cleanoutcheck = 0
+#        else:
+#            cleanout = input('this is a "yes" or "no" question (it might be caps sensitive) ')
 
-if (Defaultcheck == ""):
-    cleanoutcheck = 1
-    Defaultcheck = input("Do you want the have shortcuts cleaned out by default (useful if you uninstall things all the time for testing ) ")
-    while (cleanoutcheck == 1):
-        if Defaultcheck == "yes" or "no":
-            if Defaultcheck == "yes":
-                DoCleanout = 1
-                DefaultCleanBehaviour.write(Defaultcheck)
-                DefaultCleanBehaviour.close
-                cleanoutcheck = 0
-            else:
-                DoCleanout = 0
-                DefaultCleanBehaviour.write(Defaultcheck)
-                DefaultCleanBehaviour.close
-        else:
-            Defaultcheck = input('this is, once again, a "yes" or "no" question (it might be caps sensitive) ')
-    DefaultCleanBehaviour.write(Defaultcheck)
-    DefaultCleanBehaviour.close
-else:
-    cleanout = Defaultcheck
-    if Defaultcheck == "yes":
-        DoCleanout = 1
+#if (Defaultcheck == ""):
+#    cleanoutcheck = 1
+#    Defaultcheck = input("Do you want the have shortcuts cleaned out by default (useful if you uninstall things all the time for testing ) ")
+#    while (cleanoutcheck == 1):
+#        if Defaultcheck == "yes" or "no":
+#            if Defaultcheck == "yes":
+#                DoCleanout = 1
+#                DefaultCleanBehaviour.write(Defaultcheck)
+#                DefaultCleanBehaviour.close
+#                cleanoutcheck = 0
+#            else:
+#                DoCleanout = 0
+#                DefaultCleanBehaviour.write(Defaultcheck)
+#                DefaultCleanBehaviour.close
+#        else:
+#            Defaultcheck = input('this is, once again, a "yes" or "no" question (it might be caps sensitive) ')
+#    DefaultCleanBehaviour.write(Defaultcheck)
+#    DefaultCleanBehaviour.close
+#else:
+#    cleanout = Defaultcheck
+#    if Defaultcheck == "yes":
+#        DoCleanout = 1
 #print (Defaultcheck) #for debugging
 
 #-------------------------------------------------------------------------------
@@ -104,18 +105,17 @@ else:
 pathVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
 #-------------------------------------------------------------------------------
 #this portion is not done
-starter = "\x00shortcuts\x00"
-editVDF = ("C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf")
-edit = open(editVDF, 'r+')
 
-#line 384 is the final character of placeholder
+#editVDF = ("C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf")
+#edit = open(editVDF, 'w')
+ 
+#this long string of text if a placeholder for the script to work
+#placeholder = '"\x00shortcuts\x00\x000\x00\x01appname\x00placeholder\x00\x01exe\x00"C:\\Users\\heros\\OneDrive\\Documents\\GitHub\\autoItchtoSteamlibrary\\placeholder\\placeholder.exe"\x00\x01StartDir\x00"C:\\Users\\heros\\OneDrive\\Documents\\GitHub\\autoItchtoSteamlibrary\\placeholder\\"\x00\x01icon\x00\x00\x01ShortcutPath\x00\x00\x01LaunchOptions\x00\x00\x02IsHidden\x00\x00\x00\x00\x00\x02AllowDesktopConfig\x00\x01\x00\x00\x00\x02AllowOverlay\x00\x01\x00\x00\x00\x02OpenVR\x00\x00\x00\x00\x00\x02Devkit\x00\x00\x00\x00\x00\x01DevkitGameID\x00\x00\x02LastPlayTime\x00\x00\x00\x00\x00\x00tags\x00\x08\x08'
+#print (placeholder) # for debugging
+#if DoCleanout == 1:
+#    edit.writelines('380')
+#    edit.close()
 
-find = edit.read()
-print (find.find("\x00shortcuts\x00"))
-print (find)
-if DoCleanout == 1:
-    edit.writelines()
-    edit.close()
 #-------------------------------------------------------------------------------
 # A bunch of variables that will be needed later
 name = "" #this gets defined later
@@ -125,7 +125,7 @@ hidden = " 0 " #change the "0" to a "1" for hidden if you want to hide all the g
 allow_desktop_config = "1 "
 allow_steam_overlay = "1 "
 last_playtime = "0 " 
-categories = '"non-steam-game"' #I have the categories set as non steam game but if you want to set it as something else feel free
+categories = '"non-steam-game"' #I have the categories set as non steam game but if you want to set it as something else then feel free
 
 #extensions = (pathVDF+cleanresult+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories) #this is a template in case I have to move stuff around
 #-------------------------------------------------------------------------------
@@ -154,10 +154,10 @@ for root, dirs, files in os.walk(itchDIR):
                          if (DLLcheck1 == "OVRPlugin.dll"):
                              inVRLibrary = ("1 ")
              #-----------------------------------------------------------------
+             andcheck = "no and"
              if ("&" in (result)):
                  andcheck = "there is an &"
              else:
-                 andcheck = "no and"
                 #the below lines are for ensuring you don't have a 1,000,000,000 setup/uninstaller tools
                 #if you find something you know people will never use please add it to the blacklist for me
                  blacklist = ("ffmpeg.exe","unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe","uninstall.exe","vc_redist","oalinst.exe","UE4Game-Win64-Shipping.exe","pythonw.exe","python.exe","Spatial Media Metadata Injector.exe","zsync.exe","zsyncmake.exe")
@@ -174,7 +174,6 @@ for root, dirs, files in os.walk(itchDIR):
                         extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
                         #print (shortcut+extensions) #this line is for checking the output without it making shortcuts coding (the line below must be commented out or it will still make shortcuts)
                         #os.system('cmd /c'+'"'+shortcut+extensions+'"')
-#os.system('cmd /c '+'"C:\\Program Files (x86)\\Steam\\steam.exe" -shutdown')
 #os.system('cmd /c '+'"C:\\Program Files (x86)\\Steam\\steam.exe"')
 
 #--------------------------------------------------------------------------------
@@ -189,4 +188,4 @@ if (andcheck == "there is an &"):
 print ("")
 print ("")
 print ("")
-close = input ("press enter to close")
+#close = input ("press enter to close")

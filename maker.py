@@ -57,31 +57,71 @@ else:
 #emergencyVDF = ('"'+"your path here"+'"'+" ")
 #pathVDF = emergencyVDF
 #-------------------------------------------------------------------------------
-#comment out line 47 if you need to use emergencyVDF
+#comment out line 61 if you need to use emergencyVDF
 pathVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
 readVDF = ('info\\shortcuts.vdf')
 #----------------------------------------------------------------------------------------------------------------------------------------------------
+
 # this replaces my windows username with the actual user's windows username
 readVDF1 = open('info\\shortcuts.vdf', 'r+')
 readVDF2 = readVDF1.read()
-#print(readVDF2) #debugging
+#print(readVDF2) # for debugging
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+#this portion checks if you want to have it clean out as well as ask if the user wants to do this by default
+DefaultCleanBehaviour = open('info\\CleanoutByDefault.txt', 'r+')
+WriteDefaultBehaviour = open('info\\CleanoutByDefault.txt', 'w')
+Defaultcheck = DefaultCleanBehaviour.readline()
+
+EnsureCleanout = 1
+if Defaultcheck != "":
+    Cleanoutcheck = Defaultcheck
+    DoCleanout = "1"
+else:
+    while EnsureCleanout == 1:
+        Cleanoutcheck = input("Do you want to clean old shortcuts? if you pick yes than any programs that aren't in ItchDir will be removed ('yes' or 'no') ")
+        if Cleanoutcheck == "yes" or "no":
+            if Cleanoutcheck == "yes":
+                DoCleanout = 1
+                EnsureCleanout = 0
+            if Cleanoutcheck == "no":
+                DoCleanout = 0
+                EnsureCleanout = 0
+
+EnsureCleanout = 1
+
+if Defaultcheck == "":
+    while (EnsureCleanout == 1):
+        DefaultAsk = input("would you like to clean out by default('yes' or 'no') ")
+        if DefaultAsk == "yes":
+            WriteDefaultBehaviour.write(DefaultAsk)
+            WriteDefaultBehaviour.close()
+            EnsureCleanout = 0
+        if DefaultAsk == "no":
+            WriteDefaultBehaviour.write(DefaultAsk)
+            WriteDefaultBehaviour.close()
+            EnsureCleanout = 0
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 StartDefault = ("C:\\Users\\heros\\OneDrive\\Documents\\GitHub\\autoItchtoSteamlibrary\\placeholder\\")
 FullDefault = ("C:\\Users\\heros\\OneDrive\\Documents\\GitHub\\autoItchtoSteamlibrary\\placeholder\\placeholder.exe")
+#-------------------------------------------------------------------------------
 
 CWD = os.getcwd()
+#-------------------------------------------------------------------------------
 
 Junk, SplitStart = StartDefault.split("\\GitHub", 1)
 Start = (CWD+SplitStart)
 #print (Start) #debugging
 #print (SplitStart) #debugging
+#-------------------------------------------------------------------------------
 
 junk, SplitFull = FullDefault.split("\\GitHub", 1)
 Full = (CWD+SplitFull)
 #print (Full) #debugging
 #print (SplitFull) #debugging
+#-------------------------------------------------------------------------------
 
 NewShortCut = readVDF2.replace(StartDefault,Start)
 NewShortCut = NewShortCut.replace(FullDefault,Full)
@@ -90,22 +130,24 @@ writeVDF = open('info\\shortcuts.vdf', 'w')
 writeVDF.write(NewShortCut)
 writeVDF.close()
 #----------------------------------------------------------------------------------------------------------------------------------------------------
-#this is cleanup 
+# this is cleanup (if the user said not to cleanout than this section does nothing)
 
-#------------------------------------------------------------------------------
-#thing to be deleted
+#thing to be deleted (calm down, as I stated earlier this does nothing if the user doesn't want it to)
 FullVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"')
 #------------------------------------------------------------------------------
-#thing/path of thing to copy
+
+#thing/path of thing to copy 
 shortcuts = ("info\\shortcuts.vdf") #this is the file being copied
 splitVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config") #this is where it gets copied to 
 CWD = os.getcwd() #this adds the full path
 copier = (CWD+"\\"+shortcuts+" "+splitVDF) # I don't know why this is how I did it
 #------------------------------------------------------------------------------
 
-os.system("cmd /c del "+FullVDF) #removes outdated
-os.system("cmd /c copy "+copier) #adds the blank slate (minus the placeholder necissary for the script to work)
-
+if DoCleanout == 1:
+    os.system("cmd /c del "+FullVDF) #removes outdated
+    os.system("cmd /c copy "+copier) #adds the blank slate (minus the placeholder necissary for the script to work)
+#os.system("cmd /c del "+FullVDF) #removes outdated
+#os.system("cmd /c copy "+copier) #adds the blank slate (minus the placeholder necissary for the script to work)
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 # A bunch of variables that will be needed later

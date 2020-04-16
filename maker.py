@@ -85,7 +85,7 @@ Full = (CWD+SplitFull)
 
 NewShortCut = readVDF2.replace(StartDefault,Start)
 NewShortCut = NewShortCut.replace(FullDefault,Full)
-print (NewShortCut) #debugging
+#print (NewShortCut) #debugging
 writeVDF = open('info\\shortcuts.vdf', 'w')
 writeVDF.write(NewShortCut)
 writeVDF.close()

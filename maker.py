@@ -57,78 +57,97 @@ else:
 #emergencyVDF = ('"'+"your path here"+'"'+" ")
 #pathVDF = emergencyVDF
 #-------------------------------------------------------------------------------
-#comment out line 47 if you need to use emergencyVDF
+#comment out line 61 if you need to use emergencyVDF
 pathVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
 readVDF = ('info\\shortcuts.vdf')
 #----------------------------------------------------------------------------------------------------------------------------------------------------
+
 # this replaces my windows username with the actual user's windows username
 readVDF1 = open('info\\shortcuts.vdf', 'r+')
 readVDF2 = readVDF1.read()
-#print (readVDF2) #debugging
-User = getpass.getuser()
+#print(readVDF2) # for debugging
 
-readVDF1.write(readVDF2.replace("heros",User))
 #----------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-# this portion is not done yet and may never be done
-#checks whether or not the user want the cleanout behaviour by default
+#this portion checks if you want to have it clean out as well as ask if the user wants to do this by default
 DefaultCleanBehaviour = open('info\\CleanoutByDefault.txt', 'r+')
+WriteDefaultBehaviour = open('info\\CleanoutByDefault.txt', 'w')
 Defaultcheck = DefaultCleanBehaviour.readline()
 
-cleanout = Defaultcheck
-cleanoutcheck = 1
-if cleanout == "":
-    cleanout = input("would you like to clean out deleted apps? ")
-    while (cleanoutcheck == 1):
-        if cleanout == "yes" or "no":
-            if cleanout == "yes":
-                DoCleanout = 1
-                cleanoutcheck = 0
-            if cleanout == "no":
-                DoCleanout = 0
-                cleanoutcheck = 0
-        else:
-            cleanout = input('this is a "yes" or "no" question (it might be caps sensitive) ')
-
-if (Defaultcheck == ""):
-    cleanoutcheck = 1
-    Defaultcheck = input("Do you want the have shortcuts cleaned out by default (useful if you uninstall things all the time for testing ) ")
-    while (cleanoutcheck == 1):
-        if Defaultcheck == "yes" or "no":
-            if Defaultcheck == "yes":
-                DoCleanout = 1
-                DefaultCleanBehaviour.write(Defaultcheck)
-                DefaultCleanBehaviour.close
-                cleanoutcheck = 0
-            if Defaultcheck == "no":
-                DoCleanout = 0
-                DefaultCleanBehaviour.write(Defaultcheck)
-                DefaultCleanBehaviour.close
-        else:
-            Defaultcheck = input('this is, once again, a "yes" or "no" question (it might be caps sensitive) ')
-    DefaultCleanBehaviour.write(Defaultcheck)
-    DefaultCleanBehaviour.close
+EnsureCleanout = 1
+if Defaultcheck != "":
+    Cleanoutcheck = Defaultcheck
+    DoCleanout = "1"
 else:
-    cleanout = Defaultcheck
-    if Defaultcheck == "yes":
-        DoCleanout = 1
-#print (Defaultcheck) #for debugging
+    while EnsureCleanout == 1:
+        Cleanoutcheck = input("Do you want to clean old shortcuts? if you pick yes than any programs that aren't in ItchDir will be removed ('yes' or 'no') ")
+        if Cleanoutcheck == "yes" or "no":
+            if Cleanoutcheck == "yes":
+                DoCleanout = 1
+                EnsureCleanout = 0
+            if Cleanoutcheck == "no":
+                DoCleanout = 0
+                EnsureCleanout = 0
 
-if DoCleanout == 1: #this will clear out old shortcuts if you deleted some apps
-    #------------------------------------------------------------------------------
-    #thing to be deleted
-    FullVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"')
-    #------------------------------------------------------------------------------
-    #thing/path of thing to copy
-    shortcuts = ("info\\shortcuts.vdf") #this is the file being copied
-    splitVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config") #this is where it gets copied to 
-    CWD = os.getcwd() #this adds the full path
-    copier = (CWD+"\\"+shortcuts+" "+splitVDF) # I don't know why this is how I did it
-    #------------------------------------------------------------------------------
+EnsureCleanout = 1
+
+if Defaultcheck == "":
+    while (EnsureCleanout == 1):
+        DefaultAsk = input("would you like to clean out by default('yes' or 'no') ")
+        if DefaultAsk == "yes":
+            WriteDefaultBehaviour.write(DefaultAsk)
+            WriteDefaultBehaviour.close()
+            EnsureCleanout = 0
+        if DefaultAsk == "no":
+            WriteDefaultBehaviour.write(DefaultAsk)
+            WriteDefaultBehaviour.close()
+            EnsureCleanout = 0
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+
+StartDefault = ("C:\\Users\\heros\\OneDrive\\Documents\\GitHub\\autoItchtoSteamlibrary\\placeholder\\")
+FullDefault = ("C:\\Users\\heros\\OneDrive\\Documents\\GitHub\\autoItchtoSteamlibrary\\placeholder\\placeholder.exe")
+#-------------------------------------------------------------------------------
+
+CWD = os.getcwd()
+#-------------------------------------------------------------------------------
+
+Junk, SplitStart = StartDefault.split("\\GitHub", 1)
+Start = (CWD+SplitStart)
+#print (Start) #debugging
+#print (SplitStart) #debugging
+#-------------------------------------------------------------------------------
+
+junk, SplitFull = FullDefault.split("\\GitHub", 1)
+Full = (CWD+SplitFull)
+#print (Full) #debugging
+#print (SplitFull) #debugging
+#-------------------------------------------------------------------------------
+
+NewShortCut = readVDF2.replace(StartDefault,Start)
+NewShortCut = NewShortCut.replace(FullDefault,Full)
+#print (NewShortCut) #debugging
+writeVDF = open('info\\shortcuts.vdf', 'w')
+writeVDF.write(NewShortCut)
+writeVDF.close()
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+# this is cleanup (if the user said not to cleanout than this section does nothing)
+
+#thing to be deleted (calm down, as I stated earlier this does nothing if the user doesn't want it to)
+FullVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"')
+#------------------------------------------------------------------------------
+
+#thing/path of thing to copy 
+shortcuts = ("info\\shortcuts.vdf") #this is the file being copied
+splitVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config") #this is where it gets copied to 
+CWD = os.getcwd() #this adds the full path
+copier = (CWD+"\\"+shortcuts+" "+splitVDF) # I don't know why this is how I did it
+#------------------------------------------------------------------------------
+
+if DoCleanout == 1:
     os.system("cmd /c del "+FullVDF) #removes outdated
     os.system("cmd /c copy "+copier) #adds the blank slate (minus the placeholder necissary for the script to work)
+#os.system("cmd /c del "+FullVDF) #removes outdated
+#os.system("cmd /c copy "+copier) #adds the blank slate (minus the placeholder necissary for the script to work)
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 # A bunch of variables that will be needed later
@@ -185,7 +204,7 @@ for root, dirs, files in os.walk(itchDIR):
                      else:
                         splitresult = split_path(result)
                         #some notes: the "result" after "splitresult" is to set the game icon
-                        extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories+readVDF)
+                        extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
                         #print (shortcut+extensions) #this line is for checking the output without it making shortcuts coding (the line below must be commented out or it will still make shortcuts)
                         os.system('cmd /c'+'"'+shortcut+extensions+'"')
 #----------------------------------------------------------------------------------------------------------------------------------------------------

@@ -3,16 +3,27 @@
 # ToDo
 
 # fix not being able to add games with path/name with "&" symbol
-# add detection for non-standard installations of steam
+# add detection for non-standard installations of steam 
 # add the option to add all the games to favorite (is there a tag for that?)
-# allow multiple paths to scan 
-# be able to remove game/tools after you delete them (I think this one is done)
+# allow multiple paths to scan (Is there an elegant method of doing this?)
+
 
 #let me know if there is something else you want me to add
 
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+
+#Finished features
+
+# be able to remove game/tools after you delete them(this is not a foolproof method right now)
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 import sys, os, getpass
+if os.path.exists("C:\\Program Files (x86)\\Steam\\"):
+    StandardSteamInstall = 1
+else:
+    StandardSteamInstall = 0
+    print ("non-standard installation of steam detected")
+    SteamInstall = input("please copy and paste you steam folder location (I.E. A:\\steaminstallfolder\\Steam\\")
 os.system('cmd /c '+'"C:\\Program Files (x86)\\Steam\\steam.exe" -shutdown') #this closes steam before running the rest of the script
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 

@@ -29,6 +29,7 @@ def split_path(path):
   #that makes sure that everything is spaced properly as well as adds double quotes to the names/paths
   return '"'+name.split(".")[0]+'"'+" "+'"'+path+'"'+" "+'"'+start+'"'
 
+
 shortcut = ('py -2 shortcuts.py') #this will be used later for running the second python script with the arguments after it
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -53,15 +54,19 @@ if StandardSteamInstall == 0:
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 #checks for itch.io directory to scan and askes for one if it is not detected
-itchDIRfile = open('info\\itchDIR.txt', 'r+')
-itchDIRcheck = itchDIRfile.read()
-if (itchDIRcheck == ""):
-    itchDIR = input("copy and paste itch games directory ")
-    itchDIRfile.write(itchDIR)
-    itchDIRfile.close()
+DIRfile = open('info\\Dirs.txt', 'r+')
+DIRcheck = DIRfile.read()
+if (DIRcheck == ""):
+    DIR = input("all of the directories you want scanned divided by a ',' (I.E. 'C:\\DirOne , C:\\DirTwo , B:\\games\\Itch games').\n This will work with only one directory only if you want to do 'C:\\itch games' or something of that nature ")
+    DIRfile.write(DIR)
+    DIRfile.close()
 else:
-    itchDIR = itchDIRcheck
-    #print (itchDIR) #for debugging
+    DIR = DIRcheck
+    #print (DIR) #for debugging
+DIR.split(',')
+DIR = DIR.replace(',', "' '")
+DIR = ("'"+DIR+"'")
+print (DIR)
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 #checks for steam ID or askes for it if it is not detected
@@ -122,7 +127,7 @@ if Defaultcheck != "":
     DoCleanout = "1"
 else:
     while EnsureCleanout == 1:
-        Cleanoutcheck = input("Do you want to clean old shortcuts? if you pick yes than any programs that aren't in ItchDir will be removed ('yes' or 'no') ")
+        Cleanoutcheck = input("Do you want to clean old shortcuts? if you pick yes than any programs that aren't in DIR will be removed ('yes' or 'no') ")
         if Cleanoutcheck == "yes" or "no":
             if Cleanoutcheck == "yes":
                 DoCleanout = 1
@@ -150,6 +155,7 @@ if Defaultcheck == "":
 StartDefault = ("C:\\Users\\heros\\OneDrive\\Documents\\GitHub\\autoItchtoSteamlibrary\\placeholder\\")
 FullDefault = ("C:\\Users\\heros\\OneDrive\\Documents\\GitHub\\autoItchtoSteamlibrary\\placeholder\\placeholder.exe")
 CWD = os.getcwd()
+andcheck = 0
 #-------------------------------------------------------------------------------
 
 Junk, SplitStart = StartDefault.split("\\GitHub", 1)
@@ -199,8 +205,10 @@ categories = '"non-steam-game" ' #I have the categories set as non steam game bu
 
 #extensions = (pathVDF+cleanresult+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories) #this is a template in case I have to move stuff around
 #----------------------------------------------------------------------------------------------------------------------------------------------------
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------
 #scans set directory for .exe files
-for root, dirs, files in os.walk(itchDIR):
+for root, dirs, files in os.walk(DIR):
     for file in files:
         if file.endswith(".exe"):
              result = (os.path.join(root, file))             
@@ -224,9 +232,8 @@ for root, dirs, files in os.walk(itchDIR):
                          if (DLLcheck1 == "OVRPlugin.dll"):
                              inVRLibrary = ("1 ")
              #-----------------------------------------------------------------
-             andcheck = "no and"
              if ("&" in (result)):
-                 andcheck = "there is an &"
+                 andcheck = 1
              else:
                 #the below lines are for ensuring you don't have a 1,000,000,000 setup/uninstaller tools
                 #if you find something you know people will never use please add it to the blacklist for me
@@ -251,9 +258,9 @@ print ("thanks for using my tool")
 print ("")
 print ("let me know if something broke @ https://github.com/herosilas12/autoItchtoSteamlibrary")
 print ("")
-if (andcheck == "there is an &"):
+if (andcheck == 1):
     print ('BTW one of the apps/games you wanted to add to steam contained the "&" symbol, which for some reason breaks the script so you will have to add that app/game manually. sorry for the inconvienience')
 print ("")
 print ("")
 print ("")
-close = input ("press enter to close")
+#close = input ("press enter to close")

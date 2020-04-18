@@ -29,7 +29,6 @@ def split_path(path):
   #that makes sure that everything is spaced properly as well as adds double quotes to the names/paths
   return '"'+name.split(".")[0]+'"'+" "+'"'+path+'"'+" "+'"'+start+'"'
 
-
 shortcut = ('py -2 shortcuts.py') #this will be used later for running the second python script with the arguments after it
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 

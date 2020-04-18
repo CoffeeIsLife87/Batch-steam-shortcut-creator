@@ -2,8 +2,12 @@
 
 # ToDo
 
+<<<<<<< Updated upstream
 # fix not being able to add games with path/name with "&" symbol
 # add detection for non-standard installations of steam 
+=======
+# fix not being able to add games with path/name with "&" symbol (I have no clue how to do this)
+>>>>>>> Stashed changes
 # add the option to add all the games to favorite (is there a tag for that?)
 # allow multiple paths to scan (Is there an elegant method of doing this?)
 

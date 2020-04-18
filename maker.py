@@ -18,13 +18,16 @@
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 import sys, os, getpass
-if os.path.exists("C:\\Program Files (x86)\\Steam\\"):
+if os.path.exists("C:\\Program Files (x86)\\Steam\\steam.exe"):
     StandardSteamInstall = 1
 else:
     StandardSteamInstall = 0
     print ("non-standard installation of steam detected")
-    SteamInstall = input("please copy and paste you steam folder location (I.E. A:\\steaminstallfolder\\Steam) don't do (A:\\steaminstallfolder\\Steam\\) or IT WILL NOT WORK")
-os.system('cmd /c '+'"C:\\Program Files (x86)\\Steam\\steam.exe" -shutdown') #this closes steam before running the rest of the script
+    SteamInstall = input("please copy and paste you steam folder location (I.E. A:\\steaminstallfolder) don't do (A:\\steaminstallfolder\\) or IT WILL NOT WORK")
+if StandardSteamInstall == 1:
+    os.system('cmd /c '+'"C:\\Program Files (x86)\\Steam\\steam.exe" -shutdown') #this closes steam before running the rest of the script
+if StandardSteamInstall == 0:
+    os.system('cmd /c '+'"'+SteamInstall+'\\steam.exe" -shutdown')
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 #functions

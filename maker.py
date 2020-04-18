@@ -17,17 +17,8 @@
 # be able to remove game/tools after you delete them(this is not a foolproof method right now)
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
+
 import sys, os, getpass
-if os.path.exists("C:\\Program Files (x86)\\Steam\\steam.exe"):
-    StandardSteamInstall = 1
-else:
-    StandardSteamInstall = 0
-    print ("non-standard installation of steam detected")
-    SteamInstall = input("please copy and paste you steam folder location (I.E. A:\\steaminstallfolder) don't do (A:\\steaminstallfolder\\) or IT WILL NOT WORK")
-if StandardSteamInstall == 1:
-    os.system('cmd /c '+'"C:\\Program Files (x86)\\Steam\\steam.exe" -shutdown') #this closes steam before running the rest of the script
-if StandardSteamInstall == 0:
-    os.system('cmd /c '+'"'+SteamInstall+'\\steam.exe" -shutdown')
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 #functions
@@ -41,13 +32,34 @@ def split_path(path):
 
 shortcut = ('py -2 shortcuts.py') #this will be used later for running the second python script with the arguments after it
 #----------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Standard path check
+if os.path.exists("C:\\Program Files (x86)\\Steam\\steam.exe"):
+    StandardSteamInstall = 1
+else:
+    StandardSteamInstall = 0
+    InstallF = open('info\\NonStandardLocal.txt', 'r+')
+    ReadInstallF = InstallF.read()
+    SteamInstall = ReadInstallF
+    if SteamInstall == "":
+        print ("non-standard installation of steam detected")
+        SteamInstall = input("please copy and paste you steam folder location (I.E. A:\\steaminstallfolder) don't do (A:\\steaminstallfolder\\) or IT WILL NOT WORK")
+        InstallF.write(SteamInstall)
+        InstallF.close()
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+if StandardSteamInstall == 1:
+    os.system('cmd /c '+'"C:\\Program Files (x86)\\Steam\\steam.exe" -shutdown') #this closes steam before running the rest of the script
+if StandardSteamInstall == 0:
+    os.system('cmd /c '+'"'+SteamInstall+'\\steam.exe" -shutdown')
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+
 #checks for itch.io directory to scan and askes for one if it is not detected
 itchDIRfile = open('info\\itchDIR.txt', 'r+')
-itchDIRcheck = itchDIRfile.readline()
+itchDIRcheck = itchDIRfile.read()
 if (itchDIRcheck == ""):
     itchDIR = input("copy and paste itch games directory ")
     itchDIRfile.write(itchDIR)
-    itchDIRfile.close
+    itchDIRfile.close()
 else:
     itchDIR = itchDIRcheck
     #print (itchDIR) #for debugging
@@ -55,7 +67,7 @@ else:
 
 #checks for steam ID or askes for it if it is not detected
 steamIDfile = open('info\\steamID.txt', 'r+')
-steamIDcheck = steamIDfile.readline()
+steamIDcheck = steamIDfile.read()
 # I had to rearange some stuff so it was easier to manage so if some things have comments that seem out of place that is why
 #-------------------------------------------------------------------------------
 

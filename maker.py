@@ -43,8 +43,8 @@ else:
     if SteamInstall == "":
         print ("non-standard installation of steam detected")
         SteamInstall = input("please copy and paste you steam folder location (I.E. A:\\steaminstallfolder) don't do (A:\\steaminstallfolder\\) or IT WILL NOT WORK")
-        InstallF.write(SteamInstall)
-        InstallF.close()
+        Install.write(SteamInstall)
+        Install.close()
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 if StandardSteamInstall == 1:
     os.system('cmd /c '+'"C:\\Program Files (x86)\\Steam\\steam.exe" -shutdown') #this closes steam before running the rest of the script

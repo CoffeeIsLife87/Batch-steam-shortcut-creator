@@ -2,10 +2,9 @@
 
 # ToDo
 
-# fix not being able to add games with path/name with "&" symbol (I have no clue how to do this)
-# add the option to add all the games to favorite (is there a tag for that?)
-# allow multiple paths to scan (Is there an elegant method of doing this?)
-
+# fix not being able to add games with path/name with "&" symbol (I have no clue how to do this) (low priority)
+# add the option to add all the games to favorite (is there a tag for that?) (medium priority)
+# allow multiple paths to scan (Is there an elegant method of doing this?) (medium prioity)
 
 #let me know if there is something else you want me to add
 

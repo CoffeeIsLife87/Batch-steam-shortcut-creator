@@ -4,7 +4,6 @@
 
 # fix not being able to add games with path/name with "&" symbol (I have no clue how to do this) (low priority)
 # add the option to add all the games to favorite (is there a tag for that?) (medium priority)
-# allow multiple paths to scan (Is there an elegant method of doing this?) (medium prioity)
 
 #let me know if there is something else you want me to add
 
@@ -14,6 +13,7 @@
 
 # be able to remove game/tools after you delete them(this is not a foolproof method right now)
 # add detection for non-standard installations of steam 
+# allow multiple paths to scan (Is there an elegant method of doing this?) (medium prioity)
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -62,10 +62,6 @@ if (DIRcheck == ""):
 else:
     DIR = DIRcheck
     #print (DIR) #for debugging
-DIR.split(',')
-DIR = DIR.replace(',', "' '")
-DIR = ("'"+DIR+"'")
-print (DIR)
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 #checks for steam ID or askes for it if it is not detected
@@ -117,27 +113,26 @@ readVDF2 = readVDF1.read()
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 #this portion checks if you want to have it clean out as well as ask if the user wants to do this by default
 DefaultCleanBehaviour = open('info\\CleanoutByDefault.txt', 'r+')
-WriteDefaultBehaviour = open('info\\CleanoutByDefault.txt', 'w')
-Defaultcheck = DefaultCleanBehaviour.readline()
+Defaultcheck = DefaultCleanBehaviour.read()
 
 EnsureCleanout = 1
-if Defaultcheck != "":
+if Defaultcheck == "yes" or "no":
     Cleanoutcheck = Defaultcheck
-    DoCleanout = "1"
-else:
-    while EnsureCleanout == 1:
-        Cleanoutcheck = input("Do you want to clean old shortcuts? if you pick yes than any programs that aren't in DIR will be removed ('yes' or 'no') ")
-        if Cleanoutcheck == "yes" or "no":
-            if Cleanoutcheck == "yes":
-                DoCleanout = 1
-                EnsureCleanout = 0
-            if Cleanoutcheck == "no":
-                DoCleanout = 0
-                EnsureCleanout = 0
+while EnsureCleanout == 1:
+    if Cleanoutcheck == "yes" or "no":
+        if Cleanoutcheck == "yes":
+            DoCleanout = 1
+            EnsureCleanout = 0
+        if Cleanoutcheck == "no":
+            DoCleanout = 0
+            EnsureCleanout = 0
+    if Cleanoutcheck != "yes" or "no":
+        Cleanoutcheck = input("Do you want to clean old shortcuts? if you pick yes than any programs that aren't in the directories you set then they will be removed ('yes' or 'no') ")
 
 EnsureCleanout = 1
 
 if Defaultcheck == "":
+    WriteDefaultBehaviour = open('info\\CleanoutByDefault.txt', 'w')
     while (EnsureCleanout == 1):
         DefaultAsk = input("would you like to clean out by default('yes' or 'no') ")
         if DefaultAsk == "yes":
@@ -204,51 +199,53 @@ categories = '"non-steam-game" ' #I have the categories set as non steam game bu
 
 #extensions = (pathVDF+cleanresult+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories) #this is a template in case I have to move stuff around
 #----------------------------------------------------------------------------------------------------------------------------------------------------
-
-#scans set directory for .exe files
-for root, dirs, files in os.walk():
-    for file in files:
-        if file.endswith(".exe"):
-             result = (os.path.join(root, file))             
+SplitDir = DIR.split(",")
+print (SplitDir)
+for i in SplitDir:
+    #scans set directory for .exe files
+    for root, dirs, files in os.walk(i):
+        for file in files:
+            if file.endswith(".exe"):
+                 result = (os.path.join(root, file))             
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 # the next subsection if a VR check to add the game to your VR library if it's sub/root folders have a certain .dll file (no its not flawless, but it gets the job done for now)
-             #this is the openVR_api check
-             inVRLibrary = "0 "
-             DLLcheck, junk = result.rsplit("\\", 1)
-             for base, sub, FL in os.walk(DLLcheck):
-                 for file in FL:
-                     if file.endswith(".dll"):
-                         DLLcheck1 = file
-                         if (DLLcheck1 == "openvr_api.dll"):
-                            inVRLibrary = ("1 ")
-             #this is the OVRplugin check
-             DLLcheck, junk = result.rsplit("\\", 1)
-             for base, sub, FL in os.walk(DLLcheck):
-                 for file in FL:
-                     if file.endswith(".dll"):
-                         DLLcheck1 = file
-                         if (DLLcheck1 == "OVRPlugin.dll"):
-                             inVRLibrary = ("1 ")
-             #-----------------------------------------------------------------
-             if ("&" in (result)):
-                 andcheck = 1
-             else:
-                #the below lines are for ensuring you don't have a 1,000,000,000 setup/uninstaller tools
-                #if you find something you know people will never use please add it to the blacklist for me
-                 blacklist = ("ffmpeg.exe","unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe","uninstall.exe","vc_redist","oalinst.exe","UE4Game-Win64-Shipping.exe","pythonw.exe","python.exe","Spatial Media Metadata Injector.exe","zsync.exe","zsyncmake.exe")
-                 if result.endswith(blacklist):
-                    pass
+                #this is the openVR_api check
+                 inVRLibrary = "0 "
+                 DLLcheck, junk = result.rsplit("\\", 1)
+                 for base, sub, FL in os.walk(DLLcheck):
+                     for file in FL:
+                         if file.endswith(".dll"):
+                             DLLcheck1 = file
+                             if (DLLcheck1 == "openvr_api.dll"):
+                                 inVRLibrary = ("1 ")
+                 #this is the OVRplugin check
+                 DLLcheck, junk = result.rsplit("\\", 1)
+                 for base, sub, FL in os.walk(DLLcheck):
+                     for file in FL:
+                         if file.endswith(".dll"):
+                             DLLcheck1 = file
+                             if (DLLcheck1 == "OVRPlugin.dll"):
+                                 inVRLibrary = ("1 ")
+                #-----------------------------------------------------------------
+                 if ("&" in (result)):
+                     andcheck = 1
                  else:
-                     if 'windows-i686' in result:
- # "windows-i686" means that this is a strictly 64bit version of the app/game and often times there 
- # will be a non exsclusive version of the game as well so I blacklisted this to avoid 
+                    #the below lines are for ensuring you don't have a 1,000,000,000 setup/uninstaller tools
+                    #if you find something you know people will never use please add it to the blacklist for me
+                     blacklist = ("ffmpeg.exe","unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe","uninstall.exe","vc_redist","oalinst.exe","UE4Game-Win64-Shipping.exe","pythonw.exe","python.exe","Spatial Media Metadata Injector.exe","zsync.exe","zsyncmake.exe")
+                     if result.endswith(blacklist):
                          pass
                      else:
-                        splitresult = split_path(result)
-                        #some notes: the "result" after "splitresult" is to set the game icon
-                        extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
-                        #print (shortcut+extensions) #this line is for checking the output without it making shortcuts coding (the line below must be commented out or it will still make shortcuts)
-                        #os.system('cmd /c'+'"'+shortcut+extensions+'"')
+                         if 'windows-i686' in result:
+                    # "windows-i686" means that this is a strictly 64bit version of the app/game and often times there 
+                    # will be a non exsclusive version of the game as well so I blacklisted this to avoid 
+                             pass
+                         else:
+                             splitresult = split_path(result)
+                             #some notes: the "result" after "splitresult" is to set the game icon
+                             extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
+                             #print (shortcut+extensions) #this line is for checking the output without it making shortcuts coding (the line below must be commented out or it will still make shortcuts)
+                             os.system('cmd /c'+'"'+shortcut+extensions+'"')
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 #just a couple of words for the user
 print ("")

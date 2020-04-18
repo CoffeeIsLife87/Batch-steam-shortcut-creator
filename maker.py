@@ -23,7 +23,7 @@ if os.path.exists("C:\\Program Files (x86)\\Steam\\"):
 else:
     StandardSteamInstall = 0
     print ("non-standard installation of steam detected")
-    SteamInstall = input("please copy and paste you steam folder location (I.E. A:\\steaminstallfolder\\Steam\\")
+    SteamInstall = input("please copy and paste you steam folder location (I.E. A:\\steaminstallfolder\\Steam) don't do (A:\\steaminstallfolder\\Steam\\) or IT WILL NOT WORK")
 os.system('cmd /c '+'"C:\\Program Files (x86)\\Steam\\steam.exe" -shutdown') #this closes steam before running the rest of the script
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -52,24 +52,38 @@ else:
 #checks for steam ID or askes for it if it is not detected
 steamIDfile = open('info\\steamID.txt', 'r+')
 steamIDcheck = steamIDfile.readline()
-if (steamIDcheck == ""):
-    steamIDpath = "C:\\Program Files (x86)\\Steam\\userdata"
-    #opens steam user folder for users so they can copy and paste the numbers that represent their ID
-    steamIDpath = os.path.realpath(steamIDpath)
-    os.startfile(steamIDpath)
-    steamID = str(input("copy and paste the numbers from the folder"))
-    steamIDfile.write(steamID)
-    steamIDfile.close()
-else:
-    steamID = steamIDcheck
-    #print (steamID) #for debugging
-
+if StandardSteamInstall == 1:
+    if (steamIDcheck == ""):
+        steamIDpath = "C:\\Program Files (x86)\\Steam\\userdata"
+        #opens steam user folder for users so they can copy and paste the numbers that represent their ID
+        steamIDpath = os.path.realpath(steamIDpath)
+        os.startfile(steamIDpath)
+        steamID = str(input("copy and paste the numbers from the folder"))
+        steamIDfile.write(steamID)
+        steamIDfile.close()
+    else:
+        steamID = steamIDcheck
+        #print (steamID) #for debugging
+if StandardSteamInstall == 0:
+    if (steamIDcheck == ""):
+        steamIDpath = (SteamInstall+"\\userdata")
+        #opens steam user folder for users so they can copy and paste the numbers that represent their ID
+        steamIDopen = os.path.realpath(steamIDpath)
+        os.startfile(steamIDopen)
+        steamID = str(input("copy and paste the numbers from the folder"))
+        steamIDfile.write(steamID)
+        steamIDfile.close()
+    else:
+        steamID = steamIDcheck
+        #print (steamID) #for debugging
 #if you installed steam somewhere other than the default location then uncomment the following lines and put the path the your "shortcuts.vdf file"
-#emergencyVDF = ('"'+"your path here"+'"'+" ")
-#pathVDF = emergencyVDF
+
 #-------------------------------------------------------------------------------
 #comment out line 61 if you need to use emergencyVDF
-pathVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
+if StandardSteamInstall == 1:
+    pathVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
+if StandardSteamInstall == 0:
+    pathVDF = ('"'+SteamInstall+"\\userdata"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
 readVDF = ('info\\shortcuts.vdf')
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 

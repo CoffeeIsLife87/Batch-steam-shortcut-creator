@@ -37,9 +37,9 @@ if os.path.exists("C:\\Program Files (x86)\\Steam\\steam.exe"):
     StandardSteamInstall = 1
 else:
     StandardSteamInstall = 0
-    InstallF = open('info\\NonStandardLocal.txt', 'r+')
-    ReadInstallF = InstallF.read()
-    SteamInstall = ReadInstallF
+    Install = open('info\\NonStandardLocal.txt', 'r+')
+    ReadInstall = Install.read()
+    SteamInstall = ReadInstall
     if SteamInstall == "":
         print ("non-standard installation of steam detected")
         SteamInstall = input("please copy and paste you steam folder location (I.E. A:\\steaminstallfolder) don't do (A:\\steaminstallfolder\\) or IT WILL NOT WORK")

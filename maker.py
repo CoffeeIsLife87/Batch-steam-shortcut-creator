@@ -205,9 +205,8 @@ categories = '"non-steam-game" ' #I have the categories set as non steam game bu
 #extensions = (pathVDF+cleanresult+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories) #this is a template in case I have to move stuff around
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
-#----------------------------------------------------------------------------------------------------------------------------------------------------
 #scans set directory for .exe files
-for root, dirs, files in os.walk(DIR):
+for root, dirs, files in os.walk():
     for file in files:
         if file.endswith(".exe"):
              result = (os.path.join(root, file))             
@@ -249,7 +248,7 @@ for root, dirs, files in os.walk(DIR):
                         #some notes: the "result" after "splitresult" is to set the game icon
                         extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
                         #print (shortcut+extensions) #this line is for checking the output without it making shortcuts coding (the line below must be commented out or it will still make shortcuts)
-                        os.system('cmd /c'+'"'+shortcut+extensions+'"')
+                        #os.system('cmd /c'+'"'+shortcut+extensions+'"')
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 #just a couple of words for the user
 print ("")

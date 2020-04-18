@@ -49,41 +49,45 @@ else:
     itchDIR = itchDIRcheck
     #print (itchDIR) #for debugging
 #----------------------------------------------------------------------------------------------------------------------------------------------------
+
 #checks for steam ID or askes for it if it is not detected
 steamIDfile = open('info\\steamID.txt', 'r+')
 steamIDcheck = steamIDfile.readline()
+# I had to rearange some stuff so it was easier to manage so if some things have comments that seem out of place that is why
+#-------------------------------------------------------------------------------
+
 if StandardSteamInstall == 1:
     if (steamIDcheck == ""):
         steamIDpath = "C:\\Program Files (x86)\\Steam\\userdata"
-        #opens steam user folder for users so they can copy and paste the numbers that represent their ID
         steamIDpath = os.path.realpath(steamIDpath)
-        os.startfile(steamIDpath)
+        os.startfile(steamIDpath) #opens steam user folder for users so they can copy and paste the numbers that represent their ID
         steamID = str(input("copy and paste the numbers from the folder"))
         steamIDfile.write(steamID)
         steamIDfile.close()
     else:
         steamID = steamIDcheck
         #print (steamID) #for debugging
+if StandardSteamInstall == 1:
+    pathVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
+    FullVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"')
+    splitVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config") #this is where it gets copied to 
+#-------------------------------------------------------------------------------
+
 if StandardSteamInstall == 0:
     if (steamIDcheck == ""):
         steamIDpath = (SteamInstall+"\\userdata")
-        #opens steam user folder for users so they can copy and paste the numbers that represent their ID
         steamIDopen = os.path.realpath(steamIDpath)
-        os.startfile(steamIDopen)
+        os.startfile(steamIDopen) #opens steam user folder for users so they can copy and paste the numbers that represent their ID
         steamID = str(input("copy and paste the numbers from the folder"))
         steamIDfile.write(steamID)
         steamIDfile.close()
     else:
         steamID = steamIDcheck
         #print (steamID) #for debugging
-#if you installed steam somewhere other than the default location then uncomment the following lines and put the path the your "shortcuts.vdf file"
-
-#-------------------------------------------------------------------------------
-#comment out line 61 if you need to use emergencyVDF
-if StandardSteamInstall == 1:
-    pathVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
 if StandardSteamInstall == 0:
-    pathVDF = ('"'+SteamInstall+"\\userdata"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
+    pathVDF = ('"'+SteamInstall+"\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
+    FullVDF = ('"'+SteamInstall+"\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"')
+    splitVDF = ('"'+SteamInstall+"\\userdata\\"+steamID+"\\config") #this is where it gets copied to 
 readVDF = ('info\\shortcuts.vdf')
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -131,8 +135,6 @@ if Defaultcheck == "":
 
 StartDefault = ("C:\\Users\\heros\\OneDrive\\Documents\\GitHub\\autoItchtoSteamlibrary\\placeholder\\")
 FullDefault = ("C:\\Users\\heros\\OneDrive\\Documents\\GitHub\\autoItchtoSteamlibrary\\placeholder\\placeholder.exe")
-#-------------------------------------------------------------------------------
-
 CWD = os.getcwd()
 #-------------------------------------------------------------------------------
 
@@ -157,14 +159,10 @@ writeVDF.close()
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 # this is cleanup (if the user said not to cleanout than this section does nothing)
 
-#thing to be deleted (calm down, as I stated earlier this does nothing if the user doesn't want it to)
-FullVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"')
 #------------------------------------------------------------------------------
 
 #thing/path of thing to copy 
 shortcuts = ("info\\shortcuts.vdf") #this is the file being copied
-splitVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config") #this is where it gets copied to 
-CWD = os.getcwd() #this adds the full path
 copier = (CWD+"\\"+shortcuts+" "+splitVDF) # I don't know why this is how I did it
 #------------------------------------------------------------------------------
 

@@ -193,7 +193,7 @@ hidden = " 0 " #change the "0" to a "1" for hidden if you want to hide all the g
 allow_desktop_config = "1 "
 allow_steam_overlay = "1 "
 last_playtime = "0 " 
-categories = '"non-steam-game" ' #I have the categories set as non steam game but if you want to set it as something else then feel free
+categories = '"non-steam-game" "FAVORITES" ' #I have the categories set as non steam game but if you want to set it as something else then feel free
 
 #extensions = (pathVDF+cleanresult+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories) #this is a template in case I have to move stuff around
 #----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -230,7 +230,7 @@ for i in SplitDir:
                  else:
                     #the below lines are for ensuring you don't have a 1,000,000,000 setup/uninstaller tools
                     #if you find something you know people will never use please add it to the blacklist for me
-                     blacklist = ("ffmpeg.exe","unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe","uninstall.exe","vc_redist","oalinst.exe","UE4Game-Win64-Shipping.exe","pythonw.exe","python.exe","Spatial Media Metadata Injector.exe","zsync.exe","zsyncmake.exe")
+                     blacklist = ("ffmpeg.exe","unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe","uninstall.exe","vc_redist","oalinst.exe","UE4Game-Win64-Shipping.exe","pythonw.exe","python.exe","Spatial Media Metadata Injector.exe","zsync.exe","zsyncmake.exe","Amazon Game Remover.exe","CrashReportClient.exe","-Win64-Shipping.exe","VrContainer32.exe","VrContainer64.exe","ViveportContent.exe","LAUNCHER.exe","LAUNCHER_x64.exe","DXSETUP.exe","vcredist_x86.exe","vcredist_x64.exe","ProLogLauncher.exe","ProLog.exe","QtWebEngineProcess.exe")
                      if result.endswith(blacklist):
                          pass
                      else:

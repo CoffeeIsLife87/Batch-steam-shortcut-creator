@@ -126,13 +126,13 @@ while EnsureCleanout == 1:
         if Cleanoutcheck == "no":
             DoCleanout = 0
             EnsureCleanout = 0
-    if Cleanoutcheck != "yes" or "no":
+    if Cleanoutcheck == "":
         Cleanoutcheck = input("Do you want to clean old shortcuts? if you pick yes than any programs that aren't in the directories you set then they will be removed ('yes' or 'no') ")
 
 EnsureCleanout = 1
 
 if Defaultcheck == "":
-    WriteDefaultBehaviour = open('info\\CleanoutByDefault.txt', 'w')
+    WriteDefaultBehaviour = open('info\\CleanoutByDefault.txt', 'r+')
     while (EnsureCleanout == 1):
         DefaultAsk = input("would you like to clean out by default('yes' or 'no') ")
         if DefaultAsk == "yes":
@@ -172,8 +172,6 @@ writeVDF.write(NewShortCut)
 writeVDF.close()
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 # this is cleanup (if the user said not to cleanout than this section does nothing)
-
-#------------------------------------------------------------------------------
 
 #thing/path of thing to copy 
 shortcuts = ("info\\shortcuts.vdf") #this is the file being copied

@@ -225,12 +225,13 @@ for i in SplitDir:
                              if (DLLcheck1 == "OVRPlugin.dll"):
                                  inVRLibrary = ("1 ")
                 #-----------------------------------------------------------------
+                 splitresult = split_path(result)
                  if ("&" in (result)):
                      andcheck = 1
-                     result = (r+result)
-                     splitresult = (r+splitresult)
-                     print (result+"\n"+splitresult)
-                 else:
+                     result = ("\r"+result)
+                     splitresult = ("\r"+splitresult)
+                     print (splitresult)
+                 #else:
                     #the below lines are for ensuring you don't have a 1,000,000,000 setup/uninstaller tools
                     #if you find something you know people will never use please add it to the blacklist for me
                      blacklist = ("ffmpeg.exe","unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe","uninstall.exe","vc_redist","oalinst.exe","UE4Game-Win64-Shipping.exe","pythonw.exe","python.exe","Spatial Media Metadata Injector.exe","zsync.exe","zsyncmake.exe","Amazon Game Remover.exe","CrashReportClient.exe","-Win64-Shipping.exe","VrContainer32.exe","VrContainer64.exe","ViveportContent.exe","LAUNCHER.exe","LAUNCHER_x64.exe","DXSETUP.exe","vcredist_x86.exe","vcredist_x64.exe","ProLogLauncher.exe","ProLog.exe","QtWebEngineProcess.exe")
@@ -242,11 +243,11 @@ for i in SplitDir:
                     # will be a non exsclusive version of the game as well so I blacklisted this to avoid 
                              pass
                          else:
-                             splitresult = split_path(result)
+                             #splitresult = split_path(result)
                              #some notes: the "result" after "splitresult" is to set the game icon
                              extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
                              #print (shortcut+extensions) #this line is for checking the output without it making shortcuts coding (the line below must be commented out or it will still make shortcuts)
-                             #os.system('cmd /c'+'"'+shortcut+extensions+'"')
+                             os.system('cmd /c'+'"'+shortcut+extensions+'"')
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 #just a couple of words for the user
 print ("")

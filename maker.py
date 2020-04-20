@@ -198,7 +198,7 @@ categories = '"non-steam-game" "FAVORITES" ' #I have the categories set as non s
 #extensions = (pathVDF+cleanresult+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories) #this is a template in case I have to move stuff around
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 SplitDir = DIR.split(",")
-print (SplitDir)
+#print (SplitDir)
 for i in SplitDir:
     #scans set directory for .exe files
     for root, dirs, files in os.walk(i):
@@ -227,6 +227,9 @@ for i in SplitDir:
                 #-----------------------------------------------------------------
                  if ("&" in (result)):
                      andcheck = 1
+                     result = (r+result)
+                     splitresult = (r+splitresult)
+                     print (result+"\n"+splitresult)
                  else:
                     #the below lines are for ensuring you don't have a 1,000,000,000 setup/uninstaller tools
                     #if you find something you know people will never use please add it to the blacklist for me
@@ -243,7 +246,7 @@ for i in SplitDir:
                              #some notes: the "result" after "splitresult" is to set the game icon
                              extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
                              #print (shortcut+extensions) #this line is for checking the output without it making shortcuts coding (the line below must be commented out or it will still make shortcuts)
-                             os.system('cmd /c'+'"'+shortcut+extensions+'"')
+                             #os.system('cmd /c'+'"'+shortcut+extensions+'"')
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 #just a couple of words for the user
 print ("")

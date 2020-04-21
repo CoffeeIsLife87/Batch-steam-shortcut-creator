@@ -26,6 +26,8 @@ It now detects whether or not your steam install is standard (and makes it easie
 
 It can now scan multiple directories (so you can add your itch.io games and your epic games store games as well as any others you may have)
 
+fixed not being able to add a game/program that contained an "&" in the path/name
+
 ## other ##
 
 I use [shortcut manager](https://github.com/CorporalQuesadilla/Steam-Shortcut-Manager) as well as ["documentation"](https://www.youtube.com/watch?v=dQw4w9WgXcQ) for setting the shortcuts

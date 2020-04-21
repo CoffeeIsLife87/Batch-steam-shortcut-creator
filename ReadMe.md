@@ -20,7 +20,7 @@ requires [python 3](https://www.python.org/ftp/python/3.8.2/python-3.8.2.exe) an
 
 Now Detects whether or not a game is a VR game based on whether or not one or both DLL files are present (openvr_api.dll / OVRPlugin.dll)
 
-It now removes old shortcuts (it does leave a "placeholder" shortcuts tho)
+It now removes old shortcuts (it does leave a "placeholder" shortcut tho)
 
 It now detects whether or not your steam install is standard (and makes it easier for the user if it is)
 

@@ -12,8 +12,8 @@
 
 # be able to remove game/tools after you delete them(this is not a foolproof method right now)
 # add detection for non-standard installations of steam 
-# allow multiple paths to scan (Is there an elegant method of doing this? YES! There is!) (medium prioity)
-# fix not being able to add games with path/name with "&" symbol (I have no clue how to do this) (low priority)
+# allow multiple paths to scan (Is there an elegant method of doing this? YES! There is!) 
+# fix not being able to add games with path/name with "&" symbol
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 

@@ -238,8 +238,8 @@ for i in SplitDir:
                      else:
                          splitresult = split_path(result)
                          if "&" in result:
-                             splitresult = splitresult.replace("&","&&")
-                             result = result.replace("&","&&")
+                             splitresult = splitresult.replace("&","&&&&")
+                             result = result.replace("&","&&&&")
                          #some notes: the "result" after "splitresult" is to set the game icon
                          extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
                          #print (shortcut+extensions) #this line is for checking the output without it making shortcuts while coding (the line below must be commented out or it will still make shortcuts)

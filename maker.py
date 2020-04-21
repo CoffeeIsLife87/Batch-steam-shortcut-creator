@@ -17,7 +17,7 @@
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
-import sys, os, getpass
+import os, getpass
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 #functions
@@ -243,8 +243,8 @@ for i in SplitDir:
                              #pass
                          #some notes: the "result" after "splitresult" is to set the game icon
                          extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
-                         #print (shortcut+extensions) #this line is for checking the output without it making shortcuts while coding (the line below must be commented out or it will still make shortcuts)
-                         os.system('cmd /c'+'"'+shortcut+extensions+'"')
+                         print (shortcut+extensions) #this line is for checking the output without it making shortcuts while coding (the line below must be commented out or it will still make shortcuts)
+                         #os.system('cmd /c'+'"'+shortcut+extensions+'"')
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 #just a couple of words for the user
 print ("")

@@ -28,8 +28,6 @@ def split_path(path):
   start, name = path.rsplit("\\", 1)
   #that makes sure that everything is spaced properly as well as adds double quotes to the names/paths
   return '"'+name.split(".")[0]+'"'+" "+'"'+path+'"'+" "+'"'+start+'"'
-
-shortcut = ('py -2 shortcuts.py') #this will be used later for running the second python script with the arguments after it
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Standard path check
@@ -61,7 +59,6 @@ if (DIRcheck == ""):
     DIRfile.close()
 else:
     DIR = DIRcheck
-    #print (DIR) #for debugging
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 #checks for steam ID or askes for it if it is not detected
@@ -80,7 +77,6 @@ if StandardSteamInstall == 1:
         steamIDfile.close()
     else:
         steamID = steamIDcheck
-        #print (steamID) #for debugging
 if StandardSteamInstall == 1:
     pathVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
     FullVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"')
@@ -97,7 +93,6 @@ if StandardSteamInstall == 0:
         steamIDfile.close()
     else:
         steamID = steamIDcheck
-        #print (steamID) #for debugging
 if StandardSteamInstall == 0:
     pathVDF = ('"'+SteamInstall+"\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
     FullVDF = ('"'+SteamInstall+"\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"')
@@ -108,8 +103,6 @@ readVDF = ('info\\shortcuts.vdf')
 # this replaces my windows username with the actual user's windows username
 readVDF1 = open('info\\shortcuts.vdf', 'r+')
 readVDF2 = readVDF1.read()
-#print(readVDF2) # for debugging
-
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 #this portion checks if you want to have it clean out as well as ask if the user wants to do this by default
 DefaultCleanBehaviour = open('info\\CleanoutByDefault.txt', 'r+')
@@ -154,19 +147,14 @@ andcheck = 0
 
 Junk, SplitStart = StartDefault.split("\\GitHub", 1)
 Start = (CWD+SplitStart)
-#print (Start) #debugging
-#print (SplitStart) #debugging
 #-------------------------------------------------------------------------------
 
 junk, SplitFull = FullDefault.split("\\GitHub", 1)
 Full = (CWD+SplitFull)
-#print (Full) #debugging
-#print (SplitFull) #debugging
 #-------------------------------------------------------------------------------
 
 NewShortCut = readVDF2.replace(StartDefault,Start)
 NewShortCut = NewShortCut.replace(FullDefault,Full)
-#print (NewShortCut) #debugging
 writeVDF = open('info\\shortcuts.vdf', 'w')
 writeVDF.write(NewShortCut)
 writeVDF.close()
@@ -181,8 +169,6 @@ copier = (CWD+"\\"+shortcuts+" "+splitVDF) # I don't know why this is how I did 
 if DoCleanout == 1:
     os.system("cmd /c del "+FullVDF) #removes outdated
     os.system("cmd /c copy "+copier) #adds the blank slate (minus the placeholder necissary for the script to work)
-#os.system("cmd /c del "+FullVDF) #removes outdated
-#os.system("cmd /c copy "+copier) #adds the blank slate (minus the placeholder necissary for the script to work)
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 # A bunch of variables that will be needed later
@@ -198,7 +184,6 @@ categories = '"non-steam-game" "FAVORITES" ' #I have the categories set as non s
 #extensions = (pathVDF+cleanresult+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories) #this is a template in case I have to move stuff around
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 SplitDir = DIR.split(",")
-#print (SplitDir)
 for i in SplitDir:
     #scans set directory for .exe files
     for root, dirs, files in os.walk(i):
@@ -236,15 +221,11 @@ for i in SplitDir:
                 # will be a non exsclusive version of the game as well so I blacklisted this to avoid 
                          pass
                      else:
+                         result = result.replace("&","&&&&")#having an "&" in tha path or game name would break the script before and I am not sure why this works but it does so I am not going to question it
                          splitresult = split_path(result)
-                         if "&" in result:
-                             splitresult = splitresult.replace("&","&&")
-                             result = result.replace("&","&&")
-                             #pass
-                         #some notes: the "result" after "splitresult" is to set the game icon
+                         shortcut = ('py -2 shortcuts.py') #the "result" after "splitresult" is to set the game icon
                          extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
-                         print (shortcut+extensions) #this line is for checking the output without it making shortcuts while coding (the line below must be commented out or it will still make shortcuts)
-                         #os.system('cmd /c'+'"'+shortcut+extensions+'"')
+                         os.system('cmd /c '+shortcut+extensions)
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 #just a couple of words for the user
 print ("")
@@ -252,9 +233,5 @@ print ("thanks for using my tool")
 print ("")
 print ("let me know if something broke @ https://github.com/herosilas12/autoItchtoSteamlibrary")
 print ("")
-if (andcheck == 1):
-    print ('BTW one of the apps/games you wanted to add to steam contained the "&" symbol, which for some reason breaks the script so you will have to add that app/game manually. sorry for the inconvienience')
 print ("")
 print ("")
-print ("")
-#close = input ("press enter to close")

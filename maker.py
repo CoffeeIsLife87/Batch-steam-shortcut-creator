@@ -240,8 +240,12 @@ for i in SplitDir:
                              pass
                          else:
                              splitresult = split_path(result)
+                             if inVRLibrary == "1 ":
+                                 LaunchOptions = ('"'+"-HmdEnable true"+'"')
+                             else:
+                                 LaunchOptions = '""'
                              #some notes: the "result" after "splitresult" is to set the game icon
-                             extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
+                             extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+LaunchOptions+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
                              #print (shortcut+extensions) #this line is for checking the output without it making shortcuts coding (the line below must be commented out or it will still make shortcuts)
                              os.system('cmd /c'+'"'+shortcut+extensions+'"')
 #----------------------------------------------------------------------------------------------------------------------------------------------------

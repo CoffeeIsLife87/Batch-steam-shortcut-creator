@@ -223,10 +223,7 @@ for i in SplitDir:
                          if inVRLibrary == "1 ":
                              LaunchOptions = ('"'+"-vrmode openvr"+'"')
                          else:
-                          if inVRLibrary == "1 ":
-                            LaunchOptions = ('"'+"-vrmode openvr"+'"')
-                          else:
-                            LaunchOptions = '""'
+                             LaunchOptions = '""'
                          result = result.replace("&","&&&&")#having an "&" in tha path or game name would break the script before and I am not sure why this works but it does so I am not going to question it
                          splitresult = split_path(result)
                          shortcut = ('py -2 shortcuts.py') #the "result" after "splitresult" is to set the game icon

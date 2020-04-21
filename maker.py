@@ -53,7 +53,7 @@ if StandardSteamInstall == 0:
 DIRfile = open('info\\Dirs.txt', 'r+')
 DIRcheck = DIRfile.read()
 if (DIRcheck == ""):
-    DIR = input("all of the directories you want scanned divided by a ',' (I.E. 'C:\\DirOne , C:\\DirTwo , B:\\games\\Itch games').\n This will work with only one directory only if you want to do 'C:\\itch games' or something of that nature ")
+    DIR = input("all of the directories you want scanned divided by a ',' (I.E. 'C:\\DirOne , C:\\DirTwo , B:\\games\\Itch games').\nIf you only have one directory than you can do 'C:\\itch games' or something of that nature ")
     DIRfile.write(DIR)
     DIRfile.close()
 else:
@@ -220,13 +220,16 @@ for i in SplitDir:
                 # will be a non exsclusive version of the game as well so I blacklisted this to avoid 
                          pass
                      else:
+                         if inVRLibrary == "1 ":
+                             LaunchOptions = ('"'+"-vrmode openvr"+'"')
+                         else:
+                             LaunchOptions = '""'
                          result = result.replace("&","&&&&")#having an "&" in tha path or game name would break the script before and I am not sure why this works but it does so I am not going to question it
                          splitresult = split_path(result)
                          shortcut = ('py -2 shortcuts.py') #the "result" after "splitresult" is to set the game icon
-                         extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
+                         extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+LaunchOptions+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
                          os.system('cmd /c '+shortcut+extensions)
 #----------------------------------------------------------------------------------------------------------------------------------------------------
-#just a couple of words for the user
 print ("")
 print ("thanks for using my tool")
 print ("")

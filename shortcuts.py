@@ -188,8 +188,6 @@ def inputPreperation(args, lastEntryInfo):
     var_shortcutPath    = '"' + args[6] + '"' # quoted? what is this?
     var_launchOptions   =       args[7]
 
-    return(var_appName,var_startDir)
-
     # Boolean checks
     if args[8] == '1':
         var_isHidden = '\x01'
@@ -249,4 +247,3 @@ def main():
 
     print getURL(inputTuple)
 main()
-print (var_appName,var_unquotedPath,var_startDir)

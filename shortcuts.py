@@ -173,6 +173,13 @@ def inputPreperation(args, lastEntryInfo):
     # This is the newest entry, one more than the last one.
     var_entryID = str(int(lastEntryInfo[0])+1)
 
+    # & removal
+    if "&&&&" in args[3]: #at the time of making this I was a new coder so forgive my non-standard methods of fixing this
+        args[2] = args[2].replace("&&&&","&")
+        args[3] = args[3].replace("&&&&","&")
+        args[4] = args[4].replace("&&&&","&")
+        args[5] = args[5].replace("&&&&","&")
+    
     # Strings
     var_appName         =       args[2]
     var_unquotedPath    = '"' + args[3] + '"'

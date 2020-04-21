@@ -2,7 +2,6 @@
 
 # ToDo
 
-# fix not being able to add games with path/name with "&" symbol (I have no clue how to do this) (low priority)
 # add the option to add all the games to favorite (is there a tag for that?) (medium priority)
 
 #let me know if there is something else you want me to add
@@ -14,10 +13,11 @@
 # be able to remove game/tools after you delete them(this is not a foolproof method right now)
 # add detection for non-standard installations of steam 
 # allow multiple paths to scan (Is there an elegant method of doing this? YES! There is!) (medium prioity)
+# fix not being able to add games with path/name with "&" symbol (I have no clue how to do this) (low priority)
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
-import sys, os, getpass
+import os, getpass
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 #functions
@@ -26,10 +26,7 @@ import sys, os, getpass
 def split_path(path):
   path = path
   start, name = path.rsplit("\\", 1)
-  #that makes sure that everything is spaced properly as well as adds double quotes to the names/paths
-  return '"'+name.split(".")[0]+'"'+" "+'"'+path+'"'+" "+'"'+start+'"'
-
-shortcut = ('py -2 shortcuts.py') #this will be used later for running the second python script with the arguments after it
+  return '"'+name.split(".")[0]+'"'+" "+'"'+path+'"'+" "+'"'+start+'"' #this line makes sure that everything is spaced properly as well as adds double quotes to the names/paths
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Standard path check
@@ -56,12 +53,11 @@ if StandardSteamInstall == 0:
 DIRfile = open('info\\Dirs.txt', 'r+')
 DIRcheck = DIRfile.read()
 if (DIRcheck == ""):
-    DIR = input("all of the directories you want scanned divided by a ',' (I.E. 'C:\\DirOne , C:\\DirTwo , B:\\games\\Itch games').\n This will work with only one directory only if you want to do 'C:\\itch games' or something of that nature ")
+    DIR = input("all of the directories you want scanned divided by a ',' (I.E. 'C:\\DirOne , C:\\DirTwo , B:\\games\\Itch games').\nIf you only have one directory than you can do 'C:\\itch games' or something of that nature ")
     DIRfile.write(DIR)
     DIRfile.close()
 else:
     DIR = DIRcheck
-    #print (DIR) #for debugging
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 #checks for steam ID or askes for it if it is not detected
@@ -80,7 +76,6 @@ if StandardSteamInstall == 1:
         steamIDfile.close()
     else:
         steamID = steamIDcheck
-        #print (steamID) #for debugging
 if StandardSteamInstall == 1:
     pathVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
     FullVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"')
@@ -97,7 +92,6 @@ if StandardSteamInstall == 0:
         steamIDfile.close()
     else:
         steamID = steamIDcheck
-        #print (steamID) #for debugging
 if StandardSteamInstall == 0:
     pathVDF = ('"'+SteamInstall+"\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
     FullVDF = ('"'+SteamInstall+"\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"')
@@ -108,8 +102,6 @@ readVDF = ('info\\shortcuts.vdf')
 # this replaces my windows username with the actual user's windows username
 readVDF1 = open('info\\shortcuts.vdf', 'r+')
 readVDF2 = readVDF1.read()
-#print(readVDF2) # for debugging
-
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 #this portion checks if you want to have it clean out as well as ask if the user wants to do this by default
 DefaultCleanBehaviour = open('info\\CleanoutByDefault.txt', 'r+')
@@ -154,19 +146,14 @@ andcheck = 0
 
 Junk, SplitStart = StartDefault.split("\\GitHub", 1)
 Start = (CWD+SplitStart)
-#print (Start) #debugging
-#print (SplitStart) #debugging
 #-------------------------------------------------------------------------------
 
 junk, SplitFull = FullDefault.split("\\GitHub", 1)
 Full = (CWD+SplitFull)
-#print (Full) #debugging
-#print (SplitFull) #debugging
 #-------------------------------------------------------------------------------
 
 NewShortCut = readVDF2.replace(StartDefault,Start)
 NewShortCut = NewShortCut.replace(FullDefault,Full)
-#print (NewShortCut) #debugging
 writeVDF = open('info\\shortcuts.vdf', 'w')
 writeVDF.write(NewShortCut)
 writeVDF.close()
@@ -181,8 +168,6 @@ copier = (CWD+"\\"+shortcuts+" "+splitVDF) # I don't know why this is how I did 
 if DoCleanout == 1:
     os.system("cmd /c del "+FullVDF) #removes outdated
     os.system("cmd /c copy "+copier) #adds the blank slate (minus the placeholder necissary for the script to work)
-#os.system("cmd /c del "+FullVDF) #removes outdated
-#os.system("cmd /c copy "+copier) #adds the blank slate (minus the placeholder necissary for the script to work)
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 # A bunch of variables that will be needed later
@@ -193,12 +178,11 @@ hidden = " 0 " #change the "0" to a "1" for hidden if you want to hide all the g
 allow_desktop_config = "1 "
 allow_steam_overlay = "1 "
 last_playtime = "0 " 
-categories = '"non-steam-game" "FAVORITES" ' #I have the categories set as non steam game but if you want to set it as something else then feel free
+categories = '"non-steam-game" ' #I have the categories set as non steam game but if you want to set it as something else then feel free
 
 #extensions = (pathVDF+cleanresult+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories) #this is a template in case I have to move stuff around
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 SplitDir = DIR.split(",")
-print (SplitDir)
 for i in SplitDir:
     #scans set directory for .exe files
     for root, dirs, files in os.walk(i):
@@ -225,39 +209,31 @@ for i in SplitDir:
                              if (DLLcheck1 == "OVRPlugin.dll"):
                                  inVRLibrary = ("1 ")
                 #-----------------------------------------------------------------
-                 if ("&" in (result)):
-                     andcheck = 1
+                #the below lines are for ensuring you don't have a 1,000,000,000 setup/uninstaller tools
+                #if you find something you know people will never use please add it to the blacklist for me
+                 blacklist = ("ffmpeg.exe","unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe","uninstall.exe","vc_redist","oalinst.exe","UE4Game-Win64-Shipping.exe","pythonw.exe","python.exe","Spatial Media Metadata Injector.exe","zsync.exe","zsyncmake.exe","Amazon Game Remover.exe","CrashReportClient.exe","-Win64-Shipping.exe","VrContainer32.exe","VrContainer64.exe","ViveportContent.exe","LAUNCHER.exe","LAUNCHER_x64.exe","DXSETUP.exe","vcredist_x86.exe","vcredist_x64.exe","ProLogLauncher.exe","ProLog.exe","QtWebEngineProcess.exe")
+                 if result.endswith(blacklist):
+                     pass
                  else:
-                    #the below lines are for ensuring you don't have a 1,000,000,000 setup/uninstaller tools
-                    #if you find something you know people will never use please add it to the blacklist for me
-                     blacklist = ("ffmpeg.exe","unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe","uninstall.exe","vc_redist","oalinst.exe","UE4Game-Win64-Shipping.exe","pythonw.exe","python.exe","Spatial Media Metadata Injector.exe","zsync.exe","zsyncmake.exe","Amazon Game Remover.exe","CrashReportClient.exe","-Win64-Shipping.exe","VrContainer32.exe","VrContainer64.exe","ViveportContent.exe","LAUNCHER.exe","LAUNCHER_x64.exe","DXSETUP.exe","vcredist_x86.exe","vcredist_x64.exe","ProLogLauncher.exe","ProLog.exe","QtWebEngineProcess.exe")
-                     if result.endswith(blacklist):
+                     if 'windows-i686' in result:
+                # "windows-i686" means that this is a strictly 64bit version of the app/game and often times there 
+                # will be a non exsclusive version of the game as well so I blacklisted this to avoid 
                          pass
                      else:
-                         if 'windows-i686' in result:
-                    # "windows-i686" means that this is a strictly 64bit version of the app/game and often times there 
-                    # will be a non exsclusive version of the game as well so I blacklisted this to avoid 
-                             pass
+                         if inVRLibrary == "1 ":
+                             LaunchOptions = ('"'+"-vrmode openvr"+'"')
                          else:
-                             splitresult = split_path(result)
-                             if inVRLibrary == "1 ":
-                                 LaunchOptions = ('"'+"-HmdEnable true"+'"')
-                             else:
-                                 LaunchOptions = '""'
-                             #some notes: the "result" after "splitresult" is to set the game icon
-                             extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+LaunchOptions+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
-                             #print (shortcut+extensions) #this line is for checking the output without it making shortcuts coding (the line below must be commented out or it will still make shortcuts)
-                             os.system('cmd /c'+'"'+shortcut+extensions+'"')
+                             LaunchOptions = '""'
+                         result = result.replace("&","&&&&")#having an "&" in tha path or game name would break the script before and I am not sure why this works but it does so I am not going to question it
+                         splitresult = split_path(result)
+                         shortcut = ('py -2 shortcuts.py') #the "result" after "splitresult" is to set the game icon
+                         extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+LaunchOptions+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
+                         os.system('cmd /c '+shortcut+extensions)
 #----------------------------------------------------------------------------------------------------------------------------------------------------
-#just a couple of words for the user
 print ("")
 print ("thanks for using my tool")
 print ("")
 print ("let me know if something broke @ https://github.com/herosilas12/autoItchtoSteamlibrary")
 print ("")
-if (andcheck == 1):
-    print ('BTW one of the apps/games you wanted to add to steam contained the "&" symbol, which for some reason breaks the script so you will have to add that app/game manually. sorry for the inconvienience')
 print ("")
 print ("")
-print ("")
-#close = input ("press enter to close")

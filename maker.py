@@ -53,7 +53,7 @@ if StandardSteamInstall == 0:
 DIRfile = open('info\\Dirs.txt', 'r+')
 DIRcheck = DIRfile.read()
 if (DIRcheck == ""):
-    DIR = input("all of the directories you want scanned divided by a ',' (I.E. 'C:\\DirOne , C:\\DirTwo , B:\\games\\Itch games').\nIf you only have one directory than you can do 'C:\\itch games' or something of that nature ")
+    DIR = input("all of the directories you want scanned divided by a ',' (I.E. 'C:\\DirOne,C:\\DirTwo,B:\\games\\Itch games').\nIf you only have one directory than you can do 'C:\\itch games' or something of that nature ")
     DIRfile.write(DIR)
     DIRfile.close()
 else:

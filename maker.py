@@ -2,7 +2,6 @@
 
 # ToDo
 
-# fix not being able to add games with path/name with "&" symbol (I have no clue how to do this) (low priority)
 # add the option to add all the games to favorite (is there a tag for that?) (medium priority)
 
 #let me know if there is something else you want me to add
@@ -14,6 +13,7 @@
 # be able to remove game/tools after you delete them(this is not a foolproof method right now)
 # add detection for non-standard installations of steam 
 # allow multiple paths to scan (Is there an elegant method of doing this? YES! There is!) (medium prioity)
+# fix not being able to add games with path/name with "&" symbol (I have no clue how to do this) (low priority)
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -26,8 +26,7 @@ import os, getpass
 def split_path(path):
   path = path
   start, name = path.rsplit("\\", 1)
-  #that makes sure that everything is spaced properly as well as adds double quotes to the names/paths
-  return '"'+name.split(".")[0]+'"'+" "+'"'+path+'"'+" "+'"'+start+'"'
+  return '"'+name.split(".")[0]+'"'+" "+'"'+path+'"'+" "+'"'+start+'"' #this line makes sure that everything is spaced properly as well as adds double quotes to the names/paths
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Standard path check
@@ -44,10 +43,10 @@ else:
         Install.write(SteamInstall)
         Install.close()
 #----------------------------------------------------------------------------------------------------------------------------------------------------
-#if StandardSteamInstall == 1:
-#    os.system('cmd /c '+'"C:\\Program Files (x86)\\Steam\\steam.exe" -shutdown') #this closes steam before running the rest of the script
-#if StandardSteamInstall == 0:
-#    os.system('cmd /c '+'"'+SteamInstall+'\\steam.exe" -shutdown')
+if StandardSteamInstall == 1:
+    os.system('cmd /c '+'"C:\\Program Files (x86)\\Steam\\steam.exe" -shutdown') #this closes steam before running the rest of the script
+if StandardSteamInstall == 0:
+    os.system('cmd /c '+'"'+SteamInstall+'\\steam.exe" -shutdown')
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 #checks for itch.io directory to scan and askes for one if it is not detected
@@ -179,7 +178,7 @@ hidden = " 0 " #change the "0" to a "1" for hidden if you want to hide all the g
 allow_desktop_config = "1 "
 allow_steam_overlay = "1 "
 last_playtime = "0 " 
-categories = '"non-steam-game" "FAVORITES" ' #I have the categories set as non steam game but if you want to set it as something else then feel free
+categories = '"non-steam-game" ' #I have the categories set as non steam game but if you want to set it as something else then feel free
 
 #extensions = (pathVDF+cleanresult+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories) #this is a template in case I have to move stuff around
 #----------------------------------------------------------------------------------------------------------------------------------------------------

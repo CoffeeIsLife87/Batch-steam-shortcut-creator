@@ -46,10 +46,10 @@ else:
         Install.write(SteamInstall)
         Install.close()
 #----------------------------------------------------------------------------------------------------------------------------------------------------
-if StandardSteamInstall == 1:
-    os.system('cmd /c '+'"C:\\Program Files (x86)\\Steam\\steam.exe" -shutdown') #this closes steam before running the rest of the script
-if StandardSteamInstall == 0:
-    os.system('cmd /c '+'"'+SteamInstall+'\\steam.exe" -shutdown')
+#if StandardSteamInstall == 1:
+#    os.system('cmd /c '+'"C:\\Program Files (x86)\\Steam\\steam.exe" -shutdown') #this closes steam before running the rest of the script
+#if StandardSteamInstall == 0:
+#    os.system('cmd /c '+'"'+SteamInstall+'\\steam.exe" -shutdown')
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 #checks for itch.io directory to scan and askes for one if it is not detected
@@ -225,29 +225,26 @@ for i in SplitDir:
                              if (DLLcheck1 == "OVRPlugin.dll"):
                                  inVRLibrary = ("1 ")
                 #-----------------------------------------------------------------
-                 splitresult = split_path(result)
-                 if ("&" in (result)):
-                     andcheck = 1
-                     result = ("\r"+result)
-                     splitresult = ("\r"+splitresult)
-                     print (splitresult)
-                 #else:
-                    #the below lines are for ensuring you don't have a 1,000,000,000 setup/uninstaller tools
-                    #if you find something you know people will never use please add it to the blacklist for me
-                     blacklist = ("ffmpeg.exe","unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe","uninstall.exe","vc_redist","oalinst.exe","UE4Game-Win64-Shipping.exe","pythonw.exe","python.exe","Spatial Media Metadata Injector.exe","zsync.exe","zsyncmake.exe","Amazon Game Remover.exe","CrashReportClient.exe","-Win64-Shipping.exe","VrContainer32.exe","VrContainer64.exe","ViveportContent.exe","LAUNCHER.exe","LAUNCHER_x64.exe","DXSETUP.exe","vcredist_x86.exe","vcredist_x64.exe","ProLogLauncher.exe","ProLog.exe","QtWebEngineProcess.exe")
-                     if result.endswith(blacklist):
+                #the below lines are for ensuring you don't have a 1,000,000,000 setup/uninstaller tools
+                #if you find something you know people will never use please add it to the blacklist for me
+                 blacklist = ("ffmpeg.exe","unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe","uninstall.exe","vc_redist","oalinst.exe","UE4Game-Win64-Shipping.exe","pythonw.exe","python.exe","Spatial Media Metadata Injector.exe","zsync.exe","zsyncmake.exe","Amazon Game Remover.exe","CrashReportClient.exe","-Win64-Shipping.exe","VrContainer32.exe","VrContainer64.exe","ViveportContent.exe","LAUNCHER.exe","LAUNCHER_x64.exe","DXSETUP.exe","vcredist_x86.exe","vcredist_x64.exe","ProLogLauncher.exe","ProLog.exe","QtWebEngineProcess.exe")
+                 if result.endswith(blacklist):
+                     pass
+                 else:
+                     if 'windows-i686' in result:
+                # "windows-i686" means that this is a strictly 64bit version of the app/game and often times there 
+                # will be a non exsclusive version of the game as well so I blacklisted this to avoid 
                          pass
                      else:
-                         if 'windows-i686' in result:
-                    # "windows-i686" means that this is a strictly 64bit version of the app/game and often times there 
-                    # will be a non exsclusive version of the game as well so I blacklisted this to avoid 
-                             pass
-                         else:
-                             #splitresult = split_path(result)
-                             #some notes: the "result" after "splitresult" is to set the game icon
-                             extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
-                             #print (shortcut+extensions) #this line is for checking the output without it making shortcuts coding (the line below must be commented out or it will still make shortcuts)
-                             os.system('cmd /c'+'"'+shortcut+extensions+'"')
+                         splitresult = split_path(result)
+                         if "&" in result:
+                             splitresult = splitresult.replace("&","&&")
+                             result = result.replace("&","&&")
+                             #pass
+                         #some notes: the "result" after "splitresult" is to set the game icon
+                         extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+'""'+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
+                         #print (shortcut+extensions) #this line is for checking the output without it making shortcuts while coding (the line below must be commented out or it will still make shortcuts)
+                         os.system('cmd /c'+'"'+shortcut+extensions+'"')
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 #just a couple of words for the user
 print ("")

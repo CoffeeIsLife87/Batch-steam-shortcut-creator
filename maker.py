@@ -201,7 +201,7 @@ for i in SplitDir:
                              DLLcheck1 = file
                              if (DLLcheck1 == "openvr_api.dll"):
                                  inVRLibrary = ("1 ")
-                                 LaunchOptions = ('"-vrmode openvr -HmdEnable 1"')
+                                 LaunchOptions = ('"-vr -vrmode openvr -HmdEnable 1"')
                  #this is the OVRplugin check
                  DLLcheck, junk = result.rsplit("\\", 1)
                  for base, sub, FL in os.walk(DLLcheck):
@@ -210,7 +210,7 @@ for i in SplitDir:
                              DLLcheck1 = file
                              if (DLLcheck1 == "OVRPlugin.dll"):
                                  if inVRLibrary == ("0 "):
-                                     LaunchOptions = ('"-vrmode oculus"')
+                                     LaunchOptions = ('"-vr -vrmode oculus"')
                                  inVRLibrary = ("1 ")
                 #-----------------------------------------------------------------
                 #the below lines are for ensuring you don't have a 1,000,000,000 setup/uninstaller tools

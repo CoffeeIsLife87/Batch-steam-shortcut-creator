@@ -63,7 +63,6 @@ else:
 #checks for steam ID or askes for it if it is not detected
 steamIDfile = open('info\\steamID.txt', 'r+')
 steamIDcheck = steamIDfile.read()
-# I had to rearange some stuff so it was easier to manage so if some things have comments that seem out of place that is why
 #-------------------------------------------------------------------------------
 
 if StandardSteamInstall == 1:
@@ -79,7 +78,7 @@ if StandardSteamInstall == 1:
 if StandardSteamInstall == 1:
     pathVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
     FullVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"')
-    splitVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config") #this is where it gets copied to 
+    splitVDF = ('"'+"C:\\Program Files (x86)\\Steam\\userdata\\"+steamID+"\\config")
 #-------------------------------------------------------------------------------
 
 if StandardSteamInstall == 0:
@@ -95,14 +94,10 @@ if StandardSteamInstall == 0:
 if StandardSteamInstall == 0:
     pathVDF = ('"'+SteamInstall+"\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"'+" ")
     FullVDF = ('"'+SteamInstall+"\\userdata\\"+steamID+"\\config\\shortcuts.vdf"+'"')
-    splitVDF = ('"'+SteamInstall+"\\userdata\\"+steamID+"\\config") #this is where it gets copied to 
+    splitVDF = ('"'+SteamInstall+"\\userdata\\"+steamID+"\\config")
 readVDF = ('info\\shortcuts.vdf')
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
-# this replaces my windows username with the actual user's windows username
-readVDF1 = open('info\\shortcuts.vdf', 'r+')
-readVDF2 = readVDF1.read()
-#----------------------------------------------------------------------------------------------------------------------------------------------------
 #this portion checks if you want to have it clean out as well as ask if the user wants to do this by default
 DefaultCleanBehaviour = open('info\\CleanoutByDefault.txt', 'r+')
 Defaultcheck = DefaultCleanBehaviour.read()
@@ -137,6 +132,11 @@ if Defaultcheck == "":
             EnsureCleanout = 0
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
+
+# this replaces my windows username with the actual user's windows username
+readVDF1 = open('info\\shortcuts.vdf', 'r+')
+readVDF2 = readVDF1.read()
+#-------------------------------------------------------------------------------
 
 StartDefault = ("C:\\Users\\heros\\OneDrive\\Documents\\GitHub\\autoItchtoSteamlibrary\\placeholder\\")
 FullDefault = ("C:\\Users\\heros\\OneDrive\\Documents\\GitHub\\autoItchtoSteamlibrary\\placeholder\\placeholder.exe")
@@ -188,7 +188,8 @@ for i in SplitDir:
     for root, dirs, files in os.walk(i):
         for file in files:
             if file.endswith(".exe"):
-                 result = (os.path.join(root, file))             
+                 result = (os.path.join(root, file))
+                 LaunchOptions = '""'
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 # the next subsection if a VR check to add the game to your VR library if it's sub/root folders have a certain .dll file (no its not flawless, but it gets the job done for now)
                 #this is the openVR_api check
@@ -200,6 +201,7 @@ for i in SplitDir:
                              DLLcheck1 = file
                              if (DLLcheck1 == "openvr_api.dll"):
                                  inVRLibrary = ("1 ")
+                                 LaunchOptions = ('"-vrmode openvr -HmdEnable 1"')
                  #this is the OVRplugin check
                  DLLcheck, junk = result.rsplit("\\", 1)
                  for base, sub, FL in os.walk(DLLcheck):
@@ -207,6 +209,8 @@ for i in SplitDir:
                          if file.endswith(".dll"):
                              DLLcheck1 = file
                              if (DLLcheck1 == "OVRPlugin.dll"):
+                                 if inVRLibrary == ("0 "):
+                                     LaunchOptions = ('"-vrmode oculus"')
                                  inVRLibrary = ("1 ")
                 #-----------------------------------------------------------------
                 #the below lines are for ensuring you don't have a 1,000,000,000 setup/uninstaller tools
@@ -220,10 +224,6 @@ for i in SplitDir:
                 # will be a non exsclusive version of the game as well so I blacklisted this to avoid 
                          pass
                      else:
-                         if inVRLibrary == "1 ":
-                             LaunchOptions = ('"'+"-vrmode openvr"+'"')
-                         else:
-                             LaunchOptions = '""'
                          result = result.replace("&","&&&&")#having an "&" in tha path or game name would break the script before and I am not sure why this works but it does so I am not going to question it
                          splitresult = split_path(result)
                          shortcut = ('py -2 shortcuts.py') #the "result" after "splitresult" is to set the game icon

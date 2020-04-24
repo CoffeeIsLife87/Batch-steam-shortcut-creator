@@ -14,6 +14,7 @@
 # add detection for non-standard installations of steam 
 # allow multiple paths to scan (Is there an elegant method of doing this? YES! There is!) 
 # fix not being able to add games with path/name with "&" symbol
+# fixed strange blank shortcut that came from a .exe with "MACOSX" in the path with the same name as a previous shortcut
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -219,16 +220,19 @@ for i in SplitDir:
                  if result.endswith(blacklist):
                      pass
                  else:
-                     if 'windows-i686' in result:
-                # "windows-i686" means that this is a strictly 64bit version of the app/game and often times there 
-                # will be a non exsclusive version of the game as well so I blacklisted this to avoid 
+                     if "MACOSX" in result:
                          pass
                      else:
-                         result = result.replace("&","&&&&")#having an "&" in tha path or game name would break the script before and I am not sure why this works but it does so I am not going to question it
-                         splitresult = split_path(result)
-                         shortcut = ('py -2 shortcuts.py') #the "result" after "splitresult" is to set the game icon
-                         extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+LaunchOptions+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
-                         os.system('cmd /c '+shortcut+extensions)
+                         if 'windows-i686' in result:
+                             pass
+                # "windows-i686" means that this is a strictly 64bit version of the app/game and often times there 
+                # will be a non exsclusive version of the game as well so I blacklisted this to avoid 
+                         else:
+                             result = result.replace("&","&&&&")#having an "&" in tha path or game name would break the script before and I am not sure why this works but it does so I am not going to question it                             splitresult = split_path(result)
+                             shortcut = ('py -2 shortcuts.py') #the "result" after "splitresult" is to set the game icon
+                             splitresult = split_path(result)
+                             extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+LaunchOptions+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
+                             os.system('cmd /c '+shortcut+extensions)
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 print ("")
 print ("thanks for using my tool")

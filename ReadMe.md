@@ -4,6 +4,8 @@ requires [python 3](https://www.python.org/ftp/python/3.8.2/python-3.8.2.exe) an
 
 * make sure you click "add python to path" when installing
 
+* also use py launcher (found when installing)
+
 ## Usage ##
 
 * Download/clone the repository or download the latest release 

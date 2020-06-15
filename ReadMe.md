@@ -1,9 +1,11 @@
 ## Prerequsites ##
 
-requires [python 3](https://www.python.org/ftp/python/3.8.2/python-3.8.2.exe) and [python 2](https://www.python.org/ftp/python/2.7.17/python-2.7.17.amd64.msi)
+ * [python 3](https://www.python.org/ftp/python/3.8.2/python-3.8.2.exe)
 
-* make sure you click "add python to path" when installing
+      make sure you click "add python to path" when installing
 
+ * [steam](store.steampowered.com)
+      duh
 ## Usage ##
 
 * Download/clone the repository or download the latest release 
@@ -27,6 +29,8 @@ It now detects whether or not your steam install is standard (and makes it easie
 It can now scan multiple directories (so you can add your itch.io games and your epic games store games as well as any others you may have)
 
 fixed not being able to add a game/program that contained an "&" in the path/name
+
+Now only requires python 3
 
 ## other ##
 

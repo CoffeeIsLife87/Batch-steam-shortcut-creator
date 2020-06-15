@@ -29,6 +29,9 @@ def split_path(path):
   start, name = path.rsplit("\\", 1)
   return '"'+name.split(".")[0]+'"'+" "+'"'+path+'"'+" "+'"'+start+'"' #this line makes sure that everything is spaced properly as well as adds double quotes to the names/paths
 #----------------------------------------------------------------------------------------------------------------------------------------------------
+# Blacklist
+Blacklist = open("info\\blacklist.txt" , 'r')
+BLread = Blacklist.read()
 
 # Standard path check
 if os.path.exists("C:\\Program Files (x86)\\Steam\\steam.exe"):
@@ -216,8 +219,7 @@ for i in SplitDir:
                 #-----------------------------------------------------------------
                 #the below lines are for ensuring you don't have a 1,000,000,000 setup/uninstaller tools
                 #if you find something you know people will never use please add it to the blacklist for me
-                 blacklist = ("ffmpeg.exe","unins000.exe", "UnityCrashHandler64.exe", "UnityCrashHandler32.exe", "UnrealCEFSubProcess.exe", "UE4PrereqSetup_x64.exe", "dxwebsetup.exe","uninstall.exe","vc_redist","oalinst.exe","UE4Game-Win64-Shipping.exe","pythonw.exe","python.exe","Spatial Media Metadata Injector.exe","zsync.exe","zsyncmake.exe","Amazon Game Remover.exe","CrashReportClient.exe","-Win64-Shipping.exe","VrContainer32.exe","VrContainer64.exe","ViveportContent.exe","LAUNCHER.exe","LAUNCHER_x64.exe","DXSETUP.exe","vcredist_x86.exe","vcredist_x64.exe","ProLogLauncher.exe","ProLog.exe","QtWebEngineProcess.exe")
-                 if result.endswith(blacklist):
+                 if result.endswith(BLread):
                      pass
                  else:
                      if "MACOSX" in result:
@@ -226,10 +228,10 @@ for i in SplitDir:
                          if 'windows-i686' in result:
                              pass
                 # "windows-i686" means that this is a strictly 64bit version of the app/game and often times there 
-                # will be a non exsclusive version of the game as well so I blacklisted this to avoid 
+                # will be a non exclusive version of the game as well so I blacklisted this to avoid duplicates
                          else:
                              result = result.replace("&","&&&&")#having an "&" in tha path or game name would break the script before and I am not sure why this works but it does so I am not going to question it                             splitresult = split_path(result)
-                             shortcut = ('py -2 shortcuts.py') #the "result" after "splitresult" is to set the game icon
+                             shortcut = ('py shortcuts.py') #the "result" after "splitresult" is to set the game icon
                              splitresult = split_path(result)
                              extensions = (" "+pathVDF+splitresult+" "+'"'+result+'"'+" "+'""'+" "+LaunchOptions+" "+hidden+allow_desktop_config+allow_steam_overlay+inVRLibrary+last_playtime+categories)
                              os.system('cmd /c '+shortcut+extensions)

@@ -1,3 +1,3 @@
 @rem runs tool , that's it
-python maker.py
+py -3 maker.py
 pause

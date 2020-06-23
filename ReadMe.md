@@ -5,7 +5,7 @@
       make sure you click "add python to path" when installing
 
  * [steam](store.steampowered.com)
-      duh
+      (duh)
 
 ## Usage ##
 

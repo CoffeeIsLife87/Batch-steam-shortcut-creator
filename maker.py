@@ -32,6 +32,7 @@ def split_path(path):
 # Blacklist
 Blacklist = open("info\\blacklist.txt" , 'r')
 BLread = Blacklist.read()
+BLread = tuple(BLread.split(' , '))
 
 # Standard path check
 if os.path.exists("C:\\Program Files (x86)\\Steam\\steam.exe"):

@@ -77,8 +77,6 @@ def GetInstallLocation():
                                                         SteamIDnum = dir
                                                         continue
                                             continue
-
-                        
     if OS == "Linux": #this will be used once I have a linux dev enviornment
         pass
     return SteamIDnum , SteamLocal

@@ -1,7 +1,8 @@
-import os , platform , string , time
+import os , platform , string , time , psutil , getpass
 
 #----------------------------------------------------------
 #variables
+UserName = getpass.getuser()
 OS = platform.system()
 
 Blacklist = open("info/blacklist.txt" , 'r')
@@ -12,8 +13,12 @@ BLread = tuple(BLread.split(' , '))
 #Functions
 def split_path(path):
     path = path
-    start, name = path.rsplit("\\", 1)
-    name , junk = (name.split('.', 1))
+    if OS == "Windows":
+        start, name = path.rsplit("\\", 1)
+        name , junk = (name.split('.', 1))
+    if OS == "Linux":
+        start, name = path.rsplit("/", 1)
+        name , junk = (name.split('.', 1))
             #name path start icon
     return ('"%s" "%s" "%s" "%s"'%(name , path , start , path))#this line makes sure that everything is spaced properly as well as adds double quotes to the names/paths
 
@@ -77,8 +82,19 @@ def GetInstallLocation():
                                                         SteamIDnum = dir
                                                         continue
                                             continue
-    if OS == "Linux": #this will be used once I have a linux dev enviornment
-        pass
+    if OS == "Linux":
+        for Root , Dirs , Files in os.walk("/"):
+            for file in Files:
+                if file == "steam.sh":
+                    SteamLocal = Root
+                    print ('\nfound steam install in "%s"'%SteamLocal)
+                    continue
+        IDCheck = "%s/userdata"%(SteamLocal)
+        for root , dirs , files in os.walk(IDCheck):
+            for dir in dirs:
+                if len(dir) == 9:
+                    SteamIDnum = dir
+                    continue
     return SteamIDnum , SteamLocal
 
 def getsettings():
@@ -109,37 +125,58 @@ def getsettings():
 
 def Cleanout():
     global ReplaceVDF
-    ReplaceVDF = ("%s\\userdata\\%s\\config"%(InstallLocation.replace('"','') , SteamID))
+    ReplaceVDF = ("%s/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID))
     if DefaultCleanout == 'yes':
-        BaseVDF = "info\\shortcuts.vdf"
+        BaseVDF = "info/shortcuts.vdf"
         if OS == "Windows":
             os.system('del "%s\\shortcuts.vdf"'%(ReplaceVDF))
             os.system('copy "%s" "%s"'%(BaseVDF , ReplaceVDF))
+        if OS == "Linux":
+            os.system('rm "%s/shortcuts.vdf"'%(ReplaceVDF))
+            os.system('cp "%s" "%s"'%(BaseVDF , ReplaceVDF))
     return
 
 def CloseSteam():
     if OS == "Windows":
         os.system('"%s\\steam.exe" -shutdown'%(InstallLocation.replace('"',''))) #this closes steam before running the rest of the script
+    if OS == "Linux":
+        try:
+            os.system("killall -HUP steam")
+        except:
+            print("Steam isn't running. Won't try to stop it")
     return
 
 def CheckDirs():
-    F = open("info\\Dirs.txt" , 'r')
-    if F.read() == '':
+    F = open("info/Dirs.txt" , 'r')
+    CheckForSplit = F.read()
+    if CheckForSplit == '':
         if OS == "Windows":
             print ("\nNow lets add some folders for scanning!")
             DirsToCheck = input('\nWhat Directories would you like to have scanned?\nIf you are doing multiple then seperate them as follows:\n       C:\\Games\\ItchGames , C:\\Games\\EpicGames , C:\\Games\\OtherGames\nMake sure that you seperate all your directories with space and then a comma and then another space " , " \n')
             WriteDirs = open("info\\Dirs.txt" , 'w')
             WriteDirs.write(DirsToCheck)
         if OS == "Linux":
-            DirsToCheck = input('\nWhat Directories would you like to have scanned\nIf you are doing multiple then seperate them as follows\n       home/Itch/Games , home/other/Games\nMake sure that you seperate all your directories with space and then a comma and then another space " , " ')
-    else:
-        F = open("info\\Dirs.txt" , 'r')
-        PathExists = F.read().split(" , ")
+            DirsToCheck = input('\nWhat Directories would you like to have scanned\nIf you are doing multiple then seperate them as follows\n       /home/%s/.config/itch/apps , /home/other/Games\nMake sure that you seperate all your directories with space and then a comma and then another space " , " '%UserName)
+            WriteDirs = open("info/Dirs.txt" , 'w')
+            WriteDirs.write(DirsToCheck)
+    if CheckForSplit == '':
+        CheckForSplit = WriteDirs
+    if " , " in CheckForSplit:
+        print("found a split")
+        PathExists = CheckForSplit.split(" , ")
         for CheckPath in PathExists:
             if os.path.exists(CheckPath):
                 getfiles(CheckPath)
+            else:
+                print('it looks like "%s" is an invalid directory'%CheckPath)
+    else:
+        if os.path.exists(CheckForSplit.replace("\n",'')):
+            getfiles(CheckForSplit.replace("\n",''))
+        else:
+            print('it looks like "%s" is an invalid directory'%CheckForSplit)
 
 def getfiles(dir):
+    LastFile = ""
     for Root , Dirs , Files in os.walk(dir):
         for file in Files:
             if OS == "Windows":
@@ -147,9 +184,18 @@ def getfiles(dir):
                     ExeFile = (os.path.join(Root , file))
                     InBlacklist(ExeFile)
             if OS == "Linux":
-                if file.endswith('.sh'):
-                    SHFile = (os.path.join(Root , file))
-                    InBlacklist(SHFile)
+                CheckFile = os.path.join(Root , file)
+                ExeCheck = os.access(CheckFile, os.X_OK)
+                if str(ExeCheck) == "True":
+                    if str(LastFile) in file:
+                        pass
+                    else:
+                        ExecFile = (os.path.join(Root , file))
+                        InBlacklist(ExecFile)
+                    if "." in file:
+                        LastFile = file.split(".",1)
+                    else:
+                        LastFile = file
 
 def InBlacklist(File):
     BLCheck = 0
@@ -159,6 +205,10 @@ def InBlacklist(File):
         BLCheck = 1
     if 'windows-i686' in File:
         BLCheck = 1
+    if File.endswith(".so"):
+        BLCheck = 1
+    if File.endswith(".dll"):
+        BLCheck = 1
     if BLCheck == 0:
         VRDLLcheck(File)
 
@@ -166,29 +216,33 @@ def VRDLLcheck(File):
     global LaunchOptions , inVRLibrary
     LaunchOptions = '""'
     inVRLibrary = "0"
-    DLLcheck, junk = File.rsplit("\\", 1)
-    for base, sub, FL in os.walk(DLLcheck):
-        for file in FL:
-            if file.endswith(".dll"):
-                DLLcheck1 = file
-                if (DLLcheck1 == "openvr_api.dll"):
-                    inVRLibrary = ("1")
-                    LaunchOptions = ('"-vr -vrmode openvr -HmdEnable 1"')
-    DLLcheck, junk = File.rsplit("\\", 1)
-    for base, sub, FL in os.walk(DLLcheck):
-        for file in FL:
-            if file.endswith(".dll"):
-                DLLcheck1 = file
-                if (DLLcheck1 == "OVRPlugin.dll"):
-                    if inVRLibrary == ("0"):
-                        LaunchOptions = ('"-vr -vrmode oculus"')
-                    inVRLibrary = ("1")
+    if OS == "Windows":
+        DLLcheck, junk = File.rsplit("\\", 1)
+        for base, sub, FL in os.walk(DLLcheck):
+            for file in FL:
+                if file.endswith(".dll"):
+                    DLLcheck1 = file
+                    if (DLLcheck1 == "openvr_api.dll"):
+                        inVRLibrary = ("1")
+                        LaunchOptions = ('"-vr -vrmode openvr -HmdEnable 1"')
+        DLLcheck, junk = File.rsplit("\\", 1)
+        for base, sub, FL in os.walk(DLLcheck):
+            for file in FL:
+                if file.endswith(".dll"):
+                    DLLcheck1 = file
+                    if (DLLcheck1 == "OVRPlugin.dll"):
+                        if inVRLibrary == ("0"):
+                            LaunchOptions = ('"-vr -vrmode oculus"')
+                        inVRLibrary = ("1")
     AddShortcut(File)
 
 def AddShortcut(File):
     if OS == "Windows":
         Run = ('"%s\\shortcuts.vdf" %s "" %s 0 1 1 %s 0 "Non-Steam-Game"'%(ReplaceVDF , split_path(File) , LaunchOptions , inVRLibrary))
         os.system("python shortcuts.py %s"%Run)
+    if OS == "Linux":
+        Run = ('"%s/shortcuts.vdf" %s "" %s 0 1 1 %s 0 "Non-Steam-Game"'%(ReplaceVDF , split_path(File) , LaunchOptions , inVRLibrary))
+        os.system("python3 shortcuts.py %s"%Run)
 
 def main():
     getsettings()

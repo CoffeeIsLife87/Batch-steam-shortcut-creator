@@ -1,4 +1,4 @@
-import os , platform , string , time , psutil , getpass
+import os , platform , string , time , getpass
 
 #----------------------------------------------------------
 #variables

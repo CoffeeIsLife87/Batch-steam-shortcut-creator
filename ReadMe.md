@@ -25,11 +25,11 @@ I am pretty sure linux compatibility is done, however I have only tested it on s
 
 The Re-Write is complete but I have not ported it to linux (I don't have linux or VM software and I don't care enought to install it but If I can get it to work in WSL then I will try)
 
-Now Detects whether or not a game is a VR game based on whether or not one or both DLL files are present (openvr_api.dll / OVRPlugin.dll)
+Now Detects whether or not a game is a VR game based on whether or not one or both DLL files are present (openvr_api.dll / OVRPlugin.dll), (not working on linux)
 
 It now removes old shortcuts (it does leave a "placeholder" shortcut tho)
 
-It now detects whether or not your steam install is standard (and makes it easier for the user if it is)
+It now detects whether or not your steam install is standard (and makes it easier for the user if it isn't)
 
 It can now scan multiple directories (so you can add your itch.io games and your epic games store games as well as any others you may have)
 

@@ -160,7 +160,7 @@ def CheckDirs():
             WriteDirs = open("info/Dirs.txt" , 'w')
             WriteDirs.write(DirsToCheck)
     if CheckForSplit == '':
-        CheckForSplit = WriteDirs
+        CheckForSplit = DirsToCheck
     if " , " in CheckForSplit:
         print("found a split")
         PathExists = CheckForSplit.split(" , ")

@@ -20,7 +20,8 @@ def split_path(path):
         name , _ = (name.split('.', 1))
     if OS == "Linux":
         start, name = path.rsplit("/", 1)
-        name , _ = (name.split('.', 1))
+        if "." in name:
+            name , _ = (name.split('.', 1))
             #name path start icon
     return ('"%s" "%s" "%s" "%s"'%(name , path , start , path))#this line makes sure that everything is spaced properly as well as adds double quotes to the names/paths
 

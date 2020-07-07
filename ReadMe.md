@@ -11,7 +11,7 @@
 
 * Download/clone the repository or download the latest release 
 
-* Run start.bat or run maker.py
+* Run start.bat or run makerV3.py
 
 * give it the info it needs to function
 

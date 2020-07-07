@@ -240,10 +240,9 @@ def getURL(inputTuple):
 
 def main():
     pathToShortcutsVDF = sys.argv[1]
-    # fileExistenceCheck() # check if file exists. NOT IMPLEMENTED YET.
     lastEntryInfo = findLastEntryNumberAndPosition(pathToShortcutsVDF)
     inputTuple = inputPreperation(sys.argv, lastEntryInfo)
     addEntry(pathToShortcutsVDF, inputTuple)
-
-    print (getURL(inputTuple))
+    getURL(inputTuple)
+    print ('added "%s" to your steam library'%(sys.argv[2]))
 main()

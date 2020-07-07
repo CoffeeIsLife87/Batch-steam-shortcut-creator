@@ -244,5 +244,5 @@ def main():
     inputTuple = inputPreperation(sys.argv, lastEntryInfo)
     addEntry(pathToShortcutsVDF, inputTuple)
     getURL(inputTuple)
-    print ('added "%s" to your steam library'%(sys.argv[2]))
+    print ('added "%s" to your steam library\n'%(sys.argv[2]))
 main()

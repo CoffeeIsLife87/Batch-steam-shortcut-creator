@@ -1,7 +1,9 @@
-import os , platform , string , time , getpass
+import os , platform , string , time , getpass 
 
 #----------------------------------------------------------
 #variables
+#For all of the "_"'s in the script that is an unused variable and pylint doesn't care so that's what I used
+AtLeastOneFile = 1 # this will tell the user if it didn't find anything
 UserName = getpass.getuser()
 OS = platform.system()
 
@@ -15,10 +17,10 @@ def split_path(path):
     path = path
     if OS == "Windows":
         start, name = path.rsplit("\\", 1)
-        name , junk = (name.split('.', 1))
+        name , _ = (name.split('.', 1))
     if OS == "Linux":
         start, name = path.rsplit("/", 1)
-        name , junk = (name.split('.', 1))
+        name , _ = (name.split('.', 1))
             #name path start icon
     return ('"%s" "%s" "%s" "%s"'%(name , path , start , path))#this line makes sure that everything is spaced properly as well as adds double quotes to the names/paths
 
@@ -28,7 +30,7 @@ def GetInstallLocation():
         if os.path.exists("C:\\Program Files (x86)\\Steam"):
             SteamLocal = "C:\\Program Files (x86)\\Steam"
             IDCheck = "%s\\userdata"%(SteamLocal)
-            for root , dirs , files in os.walk(IDCheck):
+            for _ , dirs , _ in os.walk(IDCheck):
                 for dir in dirs:
                     if len(dir) == 9:
                         SteamIDnum = dir
@@ -44,14 +46,14 @@ def GetInstallLocation():
                     ValidAnswer = 0
                     for i in DriveLetters:
                         i = i+"\\"
-                        for Root , Dirs , Files in os.walk(i):
+                        for Root , _ , Files in os.walk(i):
                             for file in Files:
                                 if file == "steam.exe":
                                     SteamLocal = Root
                                     print ('\nfound steam install in "%s"'%SteamLocal)
                                     continue
                     IDCheck = "%s\\userdata"%(SteamLocal)
-                    for root , dirs , files in os.walk(IDCheck):
+                    for _ , dirs , _ in os.walk(IDCheck):
                         for dir in dirs:
                             if len(dir) == 9:
                                 SteamIDnum = dir
@@ -62,7 +64,7 @@ def GetInstallLocation():
                     SteamLocal = input(" \nSince you didn't want to scan for it can you copy and paste the location of the steam base folder (The one that has steam.exe in it)\n")
                     if os.path.exists(SteamLocal):
                         IDCheck = "%s\\userdata"%(SteamLocal)
-                        for root , dirs , files in os.walk(IDCheck):
+                        for _ , dirs , _ in os.walk(IDCheck):
                             for dir in dirs:
                                 if len(dir) == 9:
                                     SteamIDnum = dir
@@ -71,26 +73,31 @@ def GetInstallLocation():
                         while UserError == 1:
                             SteamLocal = input("Looks like the path you entered isn't valid\n\nplease make sure the path you are entering is correct\n")
                             if os.path.exists(SteamLocal):
-                                for Root , Dirs , Files in os.walk(SteamLocal):
+                                for Root , _ , Files in os.walk(SteamLocal):
                                     for file in Files:
                                         if file == "steam.exe":
                                             UserError = 0
                                             IDCheck = "%s\\userdata"%(SteamLocal)
-                                            for root , dirs , files in os.walk(IDCheck):
+                                            for _ , dirs , _ in os.walk(IDCheck):
                                                 for dir in dirs:
                                                     if len(dir) == 9:
                                                         SteamIDnum = dir
                                                         continue
                                             continue
     if OS == "Linux":
-        for Root , Dirs , Files in os.walk("/"):
-            for file in Files:
-                if file == "steam.sh":
-                    SteamLocal = Root
-                    print ('\nfound steam install in "%s"'%SteamLocal)
-                    continue
+        foundit = 1
+        for Root , _ , Files in os.walk("/"):
+            if foundit == 1:
+                for file in Files:
+                    if file == "steam.sh":
+                        foundit = 0
+                        SteamLocal = Root
+                        print ('\nfound steam install in "%s"'%SteamLocal)
+                        continue
+            else:
+                continue
         IDCheck = "%s/userdata"%(SteamLocal)
-        for root , dirs , files in os.walk(IDCheck):
+        for _ , dirs , _ in os.walk(IDCheck):
             for dir in dirs:
                 if len(dir) == 9:
                     SteamIDnum = dir
@@ -98,12 +105,12 @@ def GetInstallLocation():
     return SteamIDnum , SteamLocal
 
 def getsettings():
-    global SteamID , InstallLocation , DefaultCleanout
+    global SteamID , InstallLocation , DefaultCleanout , Proton
     #settings are layed out like "SteamID , Steam Install Location , cleanout by default"
     SettingFile = open("info/settings" , 'r')
     SavedSettings = SettingFile.read()
-    SteamID , InstallLocation , DefaultCleanout = SavedSettings.split(' , ')
-    if SavedSettings == "'' , '' , ''":
+    SteamID , InstallLocation , DefaultCleanout , Proton = SavedSettings.split(' , ')
+    if SavedSettings == "'' , '' , '' , ''":
         print ("\n\nLooks like you have never used this tool before (or you downloaded a new version or something)\nlets go through some setup.\n")
         time.sleep(0.5)
         properanswer = 0
@@ -115,11 +122,20 @@ def getsettings():
             if DefaultCleanout == ("n"):
                 Cleanout = "no"
                 properanswer = 1
+        properanswer2 = 0
+        while properanswer2 == 0:
+            EnableProton = input("\nwould you like to enable proton for running windows games?(THIS IS HIGHLY EXPERIMENTAL! IT MIGHT BE BROKEN DEPENDING ON THE GAME) (y/n)")
+            if EnableProton == ("y"):
+                Proton = "yes"
+                properanswer2 = 1
+            if EnableProton == ("n"):
+                Proton = "no"
+                properanswer2 = 1
         GetInstallLocation()
         SettingsWrite = open("info/settings" , 'w')
         SteamID = SteamID.replace(SteamID , SteamIDnum)
         InstallLocation = InstallLocation.replace(InstallLocation , SteamLocal)
-        FullSettings = ('%s , "%s" , %s'%(SteamID , InstallLocation , Cleanout))
+        FullSettings = ('%s , "%s" , %s , %s'%(SteamID , InstallLocation , Cleanout , Proton))
         SettingsWrite.write(FullSettings)
     return SteamID , InstallLocation , DefaultCleanout
 
@@ -140,14 +156,23 @@ def CloseSteam():
     if OS == "Windows":
         os.system('"%s\\steam.exe" -shutdown'%(InstallLocation.replace('"',''))) #this closes steam before running the rest of the script
     if OS == "Linux":
-        try:
-            os.system("killall -HUP steam")
-        except:
-            print("Steam isn't running. Won't try to stop it")
+        def checkIfProcessRunning():
+            SteamRunning = os.popen('ps -aux | grep steam').read()
+            #print(SteamRunning)
+            SteamSH = ("%s/steam.sh"%InstallLocation.replace('"',''))
+            if SteamSH in SteamRunning:
+                return "True"
+        if checkIfProcessRunning() == "True":
+            print("Steam is running. Stopping for shortcuts creation")
+            os.system("pkill steam")
+        else:
+            print("\nSteam isn't running. Won't try to stop it\n")
+            pass
     return
 
 def CheckDirs():
     F = open("info/Dirs.txt" , 'r')
+    NewPaths = ""
     CheckForSplit = F.read()
     if CheckForSplit == '':
         if OS == "Windows":
@@ -162,22 +187,38 @@ def CheckDirs():
     if CheckForSplit == '':
         CheckForSplit = DirsToCheck
     if " , " in CheckForSplit:
-        print("found a split")
         PathExists = CheckForSplit.split(" , ")
         for CheckPath in PathExists:
             if os.path.exists(CheckPath):
                 getfiles(CheckPath)
             else:
-                print('it looks like "%s" is an invalid directory'%CheckPath)
+                print('it looks like "%s" is an invalid directory, skipping'%CheckPath)
+                for i in PathExists:
+                    if i == CheckPath:
+                        pass
+                    else:
+                        if len(NewPaths) > 1:
+                            NewPaths = ("%s , %s"%(NewPaths , i))
+                        else:
+                            NewPaths = i
+                StripPaths = ("[" , "]" , "'")
+                for symbol in StripPaths:
+                    if symbol in PathExists:
+                        print("got to symbols")
+                        PathExists = PathExists.replace(symbol , '')
+                WriteDirs = open("info/Dirs.txt" , 'w')
+                WriteDirs.write(NewPaths)
     else:
         if os.path.exists(CheckForSplit.replace("\n",'')):
             getfiles(CheckForSplit.replace("\n",''))
         else:
-            print('it looks like "%s" is an invalid directory'%CheckForSplit)
+            print('it looks like "%s" is an invalid directory, make sure you spelled everything (and capitalized if you are on linux) correctly'%CheckForSplit)
+            WriteDirs = open("info/Dirs.txt" , 'w')
+            WriteDirs.write("")
 
 def getfiles(dir):
-    LastFile = ""
-    for Root , Dirs , Files in os.walk(dir):
+    global AtLeastOneFile
+    for Root , _ , Files in os.walk(dir):
         for file in Files:
             if OS == "Windows":
                 if file.endswith(".exe"):
@@ -187,15 +228,16 @@ def getfiles(dir):
                 CheckFile = os.path.join(Root , file)
                 ExeCheck = os.access(CheckFile, os.X_OK)
                 if str(ExeCheck) == "True":
-                    if str(LastFile) in file:
-                        pass
-                    else:
-                        ExecFile = (os.path.join(Root , file))
-                        InBlacklist(ExecFile)
-                    if "." in file:
-                        LastFile = file.split(".",1)
-                    else:
-                        LastFile = file
+                    ExecFile = (os.path.join(Root , file))
+                    InBlacklist(ExecFile)
+                    AtLeastOneFile = 0
+                if Proton == "yes":
+                    if file.endswith(".exe"):
+                        ExeFile = (os.path.join(Root , file))
+                        InBlacklist(ExeFile)
+                    AtLeastOneFile = 0
+                else:
+                    pass
 
 def InBlacklist(File):
     BLCheck = 0
@@ -217,16 +259,16 @@ def VRDLLcheck(File):
     LaunchOptions = '""'
     inVRLibrary = "0"
     if OS == "Windows":
-        DLLcheck, junk = File.rsplit("\\", 1)
-        for base, sub, FL in os.walk(DLLcheck):
+        DLLcheck, _ = File.rsplit("\\", 1)
+        for _ , _ , FL in os.walk(DLLcheck):
             for file in FL:
                 if file.endswith(".dll"):
                     DLLcheck1 = file
                     if (DLLcheck1 == "openvr_api.dll"):
                         inVRLibrary = ("1")
                         LaunchOptions = ('"-vr -vrmode openvr -HmdEnable 1"')
-        DLLcheck, junk = File.rsplit("\\", 1)
-        for base, sub, FL in os.walk(DLLcheck):
+        DLLcheck , _ = File.rsplit("\\", 1)
+        for _ , _ , FL in os.walk(DLLcheck):
             for file in FL:
                 if file.endswith(".dll"):
                     DLLcheck1 = file
@@ -249,6 +291,8 @@ def main():
     CloseSteam()
     Cleanout()
     CheckDirs()
+    if AtLeastOneFile == 1:
+        print("You might want to check that you set the right path as I couldn't find anything to add\n")
     return
 
 main()

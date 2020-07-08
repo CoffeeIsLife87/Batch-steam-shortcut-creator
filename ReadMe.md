@@ -1,15 +1,15 @@
-## Prerequsites ##
+# Prerequsites #
 
- * [python 3](https://www.python.org/ftp/python/3.8.2/python-3.8.2.exe)
+* [python 3](https://www.python.org/ftp/python/3.8.2/python-3.8.2.exe)
 
       make sure you click "add python to path" when installing for windows
 
- * [steam](https://store.steampowered.com/)
+* [steam](https://store.steampowered.com/)
       (duh)
 
 ## Usage ##
 
-* Download/clone the repository or download the latest release 
+* Download/clone the repository or download the latest release
 
 * Run start.bat or run makerV3.py
 
@@ -49,7 +49,7 @@ itch has HTML games so I should probably check on those
 
 ## known issues ##
 
-if there is a 64bit and a 32bit version of an application it will add both (on linux at least)
+if there is a 64bit and a 32bit version of an application it will add both (on linux at least)(resolved?)
 
 There are no icons for shortcuts on linux
 

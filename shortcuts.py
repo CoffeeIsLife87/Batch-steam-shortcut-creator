@@ -240,9 +240,13 @@ def getURL(inputTuple):
 
 def main():
     pathToShortcutsVDF = sys.argv[1]
-    lastEntryInfo = findLastEntryNumberAndPosition(pathToShortcutsVDF)
-    inputTuple = inputPreperation(sys.argv, lastEntryInfo)
-    addEntry(pathToShortcutsVDF, inputTuple)
-    getURL(inputTuple)
-    print ('added "%s" to your steam library\n'%(sys.argv[2]))
+    CheckForName = open(pathToShortcutsVDF , 'r')
+    if sys.argv[2] in CheckForName.read():
+        print('the shortcut for the game/app "%s" is already added\n'%sys.argv[2])
+    else:
+        lastEntryInfo = findLastEntryNumberAndPosition(pathToShortcutsVDF)
+        inputTuple = inputPreperation(sys.argv, lastEntryInfo)
+        addEntry(pathToShortcutsVDF, inputTuple)
+        getURL(inputTuple)
+        print ('added "%s" to your steam library\n'%(sys.argv[2]))
 main()

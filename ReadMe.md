@@ -2,7 +2,7 @@
 
 * [python 3](https://www.python.org/ftp/python/3.8.2/python-3.8.2.exe)
 
-      make sure you click "add python to path" when installing for windows
+make sure you click "add python to path" when installing for windows
 
 * [steam](https://store.steampowered.com/)
       (duh)
@@ -20,6 +20,8 @@
 * enjoy! :)
 
 ## anouncements ##
+
+Fixed double shortcuts for games with 64bit and 32bit variants
 
 Now supports linux as well as Proton(partially)
 
@@ -48,8 +50,6 @@ Mac OS support? (anybody want that? make an issue and I will work on it)
 itch has HTML games so I should probably check on those
 
 ## known issues ##
-
-if there is a 64bit and a 32bit version of an application it will add both (on linux at least)(resolved?)
 
 There are no icons for shortcuts on linux
 

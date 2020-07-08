@@ -11,7 +11,7 @@ make sure you click "add python to path" when installing for windows
 
 * Download/clone the repository or download the latest release
 
-* Run start.bat or run makerV3.py
+* Run makerV3.py
 
 * give it the info it needs to function
 

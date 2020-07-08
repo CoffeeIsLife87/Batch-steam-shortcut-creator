@@ -25,7 +25,7 @@ Fixed double shortcuts for games with 64bit and 32bit variants
 
 Now supports linux as well as Proton(partially)
 
-I am pretty sure linux compatibility is done, however I have only tested it on stock ubuntu 20.04 LTS so there may be issues
+I am pretty sure linux compatibility is done, however I have only tested it on stock ubuntu 20.04 LTS and fedora 32 so there may be issues
 
 The Re-Write is complete
 

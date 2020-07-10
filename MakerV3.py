@@ -3,6 +3,7 @@ import os , platform , string , time , getpass
 #----------------------------------------------------------
 #variables
 #For all of the "_"'s in the script that is an unused variable and pylint doesn't care so that's what I used
+OldRoot = "                       "#if I did an empty string it wouldn't work, however, this works unless there is that many/more spaces in a row(I hope no one does that for thier title)
 UserName = getpass.getuser()
 OS = platform.system()
 
@@ -16,15 +17,24 @@ try:
     def split_path(path):
         path = path
         if OS == "Windows":
-            start, name = path.rsplit("\\", 1)
-            name , _ = (name.split('.', 1))
+            if path.endswith("index.html"):
+                name , _ = path.split(".")
+                S , name , _ = name.rsplit("\\",2)
+                start = os.path.join(S , name)
+            else:
+                start, name = path.rsplit("\\", 1)
+                name , _ = (name.split('.', 1))
         if OS == "Linux":
             start, name = path.rsplit("/", 1)
+            if path.endswith("index.html"):
+                if "." in path:
+                    name , _ = path.split(".")
+                name , _ = name.rsplit("\\",1)
             if "." in name:
                 name , _ = (name.split('.', 1))
+                print(name)
                 #name path start icon
         return ('"%s" "%s" "%s" "%s"'%(name , path , start , path))#this line makes sure that everything is spaced properly as well as adds double quotes to the names/paths
-
     def GetInstallLocation():
         global SteamLocal , SteamIDnum
         if OS == "Windows":
@@ -104,7 +114,6 @@ try:
                         SteamIDnum = dir
                         continue
         return SteamIDnum , SteamLocal
-
     def getsettings():
         global SteamID , InstallLocation , DefaultCleanout , Proton
         #settings are layed out like "SteamID , Steam Install Location , cleanout by default"
@@ -142,7 +151,6 @@ try:
             FullSettings = ('%s , "%s" , %s , %s'%(SteamID , InstallLocation , Cleanout , Proton))
             SettingsWrite.write(FullSettings)
         return SteamID , InstallLocation , DefaultCleanout
-
     def Cleanout():
         global ReplaceVDF
         #ReplaceVDF = ("%s/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID))
@@ -161,7 +169,6 @@ try:
                 os.system('rm "%s/shortcuts.vdf"'%(ReplaceVDF))
                 os.system('cp "%s" "%s"'%(BaseVDF , ReplaceVDF))
         return
-
     def CloseSteam():
         if OS == "Windows":
             def checkIfProcessRunningWin():
@@ -185,15 +192,14 @@ try:
                 print("\nSteam isn't running. Won't try to stop it\n")
                 pass
         return
-
-    def CheckDirs():
+    def CheckDirs(OldRoot):
         F = open("info/Dirs.txt" , 'r')
         NewPaths = ""
         CheckForSplit = F.read()
         if CheckForSplit == '':
             if OS == "Windows":
                 print ("\nNow lets add some folders for scanning!")
-                DirsToCheck = input('\nWhat Directories would you like to have scanned?\nIf you are doing multiple then seperate them as follows:\n       C:\\Games\\ItchGames , C:\\Games\\EpicGames , C:\\Games\\OtherGames\nMake sure that you seperate all your directories with space and then a comma and then another space " , " \n')
+                DirsToCheck = input('\nWhat Directories would you like to have scanned?\nIf you are doing multiple then seperate them as follows(this is an example BTW):\n       C:\\Games\\ItchGames , C:\\Games\\EpicGames , C:\\Games\\OtherGames\nMake sure that you seperate all your directories with space and then a comma and then another space " , " \n')
                 WriteDirs = open("info\\Dirs.txt" , 'w')
                 WriteDirs.write(DirsToCheck)
             if OS == "Linux":
@@ -206,7 +212,7 @@ try:
             PathExists = CheckForSplit.split(" , ")
             for CheckPath in PathExists:
                 if os.path.exists(CheckPath):
-                    getfiles(CheckPath)
+                    getfiles(CheckPath , OldRoot)
                 else:
                     print('it looks like "%s" is an invalid directory, skipping'%CheckPath)
                     for i in PathExists:
@@ -226,32 +232,47 @@ try:
                     WriteDirs.write(NewPaths)
         else:
             if os.path.exists(CheckForSplit.replace("\n",'')):
-                getfiles(CheckForSplit.replace("\n",''))
+                getfiles(CheckForSplit.replace("\n",'') , OldRoot)
             else:
                 print('it looks like "%s" is an invalid directory, make sure you spelled everything (and capitalized if you are on linux) correctly'%CheckForSplit)
                 WriteDirs = open("info/Dirs.txt" , 'w')
                 WriteDirs.write("")
-
-    def getfiles(dir):
+    def getfiles(dir , OldRoot):
+        global GameName
         for Root , _ , Files in os.walk(dir):
             for file in Files:
                 if OS == "Windows":
                     if file.endswith(".exe"):
                         ExeFile = (os.path.join(Root , file))
                         InBlacklist(ExeFile)
+                    if file == "index.html":
+                        if OldRoot in os.path.join(Root , file):
+                            pass
+                        else:
+                            _ , GameName , _ = Root.rsplit("\\",2)
+                            OldRoot = GameName
+                            HTMLFILE = (os.path.join(Root , file))
+                            InBlacklist(HTMLFILE)
                 if OS == "Linux":
                     CheckFile = os.path.join(Root , file)
                     ExeCheck = os.access(CheckFile, os.X_OK)
                     if str(ExeCheck) == "True":
                         ExecFile = (os.path.join(Root , file))
                         InBlacklist(ExecFile)
+                    if file == "index.html":
+                        if OldRoot in os.path.join(Root , file):
+                            pass
+                        else:
+                            _ , GameName , _ = Root.rsplit("\\",2)
+                            OldRoot = GameName
+                            HTMLFILE = (os.path.join(Root , file))
+                            InBlacklist(HTMLFILE)
                     if Proton == "yes":
                         if file.endswith(".exe"):
                             ExeFile = (os.path.join(Root , file))
                             InBlacklist(ExeFile)
                     else:
                         pass
-
     def InBlacklist(File):
         BLCheck = 0
         if File.endswith(BLread):
@@ -266,7 +287,6 @@ try:
             BLCheck = 1
         if BLCheck == 0:
             VRDLLcheck(File)
-
     def VRDLLcheck(File):
         global LaunchOptions , inVRLibrary
         LaunchOptions = '""'
@@ -290,7 +310,6 @@ try:
                                 LaunchOptions = ('"-vr -vrmode oculus"')
                             inVRLibrary = ("1")
         AddShortcut(File)
-
     def AddShortcut(File):
         if OS == "Windows":
             Run = ('"%s\\shortcuts.vdf" %s "" %s 0 1 1 %s 0 "Non-Steam-Game"'%(ReplaceVDF , split_path(File) , LaunchOptions , inVRLibrary))
@@ -298,15 +317,12 @@ try:
         if OS == "Linux":
             Run = ('"%s/shortcuts.vdf" %s "" %s 0 1 1 %s 0 "Non-Steam-Game"'%(ReplaceVDF , split_path(File) , LaunchOptions , inVRLibrary))
             os.system("python3 shortcuts.py %s"%Run)
-
     def main():
         getsettings()
         CloseSteam()
         Cleanout()
-        CheckDirs()
+        CheckDirs(OldRoot)
         return
-
     main()
-
 except:
     print("\n\n\n\noperation canceled by user using ctrl+c\n\n")

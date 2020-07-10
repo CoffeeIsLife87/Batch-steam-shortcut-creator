@@ -2,7 +2,7 @@
 
 * [python 3](https://www.python.org/ftp/python/3.8.2/python-3.8.2.exe)
 
-      make sure you click "add python to path" when installing for windows
+make sure you click "add python to path" when installing for windows
 
 * [steam](https://store.steampowered.com/)
       (duh)
@@ -11,7 +11,7 @@
 
 * Download/clone the repository or download the latest release
 
-* Run start.bat or run makerV3.py
+* Run makerV3.py
 
 * give it the info it needs to function
 
@@ -21,9 +21,11 @@
 
 ## anouncements ##
 
+Fixed double shortcuts for games with 64bit and 32bit variants
+
 Now supports linux as well as Proton(partially)
 
-I am pretty sure linux compatibility is done, however I have only tested it on stock ubuntu 20.04 LTS so there may be issues
+I am pretty sure linux compatibility is done, however I have only tested it on stock ubuntu 20.04 LTS and fedora 32 so there may be issues
 
 The Re-Write is complete
 
@@ -48,8 +50,6 @@ Mac OS support? (anybody want that? make an issue and I will work on it)
 itch has HTML games so I should probably check on those
 
 ## known issues ##
-
-if there is a 64bit and a 32bit version of an application it will add both (on linux at least)(resolved?)
 
 There are no icons for shortcuts on linux
 

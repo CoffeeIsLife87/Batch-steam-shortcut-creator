@@ -27,20 +27,10 @@ try:
         if OS == "Linux":
             start, name = path.rsplit("/", 1)
             if path.endswith("index.html"):
-                name , _ = path.split(".")
-                S , name , _ = name.rsplit("/",2)
-                start = os.path.join(S , name)
-            else:
-                start, name = path.rsplit("/", 1)
-                if "." in name:
-                    name , _ = (name.split('.', 1))
-            #if path.endswith("index.html"):
-            #    if "." in path:
-            #        name , _ = path.split(".")
-            #    name , _ = name.rsplit("\\",1)
-            #if "." in name:
-            #    name , _ = (name.split('.', 1))
-            #    print(name)
+                _ , name , _ = path.rsplit("/",2)
+                start , _= path.rsplit("/", 1)
+            if "." in name:
+                name , _ = (name.split('.', 1))
                 #name path start icon
         return ('"%s" "%s" "%s" "%s"'%(name , path , start , path))#this line makes sure that everything is spaced properly as well as adds double quotes to the names/paths
     def GetInstallLocation():
@@ -333,4 +323,4 @@ try:
         return
     main()
 except:
-    print("\n\n\n\noperation canceled by user using ctrl+c\n\n")
+    print("\n\n\n\noperation canceled by user using ctrl+c or an error occured\n\n")

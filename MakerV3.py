@@ -5,7 +5,7 @@ import os , platform , string , time , getpass
 #For all of the "_"'s in the script that is an unused variable and pylint doesn't care so that's what I used
 OldRoot = "                       "#if I did an empty string it wouldn't work, however, this works unless there is that many/more spaces in a row(I hope no one does that for thier title)
 UserName = getpass.getuser()
-OS = platform.system()
+OS = platform.system()# for whatever reason when I ported this to macOS catalina platform.system returned Darwin so macOS = Darwin in python
 
 Blacklist = open("info/blacklist.txt" , 'r')
 BLread = Blacklist.read()
@@ -13,7 +13,9 @@ BLread = BLread.replace('"','')
 BLread = tuple(BLread.split(' , '))
 #----------------------------------------------------------
 #Functions
-try:
+#try:
+yes = 1
+if yes == 1:
     def split_path(path):
         path = path
         if OS == "Windows":
@@ -29,7 +31,16 @@ try:
             if path.endswith("index.html"):
                 if "." in path:
                     name , _ = path.split(".")
-                name , _ = name.rsplit("\\",1)
+                name , _ = name.rsplit("/",1)
+            if "." in name:
+                name , _ = (name.split('.', 1))
+                print(name)
+        if OS == "Darwin":
+            start, name = path.rsplit("/", 1)
+            if path.endswith("index.html"):
+                if "." in path:
+                    name , _ = path.split(".")
+                name , _ = name.rsplit("/",1)
             if "." in name:
                 name , _ = (name.split('.', 1))
                 print(name)
@@ -113,6 +124,31 @@ try:
                     if len(dir) == 9:
                         SteamIDnum = dir
                         continue
+        if OS == "Darwin":
+            foundit = 1
+            for Root , _ , Files in os.walk("/Users/%s/"%UserName):
+                if foundit == 1:
+                    for file in Files:
+                        if "Steam" in Root:
+                            for CorrectDir , _ , _ in os.walk(Root):
+                                if foundit == 0:
+                                    continue
+                                    #print(CorrectDir)
+                                if ("userdata" in CorrectDir):
+                                    foundit = 0
+                                    print("found it")
+                                    SteamLocal = Root
+                                    print ('\nfound steam install in "%s"'%SteamLocal)
+                                    continue
+                            continue
+                else:
+                    continue
+            IDCheck = "%s/userdata"%(SteamLocal)
+            for _ , dirs , _ in os.walk(IDCheck):
+                for dir in dirs:
+                    if len(dir) == 9:
+                        SteamIDnum = dir
+                        continue
         return SteamIDnum , SteamLocal
     def getsettings():
         global SteamID , InstallLocation , DefaultCleanout , Proton
@@ -133,6 +169,8 @@ try:
                     Cleanout = "no"
                     properanswer = 1
             if OS == "Windows":
+                Proton = "no"
+            if OS == "Darwin":
                 Proton = "no"
             if OS == "Linux":
                 properanswer2 = 0
@@ -191,6 +229,24 @@ try:
             else:
                 print("\nSteam isn't running. Won't try to stop it\n")
                 pass
+        if OS == "Darwin":
+            def checkIfProcessRunningMac():
+                global SteamPID
+                SteamPID = os.popen("pgrep steam").read()
+                if SteamPID == '':
+                    pass
+                else:
+                    return "True"
+            if checkIfProcessRunningMac() == "True":
+                print("Steam is running. Stopping for shortcuts creation")
+                for ID in SteamPID.split("\n"):
+                    if ID == '':
+                        pass
+                    else:
+                        os.system("kill -HUP %s"%ID)
+            else:
+                print("\nSteam isn't running. Won't try to stop it\n")
+                pass
         return
     def CheckDirs(OldRoot):
         F = open("info/Dirs.txt" , 'r')
@@ -204,6 +260,10 @@ try:
                 WriteDirs.write(DirsToCheck)
             if OS == "Linux":
                 DirsToCheck = input('\nWhat Directories would you like to have scanned\nIf you are doing multiple then seperate them as follows\n       /home/%s/.config/itch/apps , /home/other/Games\nMake sure that you seperate all your directories with space and then a comma and then another space " , " '%UserName)
+                WriteDirs = open("info/Dirs.txt" , 'w')
+                WriteDirs.write(DirsToCheck)
+            if OS == "Darwin":
+                DirsToCheck = input('\nWhat Directories would you like to have scanned\nIf you are doing multiple then seperate them as follows\n       /Users/%s/Library/Application Support/itch/apps , /Users/%s/Games\nMake sure that you seperate all your directories with space and then a comma and then another space " , " '%(UserName , UserName))
                 WriteDirs = open("info/Dirs.txt" , 'w')
                 WriteDirs.write(DirsToCheck)
         if CheckForSplit == '':
@@ -234,7 +294,7 @@ try:
             if os.path.exists(CheckForSplit.replace("\n",'')):
                 getfiles(CheckForSplit.replace("\n",'') , OldRoot)
             else:
-                print('it looks like "%s" is an invalid directory, make sure you spelled everything (and capitalized if you are on linux) correctly'%CheckForSplit)
+                print('it looks like "%s" is an invalid directory, make sure you spelled everything (and capitalized if you are on linux/mac) correctly'%CheckForSplit)
                 WriteDirs = open("info/Dirs.txt" , 'w')
                 WriteDirs.write("")
     def getfiles(dir , OldRoot):
@@ -273,12 +333,18 @@ try:
                             InBlacklist(ExeFile)
                     else:
                         pass
+                if OS == "Darwin":
+                    if file.endswith(".app"):
+                        ExecFile = os.path.join(Root , file)
+                        print(ExecFile)
+                        AddShortcut(ExecFile)
     def InBlacklist(File):
         BLCheck = 0
         if File.endswith(BLread):
             BLCheck = 1
-        if "MACOSX" in File:
-            BLCheck = 1
+        if OS == "Windows" or "Linux":
+            if "MACOSX" in File:
+                BLCheck = 1
         if 'windows-i686' in File:
             BLCheck = 1
         if File.endswith(".so"):
@@ -309,6 +375,8 @@ try:
                             if inVRLibrary == ("0"):
                                 LaunchOptions = ('"-vr -vrmode oculus"')
                             inVRLibrary = ("1")
+        else:
+            pass
         AddShortcut(File)
     def AddShortcut(File):
         if OS == "Windows":
@@ -317,6 +385,10 @@ try:
         if OS == "Linux":
             Run = ('"%s/shortcuts.vdf" %s "" %s 0 1 1 %s 0 "Non-Steam-Game"'%(ReplaceVDF , split_path(File) , LaunchOptions , inVRLibrary))
             os.system("python3 shortcuts.py %s"%Run)
+        if OS == "Darwin":
+            Run = ('"%s/shortcuts.vdf" %s "" %s 0 1 1 %s 0 "Non-Steam-Game"'%(ReplaceVDF , split_path(File) , LaunchOptions , inVRLibrary))
+            print(Run)
+            #os.system("python3 shortcuts.py %s"%Run)
     def main():
         getsettings()
         CloseSteam()
@@ -324,5 +396,5 @@ try:
         CheckDirs(OldRoot)
         return
     main()
-except:
-    print("\n\n\n\noperation canceled by user using ctrl+c\n\n")
+#except:
+#    print("\n\n\n\noperation canceled by user using ctrl+c\n\n")

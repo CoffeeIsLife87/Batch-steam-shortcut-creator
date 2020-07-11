@@ -72,6 +72,8 @@
 #-------------------------------------------------------------------------------
 import sys
 import crc_algorithms
+import platform
+OS = platform.system()
 
 def findLastEntryNumberAndPosition(pathToShortcutsVDF):
     # From the end, search backwards to the beginning of the last entry to get it's ID
@@ -242,7 +244,10 @@ def main():
     pathToShortcutsVDF = sys.argv[1]
     CheckForName = open(pathToShortcutsVDF , 'r')
     if sys.argv[2] in CheckForName.read():
-        print('the shortcut for the game/app "%s" is already added\n'%sys.argv[2])
+        if OS == "Darwin":
+            pass
+        else:
+            print('the shortcut for the game/app "%s" is already added\n'%sys.argv[2])
     else:
         lastEntryInfo = findLastEntryNumberAndPosition(pathToShortcutsVDF)
         inputTuple = inputPreperation(sys.argv, lastEntryInfo)

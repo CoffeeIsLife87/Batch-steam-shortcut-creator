@@ -13,9 +13,7 @@ BLread = BLread.replace('"','')
 BLread = tuple(BLread.split(' , '))
 #----------------------------------------------------------
 #Functions
-#try:
-yes = 1
-if yes == 1:
+try:
     def split_path(path):
         path = path
         if OS == "Windows":
@@ -33,8 +31,13 @@ if yes == 1:
                 start , _= path.rsplit("/", 1)
             if "." in name:
                 name , _ = (name.split('.', 1))
+        if OS == "Darwin":
+            ActualPath , _ = path.split(".app",1)
+            ActualPath = ActualPath+".app"
+            start, name = ActualPath.rsplit("/", 1)
+            name , _ = (name.split('.', 1))
                 #name path start icon
-        return ('"%s" "%s" "%s" "%s"'%(name , path , start , path))#this line makes sure that everything is spaced properly as well as adds double quotes to the names/paths
+        return ('"%s" "%s" "%s" "%s"'%(name , ActualPath , start , ActualPath))#this line makes sure that everything is spaced properly as well as adds double quotes to the names/paths
     def GetInstallLocation():
         global SteamLocal , SteamIDnum
         if OS == "Windows":
@@ -122,7 +125,6 @@ if yes == 1:
                             for CorrectDir , _ , _ in os.walk(Root):
                                 if foundit == 0:
                                     continue
-                                    #print(CorrectDir)
                                 if ("userdata" in CorrectDir):
                                     foundit = 0
                                     print("found it")
@@ -180,7 +182,6 @@ if yes == 1:
         return SteamID , InstallLocation , DefaultCleanout
     def Cleanout():
         global ReplaceVDF
-        #ReplaceVDF = ("%s/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID))
         if DefaultCleanout == 'yes':
             if OS == "Windows":
                 BaseVDF = "info\\shortcuts.vdf"
@@ -191,6 +192,11 @@ if yes == 1:
                 else:
                     os.popen('copy "%s" "%s"'%(BaseVDF , ReplaceVDF))
             if OS == "Linux":
+                BaseVDF = "info/shortcuts.vdf"
+                ReplaceVDF = ("%s/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID))
+                os.system('rm "%s/shortcuts.vdf"'%(ReplaceVDF))
+                os.system('cp "%s" "%s"'%(BaseVDF , ReplaceVDF))
+            if OS == "Darwin":
                 BaseVDF = "info/shortcuts.vdf"
                 ReplaceVDF = ("%s/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID))
                 os.system('rm "%s/shortcuts.vdf"'%(ReplaceVDF))
@@ -260,6 +266,7 @@ if yes == 1:
         if " , " in CheckForSplit:
             PathExists = CheckForSplit.split(" , ")
             for CheckPath in PathExists:
+                print(CheckPath)
                 if os.path.exists(CheckPath):
                     getfiles(CheckPath , OldRoot)
                 else:
@@ -286,9 +293,9 @@ if yes == 1:
                 print('it looks like "%s" is an invalid directory, make sure you spelled everything (and capitalized if you are on linux/mac) correctly'%CheckForSplit)
                 WriteDirs = open("info/Dirs.txt" , 'w')
                 WriteDirs.write("")
-    def getfiles(dir , OldRoot):
+    def getfiles(scandir , OldRoot):
         global GameName
-        for Root , _ , Files in os.walk(dir):
+        for Root , _ , Files in os.walk(scandir):
             for file in Files:
                 if OS == "Windows":
                     if file.endswith(".exe"):
@@ -322,11 +329,9 @@ if yes == 1:
                             InBlacklist(ExeFile)
                     else:
                         pass
-                if OS == "Darwin":
-                    if file.endswith(".app"):
-                        ExecFile = os.path.join(Root , file)
-                        print(ExecFile)
-                        AddShortcut(ExecFile)
+                if OS == "Darwin":# in macOS .app files are treated as folders for NO REASON!
+                    if ".app" in Root:
+                        InBlacklist(Root)
     def InBlacklist(File):
         BLCheck = 0
         if File.endswith(BLread):
@@ -376,8 +381,7 @@ if yes == 1:
             os.system("python3 shortcuts.py %s"%Run)
         if OS == "Darwin":
             Run = ('"%s/shortcuts.vdf" %s "" %s 0 1 1 %s 0 "Non-Steam-Game"'%(ReplaceVDF , split_path(File) , LaunchOptions , inVRLibrary))
-            print(Run)
-            #os.system("python3 shortcuts.py %s"%Run)
+            os.system("python3 shortcuts.py %s"%Run)
     def main():
         getsettings()
         CloseSteam()
@@ -385,5 +389,5 @@ if yes == 1:
         CheckDirs(OldRoot)
         return
     main()
-#except:
-#    print("\n\n\n\noperation canceled by user using ctrl+c or an error occured\n\n")
+except:
+    print("\n\n\n\noperation canceled by user using ctrl+c or an error occured\n\n")

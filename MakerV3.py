@@ -29,21 +29,10 @@ if yes == 1:
         if OS == "Linux":
             start, name = path.rsplit("/", 1)
             if path.endswith("index.html"):
-                if "." in path:
-                    name , _ = path.split(".")
-                name , _ = name.rsplit("/",1)
+                _ , name , _ = path.rsplit("/",2)
+                start , _= path.rsplit("/", 1)
             if "." in name:
                 name , _ = (name.split('.', 1))
-                print(name)
-        if OS == "Darwin":
-            start, name = path.rsplit("/", 1)
-            if path.endswith("index.html"):
-                if "." in path:
-                    name , _ = path.split(".")
-                name , _ = name.rsplit("/",1)
-            if "." in name:
-                name , _ = (name.split('.', 1))
-                print(name)
                 #name path start icon
         return ('"%s" "%s" "%s" "%s"'%(name , path , start , path))#this line makes sure that everything is spaced properly as well as adds double quotes to the names/paths
     def GetInstallLocation():
@@ -323,7 +312,7 @@ if yes == 1:
                         if OldRoot in os.path.join(Root , file):
                             pass
                         else:
-                            _ , GameName , _ = Root.rsplit("\\",2)
+                            _ , GameName , _ = Root.rsplit("/",2)
                             OldRoot = GameName
                             HTMLFILE = (os.path.join(Root , file))
                             InBlacklist(HTMLFILE)
@@ -397,4 +386,4 @@ if yes == 1:
         return
     main()
 #except:
-#    print("\n\n\n\noperation canceled by user using ctrl+c\n\n")
+#    print("\n\n\n\noperation canceled by user using ctrl+c or an error occured\n\n")

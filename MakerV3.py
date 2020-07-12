@@ -198,6 +198,10 @@ try:
             InstallLocation = InstallLocation.replace(InstallLocation , SteamLocal)
             FullSettings = ('%s , "%s" , %s , %s'%(SteamID , InstallLocation , Cleanout , Proton))
             SettingsWrite.write(FullSettings)
+        if DefaultCleanout == 'y':
+            DefaultCleanout = Cleanout
+        if InstallLocation == '':
+            InstallLocation = SteamLocal
         return SteamID , InstallLocation , DefaultCleanout
     def Cleanout():
         global ReplaceVDF
@@ -215,8 +219,15 @@ try:
                 if os.path.exists("%s/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID)):
                     ReplaceVDF = ("%s/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID))
                 elif os.path.exists("%s/steam/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID)):
+                    print("yes steam")
                     ReplaceVDF = ("%s/steam/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID))
-                print(ReplaceVDF)
+                try:
+                    ReplaceVDF = ReplaceVDF
+                except:
+                    for Root , _ , Files in os.walk(InstallLocation.replace('"','')):
+                        for file in Files:
+                            if file == 'shortcuts.vdf':
+                                ReplaceVDF = os.path.join(Root , file)
                 os.popen('rm "%s/shortcuts.vdf"'%(ReplaceVDF))
                 os.system('cp "%s" "%s"'%(BaseVDF , ReplaceVDF))
             if OS == "Darwin":
@@ -418,4 +429,4 @@ try:
         return
     main()
 except:
-    print("\n\n\n\noperation canceled by user using ctrl+c or an error occured (if this is your first time running the script then run it again. for some reason it doesn't work the first run)\n\n")
+    print("\n\n\n\noperation canceled by user using ctrl+c or an error occured\n\n")

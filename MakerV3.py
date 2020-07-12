@@ -5,7 +5,8 @@ import os , platform , string , time , getpass
 #For all of the "_"'s in the script that is an unused variable and pylint doesn't care so that's what I used
 OldRoot = "                       "#if I did an empty string it wouldn't work, however, this works unless there is that many/more spaces in a row(I hope no one does that for thier title)
 UserName = getpass.getuser()
-OS = platform.system()
+SkipPath = '         '
+OS = platform.system()# for whatever reason when I ported this to macOS catalina platform.system returned Darwin so macOS = Darwin in python
 
 Blacklist = open("info/blacklist.txt" , 'r')
 BLread = Blacklist.read()
@@ -15,10 +16,10 @@ BLread = tuple(BLread.split(' , '))
 #Functions
 try:
     def split_path(path):
-        path = path
+        Path = path
         if OS == "Windows":
             if path.endswith("index.html"):
-                name , _ = path.split(".")
+                name , _ = Path.split(".")
                 S , name , _ = name.rsplit("\\",2)
                 start = os.path.join(S , name)
             else:
@@ -31,8 +32,21 @@ try:
                 start , _= path.rsplit("/", 1)
             if "." in name:
                 name , _ = (name.split('.', 1))
+        if OS == "Darwin":
+            global SkipPath
+            ActualPath , _ = path.split(".app",1)
+            Path = ActualPath+".app"
+            if SkipPath == '         ':
+                SkipPath = ActualPath
+            else:
+                if ActualPath in SkipPath:
+                    pass
+                else:
+                    SkipPath = "%s\n%s"%(SkipPath , ActualPath)
+            start, name = ActualPath.rsplit("/", 1)
+            name , _ = (name.split('.', 1))
                 #name path start icon
-        return ('"%s" "%s" "%s" "%s"'%(name , path , start , path))#this line makes sure that everything is spaced properly as well as adds double quotes to the names/paths
+        return ('"%s" "%s" "%s" "%s"'%(name , Path , start , Path))#this line makes sure that everything is spaced properly as well as adds double quotes to the names/paths
     def GetInstallLocation():
         global SteamLocal , SteamIDnum
         if OS == "Windows":
@@ -111,6 +125,30 @@ try:
                     if len(dir) == 9:
                         SteamIDnum = dir
                         continue
+        if OS == "Darwin":
+            foundit = 1
+            for Root , _ , Files in os.walk("/Users/%s/"%UserName):
+                if foundit == 1:
+                    for file in Files:
+                        if "Steam" in Root:
+                            for CorrectDir , _ , _ in os.walk(Root):
+                                if foundit == 0:
+                                    continue
+                                if ("userdata" in CorrectDir):
+                                    foundit = 0
+                                    print("found it")
+                                    SteamLocal = Root
+                                    print ('\nfound steam install in "%s"'%SteamLocal)
+                                    continue
+                            continue
+                else:
+                    continue
+            IDCheck = "%s/userdata"%(SteamLocal)
+            for _ , dirs , _ in os.walk(IDCheck):
+                for dir in dirs:
+                    if len(dir) == 9:
+                        SteamIDnum = dir
+                        continue
         return SteamIDnum , SteamLocal
     def getsettings():
         global SteamID , InstallLocation , DefaultCleanout , Proton
@@ -132,6 +170,8 @@ try:
                     properanswer = 1
             if OS == "Windows":
                 Proton = "no"
+            if OS == "Darwin":
+                Proton = "no"
             if OS == "Linux":
                 properanswer2 = 0
                 while properanswer2 == 0:
@@ -151,7 +191,6 @@ try:
         return SteamID , InstallLocation , DefaultCleanout
     def Cleanout():
         global ReplaceVDF
-        #ReplaceVDF = ("%s/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID))
         if DefaultCleanout == 'yes':
             if OS == "Windows":
                 BaseVDF = "info\\shortcuts.vdf"
@@ -162,6 +201,11 @@ try:
                 else:
                     os.popen('copy "%s" "%s"'%(BaseVDF , ReplaceVDF))
             if OS == "Linux":
+                BaseVDF = "info/shortcuts.vdf"
+                ReplaceVDF = ("%s/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID))
+                os.system('rm "%s/shortcuts.vdf"'%(ReplaceVDF))
+                os.system('cp "%s" "%s"'%(BaseVDF , ReplaceVDF))
+            if OS == "Darwin":
                 BaseVDF = "info/shortcuts.vdf"
                 ReplaceVDF = ("%s/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID))
                 os.system('rm "%s/shortcuts.vdf"'%(ReplaceVDF))
@@ -189,6 +233,24 @@ try:
             else:
                 print("\nSteam isn't running. Won't try to stop it\n")
                 pass
+        if OS == "Darwin":
+            def checkIfProcessRunningMac():
+                global SteamPID
+                SteamPID = os.popen("pgrep steam").read()
+                if SteamPID == '':
+                    pass
+                else:
+                    return "True"
+            if checkIfProcessRunningMac() == "True":
+                print("Steam is running. Stopping for shortcuts creation")
+                for ID in SteamPID.split("\n"):
+                    if ID == '':
+                        pass
+                    else:
+                        os.system("kill -HUP %s"%ID)
+            else:
+                print("\nSteam isn't running. Won't try to stop it\n")
+                pass
         return
     def CheckDirs(OldRoot):
         F = open("info/Dirs.txt" , 'r')
@@ -204,11 +266,16 @@ try:
                 DirsToCheck = input('\nWhat Directories would you like to have scanned\nIf you are doing multiple then seperate them as follows\n       /home/%s/.config/itch/apps , /home/other/Games\nMake sure that you seperate all your directories with space and then a comma and then another space " , " '%UserName)
                 WriteDirs = open("info/Dirs.txt" , 'w')
                 WriteDirs.write(DirsToCheck)
+            if OS == "Darwin":
+                DirsToCheck = input('\nWhat Directories would you like to have scanned\nIf you are doing multiple then seperate them as follows\n       /Users/%s/Library/Application Support/itch/apps , /Users/%s/Games\nMake sure that you seperate all your directories with space and then a comma and then another space " , " '%(UserName , UserName))
+                WriteDirs = open("info/Dirs.txt" , 'w')
+                WriteDirs.write(DirsToCheck)
         if CheckForSplit == '':
             CheckForSplit = DirsToCheck
         if " , " in CheckForSplit:
             PathExists = CheckForSplit.split(" , ")
             for CheckPath in PathExists:
+                print(CheckPath)
                 if os.path.exists(CheckPath):
                     getfiles(CheckPath , OldRoot)
                 else:
@@ -232,12 +299,12 @@ try:
             if os.path.exists(CheckForSplit.replace("\n",'')):
                 getfiles(CheckForSplit.replace("\n",'') , OldRoot)
             else:
-                print('it looks like "%s" is an invalid directory, make sure you spelled everything (and capitalized if you are on linux) correctly'%CheckForSplit)
+                print('it looks like "%s" is an invalid directory, make sure you spelled everything (and capitalized if you are on linux/mac) correctly'%CheckForSplit)
                 WriteDirs = open("info/Dirs.txt" , 'w')
                 WriteDirs.write("")
-    def getfiles(dir , OldRoot):
+    def getfiles(scandir , OldRoot):
         global GameName
-        for Root , _ , Files in os.walk(dir):
+        for Root , _ , Files in os.walk(scandir):
             for file in Files:
                 if OS == "Windows":
                     if file.endswith(".exe"):
@@ -271,12 +338,22 @@ try:
                             InBlacklist(ExeFile)
                     else:
                         pass
+                if OS == "Darwin":# in macOS .app files are treated as folders for NO REASON!
+                    if ".app" in Root:
+                        NoRepeasts = 1
+                        for i in SkipPath.split("\n"):
+                            if i in Root:
+                                NoRepeasts = 0
+                                continue
+                        if NoRepeasts == 1:
+                            InBlacklist(Root)
     def InBlacklist(File):
         BLCheck = 0
         if File.endswith(BLread):
             BLCheck = 1
-        if "MACOSX" in File:
-            BLCheck = 1
+        if OS == "Windows" or "Linux":
+            if "MACOSX" in File:
+                BLCheck = 1
         if 'windows-i686' in File:
             BLCheck = 1
         if File.endswith(".so"):
@@ -307,12 +384,17 @@ try:
                             if inVRLibrary == ("0"):
                                 LaunchOptions = ('"-vr -vrmode oculus"')
                             inVRLibrary = ("1")
+        else:
+            pass
         AddShortcut(File)
     def AddShortcut(File):
         if OS == "Windows":
             Run = ('"%s\\shortcuts.vdf" %s "" %s 0 1 1 %s 0 "Non-Steam-Game"'%(ReplaceVDF , split_path(File) , LaunchOptions , inVRLibrary))
             os.system("python shortcuts.py %s"%Run)
         if OS == "Linux":
+            Run = ('"%s/shortcuts.vdf" %s "" %s 0 1 1 %s 0 "Non-Steam-Game"'%(ReplaceVDF , split_path(File) , LaunchOptions , inVRLibrary))
+            os.system("python3 shortcuts.py %s"%Run)
+        if OS == "Darwin":
             Run = ('"%s/shortcuts.vdf" %s "" %s 0 1 1 %s 0 "Non-Steam-Game"'%(ReplaceVDF , split_path(File) , LaunchOptions , inVRLibrary))
             os.system("python3 shortcuts.py %s"%Run)
     def main():

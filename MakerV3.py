@@ -14,9 +14,7 @@ BLread = BLread.replace('"','')
 BLread = tuple(BLread.split(' , '))
 #----------------------------------------------------------
 #Functions
-#try:
-yes = 1
-if yes == 1:
+try:
     def split_path(path):
         Path = path
         if OS == "Windows":
@@ -429,5 +427,5 @@ if yes == 1:
         CheckDirs(OldRoot)
         return
     main()
-#except:
-#    print("\n\n\n\noperation canceled by user using ctrl+c or an error occured\n\n")
+except:
+    print("\n\n\n\noperation canceled by user using ctrl+c or an error occured\n\n")

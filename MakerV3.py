@@ -16,10 +16,10 @@ BLread = tuple(BLread.split(' , '))
 #Functions
 try:
     def split_path(path):
-        path = path
+        Path = path
         if OS == "Windows":
             if path.endswith("index.html"):
-                name , _ = path.split(".")
+                name , _ = Path.split(".")
                 S , name , _ = name.rsplit("\\",2)
                 start = os.path.join(S , name)
             else:
@@ -35,7 +35,7 @@ try:
         if OS == "Darwin":
             global SkipPath
             ActualPath , _ = path.split(".app",1)
-            ActualPath = ActualPath+".app"
+            Path = ActualPath+".app"
             if SkipPath == '         ':
                 SkipPath = ActualPath
             else:
@@ -46,7 +46,7 @@ try:
             start, name = ActualPath.rsplit("/", 1)
             name , _ = (name.split('.', 1))
                 #name path start icon
-        return ('"%s" "%s" "%s" "%s"'%(name , ActualPath , start , ActualPath))#this line makes sure that everything is spaced properly as well as adds double quotes to the names/paths
+        return ('"%s" "%s" "%s" "%s"'%(name , Path , start , Path))#this line makes sure that everything is spaced properly as well as adds double quotes to the names/paths
     def GetInstallLocation():
         global SteamLocal , SteamIDnum
         if OS == "Windows":

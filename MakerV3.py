@@ -14,7 +14,9 @@ BLread = BLread.replace('"','')
 BLread = tuple(BLread.split(' , '))
 #----------------------------------------------------------
 #Functions
-try:
+#try:
+yes = 1
+if yes == 1:
     def split_path(path):
         Path = path
         if OS == "Windows":
@@ -43,7 +45,7 @@ try:
                     pass
                 else:
                     SkipPath = "%s\n%s"%(SkipPath , ActualPath)
-            start, name = ActualPath.rsplit("/", 1)
+            start, name = Path.rsplit("/", 1)
             name , _ = (name.split('.', 1))
                 #name path start icon
         return ('"%s" "%s" "%s" "%s"'%(name , Path , start , Path))#this line makes sure that everything is spaced properly as well as adds double quotes to the names/paths
@@ -427,5 +429,5 @@ try:
         CheckDirs(OldRoot)
         return
     main()
-except:
-    print("\n\n\n\noperation canceled by user using ctrl+c or an error occured\n\n")
+#except:
+#    print("\n\n\n\noperation canceled by user using ctrl+c or an error occured\n\n")

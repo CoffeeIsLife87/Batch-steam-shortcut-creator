@@ -5,6 +5,7 @@ import os , platform , string , time , getpass
 #For all of the "_"'s in the script that is an unused variable and pylint doesn't care so that's what I used
 OldRoot = "                       "#if I did an empty string it wouldn't work, however, this works unless there is that many/more spaces in a row(I hope no one does that for thier title)
 UserName = getpass.getuser()
+SkipPath = '         '
 OS = platform.system()# for whatever reason when I ported this to macOS catalina platform.system returned Darwin so macOS = Darwin in python
 
 Blacklist = open("info/blacklist.txt" , 'r')
@@ -32,8 +33,16 @@ try:
             if "." in name:
                 name , _ = (name.split('.', 1))
         if OS == "Darwin":
+            global SkipPath
             ActualPath , _ = path.split(".app",1)
             ActualPath = ActualPath+".app"
+            if SkipPath == '         ':
+                SkipPath = ActualPath
+            else:
+                if ActualPath in SkipPath:
+                    pass
+                else:
+                    SkipPath = "%s\n%s"%(SkipPath , ActualPath)
             start, name = ActualPath.rsplit("/", 1)
             name , _ = (name.split('.', 1))
                 #name path start icon
@@ -331,7 +340,13 @@ try:
                         pass
                 if OS == "Darwin":# in macOS .app files are treated as folders for NO REASON!
                     if ".app" in Root:
-                        InBlacklist(Root)
+                        NoRepeasts = 1
+                        for i in SkipPath.split("\n"):
+                            if i in Root:
+                                NoRepeasts = 0
+                                continue
+                        if NoRepeasts == 1:
+                            InBlacklist(Root)
     def InBlacklist(File):
         BLCheck = 0
         if File.endswith(BLread):

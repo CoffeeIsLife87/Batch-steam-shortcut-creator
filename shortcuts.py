@@ -72,8 +72,6 @@
 #-------------------------------------------------------------------------------
 import sys
 import crc_algorithms
-import platform
-OS = platform.system()
 
 def findLastEntryNumberAndPosition(pathToShortcutsVDF):
     # From the end, search backwards to the beginning of the last entry to get it's ID
@@ -137,7 +135,7 @@ def createEntry(inputTuple):
     var_allowDeskConf   = inputTuple[8]
     var_allowOverlay    = inputTuple[9]
     var_openVR          = inputTuple[10]
-    var_lastPlayTime    = inputTuple[11]
+    #var_lastPlayTime    = inputTuple[11]
     var_tags            = inputTuple[12]
 
 
@@ -162,12 +160,11 @@ def createEntry(inputTuple):
     full_allowDeskConf  =  '\x02'  +  'AllowDesktopConfig'  +  '\x00'  +  var_allowDeskConf  +  '\x00\x00\x00'
     full_allowOverlay   =  '\x02'  +  'AllowOverlay'        +  '\x00'  +  var_allowOverlay   +  '\x00\x00\x00'
     full_openVR         =  '\x02'  +  'OpenVR'              +  '\x00'  +  var_openVR         +  '\x00\x00\x00'
-    full_lastPlayTime   =  '\x02'  +  'LastPlayTime'        +  '\x00'  +  var_lastPlayTime
+    #full_lastPlayTime   =  '\x02'  +  'LastPlayTime'        +  '\x00'  +  var_lastPlayTime
     full_tags           =  '\x00'  +  'tags'                +  '\x00'  +  var_tags           +  '\x08\x08'
 
     newEntry = full_entryID + full_appName + full_quotedPath + full_startDir + full_iconPath + full_shortcutPath + full_launchOptions + full_isHidden + full_allowDeskConf + full_allowOverlay + full_openVR + full_tags
     return newEntry
-    pass
 
 def inputPreperation(args, lastEntryInfo):
     # Get all the variables cleaned up
@@ -244,10 +241,7 @@ def main():
     pathToShortcutsVDF = sys.argv[1]
     CheckForName = open(pathToShortcutsVDF , 'r')
     if sys.argv[2] in CheckForName.read():
-        if OS == "Darwin":
-            pass
-        else:
-            print('the shortcut for the game/app "%s" is already added\n'%sys.argv[2])
+        print('the shortcut for the game/app "%s" is already added\n'%sys.argv[2])
     else:
         lastEntryInfo = findLastEntryNumberAndPosition(pathToShortcutsVDF)
         inputTuple = inputPreperation(sys.argv, lastEntryInfo)

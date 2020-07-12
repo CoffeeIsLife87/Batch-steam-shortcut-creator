@@ -212,10 +212,11 @@ try:
                     os.popen('copy "%s" "%s"'%(BaseVDF , ReplaceVDF))
             if OS == "Linux":
                 BaseVDF = "info/shortcuts.vdf"
-                if os.path.exists(("%s/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID))):
+                if os.path.exists("%s/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID)):
                     ReplaceVDF = ("%s/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID))
-                else:
+                elif os.path.exists("%s/steam/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID)):
                     ReplaceVDF = ("%s/steam/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID))
+                print(ReplaceVDF)
                 os.popen('rm "%s/shortcuts.vdf"'%(ReplaceVDF))
                 os.system('cp "%s" "%s"'%(BaseVDF , ReplaceVDF))
             if OS == "Darwin":
@@ -236,7 +237,6 @@ try:
         if OS == "Linux":
             def checkIfProcessRunningLinux():
                 SteamRunning = os.popen('ps -aux | grep steam').read()
-                #print(SteamRunning)
                 SteamSH = ("%s/steam.sh"%InstallLocation.replace('"',''))
                 if SteamSH in SteamRunning:
                     return "True"
@@ -418,4 +418,4 @@ try:
         return
     main()
 except:
-    print("\n\n\n\noperation canceled by user using ctrl+c or an error occured\n\n")
+    print("\n\n\n\noperation canceled by user using ctrl+c or an error occured (if this is your first time running the script then run it again. for some reason it doesn't work the first run)\n\n")

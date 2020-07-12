@@ -119,12 +119,22 @@ try:
                             continue
                 else:
                     continue
-            IDCheck = "%s/userdata"%(SteamLocal)
-            for _ , dirs , _ in os.walk(IDCheck):
-                for dir in dirs:
-                    if len(dir) == 9:
-                        SteamIDnum = dir
-                        continue
+            if os.path.exists("%s/userdata"%(SteamLocal)):
+                IDCheck = "%s/userdata"%(SteamLocal)
+                for _ , dirs , _ in os.walk(IDCheck):
+                    for dir in dirs:
+                        if len(dir) == 9:
+                            SteamIDnum = dir
+                            continue
+            else:
+                for Root , _ , _ in os.walk(SteamLocal):
+                    if Root.endswith('userdata'):
+                        SteamIDCheck = Root
+                for _ , dirs , _ in os.walk(SteamIDCheck):
+                    for dir in dirs:
+                        if len(dir) == 9:
+                            SteamIDnum = dir
+                            continue
         if OS == "Darwin":
             foundit = 1
             for Root , _ , Files in os.walk("/Users/%s/"%UserName):
@@ -202,8 +212,11 @@ try:
                     os.popen('copy "%s" "%s"'%(BaseVDF , ReplaceVDF))
             if OS == "Linux":
                 BaseVDF = "info/shortcuts.vdf"
-                ReplaceVDF = ("%s/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID))
-                os.system('rm "%s/shortcuts.vdf"'%(ReplaceVDF))
+                if os.path.exists(("%s/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID))):
+                    ReplaceVDF = ("%s/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID))
+                else:
+                    ReplaceVDF = ("%s/steam/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID))
+                os.popen('rm "%s/shortcuts.vdf"'%(ReplaceVDF))
                 os.system('cp "%s" "%s"'%(BaseVDF , ReplaceVDF))
             if OS == "Darwin":
                 BaseVDF = "info/shortcuts.vdf"

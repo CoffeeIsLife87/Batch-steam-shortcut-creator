@@ -219,7 +219,6 @@ try:
                 if os.path.exists("%s/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID)):
                     ReplaceVDF = ("%s/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID))
                 elif os.path.exists("%s/steam/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID)):
-                    print("yes steam")
                     ReplaceVDF = ("%s/steam/userdata/%s/config"%(InstallLocation.replace('"','') , SteamID))
                 try:
                     ReplaceVDF = ReplaceVDF

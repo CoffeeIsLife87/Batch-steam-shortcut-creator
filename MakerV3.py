@@ -14,7 +14,9 @@ BLread = BLread.replace('"','')
 BLread = tuple(BLread.split(' , '))
 #----------------------------------------------------------
 #Functions
-try:
+#try:
+yes = 1
+if yes == 1:
     def split_path(path):
         Path = path
         if OS == "Windows":
@@ -110,13 +112,15 @@ try:
         if OS == "Linux":
             foundit = 1
             for Root , _ , Files in os.walk("/"):
-                if foundit == 1:
-                    for file in Files:
-                        if file == "steam.sh":
-                            foundit = 0
-                            SteamLocal = Root
-                            print ('\nfound steam install in "%s"'%SteamLocal)
-                            continue
+                if any(steam in Root for steam in ('steam' , 'Steam')):
+                    if foundit == 1:
+                        for file in Files:
+                            if file == "steam.sh":
+                                print(Root)
+                                foundit = 0
+                                SteamLocal = Root
+                                print ('\nfound steam install in "%s"'%SteamLocal)
+                                continue
                 else:
                     continue
             if os.path.exists("%s/userdata"%(SteamLocal)):
@@ -227,7 +231,8 @@ try:
                         for file in Files:
                             if file == 'shortcuts.vdf':
                                 ReplaceVDF = os.path.join(Root , file)
-                os.popen('rm "%s/shortcuts.vdf"'%(ReplaceVDF))
+                if os.path.exists('%s/shortcuts.vdf'%ReplaceVDF):
+                    os.popen('rm "%s/shortcuts.vdf"'%(ReplaceVDF))
                 os.system('cp "%s" "%s"'%(BaseVDF , ReplaceVDF))
             if OS == "Darwin":
                 BaseVDF = "info/shortcuts.vdf"
@@ -427,5 +432,5 @@ try:
         CheckDirs(OldRoot)
         return
     main()
-except:
-    print("\n\n\n\noperation canceled by user using ctrl+c or an error occured\n\n")
+#except:
+#    print("\n\n\n\noperation canceled by user using ctrl+c or an error occured\n\n")

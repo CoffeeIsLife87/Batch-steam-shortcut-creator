@@ -432,5 +432,3 @@ if yes == 1:
         CheckDirs(OldRoot)
         return
     main()
-#except:
-#    print("\n\n\n\noperation canceled by user using ctrl+c or an error occured\n\n")

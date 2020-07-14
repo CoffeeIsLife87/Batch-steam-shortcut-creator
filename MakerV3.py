@@ -508,7 +508,7 @@ def GUI():
     Layer1 = 1
     while Layer1 == 1:
         ClearCLI()
-        WhichSetting = input('What would you like to change?\n\n(1)Enable/disable shortcut cleaning\n\n(2)Enable/Disable Proton shortcuts(exe games on linux)\n\n(3)Manage folders to scan\n\n(4)Add shortcuts\n\n(5)exit')
+        WhichSetting = input('What would you like to change?\n\n(1)Enable/disable shortcut cleaning\n\n(2)Enable/Disable Proton shortcuts(exe games on linux)\n\n(3)Manage folders to scan\n\n(4)Add shortcuts\n\n(5)exit\n')
         ReadSettings = open('info/settings','r')
         ReadSettings.seek(0)
         SteamID , InstallLocation , DefaultCleanout , Proton = ReadSettings.read().split(' , ')

@@ -427,6 +427,7 @@ def ClearCLI():
     if OS == "Windows":
         os.system('cls')
 def GUI():
+    getsettings()
     def WriteSettings(SteamID , InstallLocation , DefaultCleanout , Proton):
         SettingsFile = open('info/settings','w')
         SettingsFile.write('%s , %s , %s , %s'%(SteamID , InstallLocation , DefaultCleanout , Proton))
@@ -573,6 +574,6 @@ def run():
     CheckDirs(OldRoot)
     return
 def main():
-        GUI()
-        return
+    GUI()
+    return
 main()

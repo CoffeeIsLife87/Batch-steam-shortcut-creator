@@ -108,13 +108,15 @@ def GetInstallLocation():
     if OS == "Linux":
         foundit = 1
         for Root , _ , Files in os.walk("/"):
-            if foundit == 1:
-                for file in Files:
-                    if file == "steam.sh":
-                        foundit = 0
-                        SteamLocal = Root
-                        print ('\nfound steam install in "%s"'%SteamLocal)
-                        continue
+            if any(steam in Root for steam in ('steam' , 'Steam')):
+                if foundit == 1:
+                    for file in Files:
+                        if file == "steam.sh":
+                            print(Root)
+                            foundit = 0
+                            SteamLocal = Root
+                            print ('\nfound steam install in "%s"'%SteamLocal)
+                            continue
             else:
                 continue
         if os.path.exists("%s/userdata"%(SteamLocal)):

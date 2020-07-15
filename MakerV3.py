@@ -178,6 +178,7 @@ def getsettings():
             if DefaultCleanout == ("n"):
                 Cleanout = "no"
                 properanswer = 1
+
         if OS == "Windows":
             Proton = "no"
         if OS == "Darwin":

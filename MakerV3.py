@@ -111,12 +111,11 @@ def GetInstallLocation():
             if any(steam in Root for steam in ('steam' , 'Steam')):
                 if foundit == 1:
                     for file in Files:
-                        for file in Files:
-                            if file == "steam.sh":
-                                foundit = 0
-                                SteamLocal = Root
-                                print ('\nfound steam install in "%s"'%SteamLocal)
-                            continue
+                        if file == "steam.sh":
+                            foundit = 0
+                            SteamLocal = Root
+                            print ('\nfound steam install in "%s"'%SteamLocal)
+                        continue
             else:
                 continue
         if os.path.exists("%s/userdata"%(SteamLocal)):
@@ -178,6 +177,7 @@ def getsettings():
             if DefaultCleanout == ("n"):
                 Cleanout = "no"
                 properanswer = 1
+
         if OS == "Windows":
             Proton = "no"
         if OS == "Darwin":

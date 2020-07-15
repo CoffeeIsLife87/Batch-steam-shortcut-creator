@@ -3,7 +3,6 @@ import os , platform , string , time , getpass
 #----------------------------------------------------------
 #variables
 #For all of the "_"'s in the script that is an unused variable and pylint doesn't care so that's what I used
-OldRoot = "                       "#if I did an empty string it wouldn't work, however, this works unless there is that many/more spaces in a row(I hope no one does that for thier title)
 UserName = getpass.getuser()
 SkipPath = '         '
 OS = platform.system()# for whatever reason when I ported this to macOS catalina platform.system returned Darwin so macOS = Darwin in python
@@ -201,6 +200,8 @@ def getsettings():
         DefaultCleanout = Cleanout
     if InstallLocation == '':
         InstallLocation = SteamLocal
+    if open('info/Dirs.txt','r').read() == '':
+        NoDirs()
     return SteamID , InstallLocation , DefaultCleanout , Proton
 def Cleanout():
     global ReplaceVDF
@@ -276,9 +277,8 @@ def CloseSteam():
             print("\nSteam isn't running. Won't try to stop it\n")
             pass
     return
-def CheckDirs(OldRoot):
+def NoDirs():
     F = open("info/Dirs.txt" , 'r')
-    NewPaths = ""
     CheckForSplit = F.read()
     if CheckForSplit == '':
         if OS == "Windows":
@@ -294,39 +294,44 @@ def CheckDirs(OldRoot):
             DirsToCheck = input('\nWhat Directories would you like to have scanned\nIf you are doing multiple then seperate them as follows\n       /Users/%s/Library/Application Support/itch/apps , /Users/%s/Games\nMake sure that you seperate all your directories with space and then a comma and then another space " , " '%(UserName , UserName))
             WriteDirs = open("info/Dirs.txt" , 'w')
             WriteDirs.write(DirsToCheck)
+def CheckDirs():
+    F = open("info/Dirs.txt" , 'r')
+    NewPaths = ""
+    CheckForSplit = F.read()
     if CheckForSplit == '':
-        CheckForSplit = DirsToCheck
-    if " , " in CheckForSplit:
-        PathExists = CheckForSplit.split(" , ")
-        for CheckPath in PathExists:
-            #print(CheckPath)
-            if os.path.exists(CheckPath):
-                getfiles(CheckPath , OldRoot)
-            else:
-                print('it looks like "%s" is an invalid directory, skipping'%CheckPath)
-                for i in PathExists:
-                    if i == CheckPath:
-                        pass
-                    else:
-                        if len(NewPaths) > 1:
-                            NewPaths = ("%s , %s"%(NewPaths , i))
-                        else:
-                            NewPaths = i
-                StripPaths = ("[" , "]" , "'")
-                for symbol in StripPaths:
-                    if symbol in PathExists:
-                        print("got to symbols")
-                        PathExists = PathExists.replace(symbol , '')
-                WriteDirs = open("info/Dirs.txt" , 'w')
-                WriteDirs.write(NewPaths)
+        pass
     else:
-        if os.path.exists(CheckForSplit.replace("\n",'')):
-            getfiles(CheckForSplit.replace("\n",'') , OldRoot)
+        if " , " in CheckForSplit:
+            PathExists = CheckForSplit.split(" , ")
+            for CheckPath in PathExists:
+                if os.path.exists(CheckPath):
+                    getfiles(CheckPath)
+                else:
+                    print('it looks like "%s" is an invalid directory, skipping'%CheckPath)
+                    for i in PathExists:
+                        if i == CheckPath:
+                            pass
+                        else:
+                            if len(NewPaths) > 1:
+                                NewPaths = ("%s , %s"%(NewPaths , i))
+                            else:
+                                NewPaths = i
+                    StripPaths = ("[" , "]" , "'")
+                    for symbol in StripPaths:
+                        if symbol in PathExists:
+                            print("got to symbols")
+                            PathExists = PathExists.replace(symbol , '')
+                    WriteDirs = open("info/Dirs.txt" , 'w')
+                    WriteDirs.write(NewPaths)
         else:
-            print('it looks like "%s" is an invalid directory, make sure you spelled everything (and capitalized if you are on linux/mac) correctly'%CheckForSplit)
-            WriteDirs = open("info/Dirs.txt" , 'w')
-            WriteDirs.write("")
-def getfiles(scandir , OldRoot):
+            if os.path.exists(CheckForSplit.replace("\n",'')):
+                getfiles(CheckForSplit.replace("\n",''))
+            else:
+                print('it looks like "%s" is an invalid directory, make sure you spelled everything (and capitalized if you are on linux/mac) correctly'%CheckForSplit)
+                WriteDirs = open("info/Dirs.txt" , 'w')
+                WriteDirs.write("")
+def getfiles(scandir):
+    OldRoot = "                       "#if I did an empty string it wouldn't work, however, this works unless there is that many/more spaces in a row(I hope no one does that for thier title)
     global GameName
     for Root , _ , Files in os.walk(scandir):
         for file in Files:
@@ -459,18 +464,23 @@ def GUI():
             DirList = ''
             ReadDirFile = open('info/Dirs.txt' , 'r')
             ReadDirFile.seek(0)
+            DirFileContents = ReadDirFile.read()
             ClearCLI()
             print('Will currently scan the following folders:\n')
-            ReadDirFile.seek(0)
-            for i in ReadDirFile.read().split(' , '):
-                if DirList == '':
-                    DirList = i+'\n'
-                else:
-                    DirList = ("%s%s\n"%(DirList , i))
+            if ' , ' in DirFileContents:
+                for i in DirFileContents.split(' , '):
+                    if DirList == '':
+                        DirList = i+'\n'
+                    else:
+                        DirList = ("%s%s\n"%(DirList , i))
+            else:
+                DirList = DirFileContents
             print(DirList)
             print('-------------------------------------------')
             WhatToDo = input('What would you like to do?\n(1)Remove a folder\n\n(2)Add a folder\n\n(3)go back')
             if WhatToDo == '1' or '2' or '3':
+                ReadDirFile.seek(0)
+                DirFileContents = ReadDirFile.read()
                 ClearCLI()
                 if WhatToDo == '1':
                     NumedList = ''
@@ -494,22 +504,25 @@ def GUI():
                     try:
                         print("What folder would you like to add?(don't add quotes)ctrl+c to cancel/go back\n")
                         WhatDir = input('')
-                        AppendDirFile = open('info/Dirs.txt' , 'a')
                         if os.path.exists(WhatDir):
-                            if ReadDirFile.seek(1).read() == '':
+                            AppendDirFile = open('info/Dirs.txt' , 'w')
+                            if DirFileContents == '':
                                 AppendDirFile.write(WhatDir)
+                                input('added "%s" to your list of folders to scan'%WhatDir)
                             else:
-                                AppendDirFile.write(" , %s"%WhatDir)
+                                AppendDirFile.write("%s , %s"%(DirFileContents , WhatDir))
+                                input('added "%s" to your list of folders to scan'%WhatDir)
+                            AppendDirFile.close()
                         else:
-                            print('It looks like you might have entered a invalid path')
+                            print('It looks like "%s" might be an invalid path'%WhatDir)
                     except:
-                        pass
+                       pass
                 if WhatToDo == '3':
                     Layer3 = 0
     Layer1 = 1
     while Layer1 == 1:
         ClearCLI()
-        WhichSetting = input('What would you like to change?\n\n(1)Enable/disable shortcut cleaning\n\n(2)Enable/Disable Proton shortcuts(exe games on linux)\n\n(3)Manage folders to scan\n\n(4)Add shortcuts\n\n(5)exit\n')
+        WhichSetting = input('What would you like to do?\n\n(1)Enable/disable shortcut cleaning\n\n(2)Enable/Disable Proton shortcuts(.exe games on linux)\n\n(3)Manage folders to scan\n\n(4)Add shortcuts(will quit after done adding)\n\n(5)exit\n')
         ReadSettings = open('info/settings','r')
         ReadSettings.seek(0)
         SteamID , InstallLocation , DefaultCleanout , Proton = ReadSettings.read().split(' , ')
@@ -571,7 +584,7 @@ def run():
     getsettings()
     CloseSteam()
     Cleanout()
-    CheckDirs(OldRoot)
+    CheckDirs()
     return
 def main():
     GUI()

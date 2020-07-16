@@ -551,7 +551,7 @@ def GUI():
                                 pass
                         WriteSettings(SteamID , InstallLocation , DefaultCleanout , Proton)
                     if WhichSetting == '2':
-                        if OS == 'Windows' or 'Darwin':
+                        if OS != 'Linux':
                             input('This is a linux option only(press enter to continue)')
                             Layer2 = 0
                         elif OS == 'Linux':
@@ -569,7 +569,7 @@ def GUI():
                                     Layer2 = 0
                                 if ChangeProton == 'n':
                                     Layer2 = 0
-                                    pass
+                            WriteSettings(SteamID , InstallLocation , DefaultCleanout , Proton)
                     if WhichSetting == '3':
                         DirManager()
                         Layer2 = 0

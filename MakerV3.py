@@ -24,12 +24,13 @@ def split_path(path):
     if OS == "Linux":
         start, name = path.rsplit("/", 1)
         if path.endswith("index.html"):
-            _ , name , _ = path.rsplit("/",2)
-            start , _= path.rsplit("/", 1)
+            AddHTMLGame(path)
         if "." in name:
             name , _ = (name.split('.', 1))
     if OS == "Darwin":
         global SkipPath
+        if Path.endswith('index.html'):
+            return(AddHTMLGame(path))
         ActualPath , _ = path.split(".app",1)
         Path = ActualPath+".app"
         if SkipPath == '         ':
@@ -143,7 +144,6 @@ def GetInstallLocation():
                                 continue
                             if ("userdata" in CorrectDir):
                                 foundit = 0
-                                print("found it")
                                 SteamLocal = Root
                                 print ('\nfound steam install in "%s"'%SteamLocal)
                                 continue
@@ -367,6 +367,9 @@ def getfiles(scandir):
                 else:
                     pass
             if OS == "Darwin":# in macOS .app files are treated as folders for NO REASON!
+                if file == 'index.html':
+                    HTMLFILE = (os.path.join(Root , file))
+                    InBlacklist(HTMLFILE)
                 if ".app" in Root:
                     NoRepeasts = 1
                     for i in SkipPath.split("\n"):
@@ -433,6 +436,28 @@ def AddHTMLGame(gamedir):
         name , _ = gamedir.split(".")
         S , name , _ = name.rsplit("\\",2)
         start = os.path.join(S , name)
+        if " " in start:
+            FullHTML = ("%s%s'%s'%s"%(HTMLServerLaunch1 , HTMLServerLaunch2 , start , HTMLGameLaunch))
+        else:
+            FullHTML = ("%s%s%s%s"%(HTMLServerLaunch1 , HTMLServerLaunch2 , start , HTMLGameLaunch))
+        return ('"%s" "%s" "%s" "%s"'%(name , FullHTML , start , gamedir))
+    if OS == 'Linux':
+        HTMLServerLaunch1 = "'bash' open "
+        HTMLServerLaunch2 = 'python3 -m http.server -d '
+        HTMLGameLaunch = ' & open http://127.0.0.1:8000'
+        _ , name , _ = gamedir.rsplit("/",2)
+        start , _= gamedir.rsplit("/", 1)
+        if " " in start:
+            FullHTML = ("%s%s'%s'%s"%(HTMLServerLaunch1 , HTMLServerLaunch2 , start , HTMLGameLaunch))
+        else:
+            FullHTML = ("%s%s%s%s"%(HTMLServerLaunch1 , HTMLServerLaunch2 , start , HTMLGameLaunch))
+        return ('"%s" "%s" "%s" "%s"'%(name , FullHTML , start , gamedir))
+    if OS == 'Darwin':
+        HTMLServerLaunch1 = "'/System/Applications/Utilities/Terminal.app' && "
+        HTMLServerLaunch2 = 'python3 -m http.server -d '
+        HTMLGameLaunch = ' & open http://127.0.0.1:8000'
+        _ , name , _ = gamedir.rsplit("/",2)
+        start , _= gamedir.rsplit("/", 1)
         if " " in start:
             FullHTML = ("%s%s'%s'%s"%(HTMLServerLaunch1 , HTMLServerLaunch2 , start , HTMLGameLaunch))
         else:

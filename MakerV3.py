@@ -159,12 +159,12 @@ def GetInstallLocation():
                     continue
     return SteamIDnum , SteamLocal
 def getsettings():
-    global SteamID , InstallLocation , DefaultCleanout , Proton
+    global SteamID , InstallLocation , DefaultCleanout , Proton , EnableHTML
     #settings are layed out like "SteamID , Steam Install Location , cleanout by default , Enable Proton(for running windows games on linux through steam)"
     SettingFile = open("info/settings" , 'r')
     SavedSettings = SettingFile.read()
-    SteamID , InstallLocation , DefaultCleanout , Proton = SavedSettings.split(' , ')
-    if SavedSettings == "'' , '' , '' , ''":
+    SteamID , InstallLocation , DefaultCleanout , Proton , EnableHTML = SavedSettings.split(' , ')
+    if SavedSettings == "'' , '' , '' , '' , ''":
         print ("\n\nLooks like you have never used this tool before (or you downloaded a new version or something)\nlets go through some setup.\n")
         time.sleep(0.5)
         properanswer = 0
@@ -190,11 +190,20 @@ def getsettings():
                 if EnableProton == ("n"):
                     Proton = "no"
                     properanswer2 = 1
+        properanswer = 0
+        while properanswer == 0:
+            EnableHTML = input("would you like to enable HTML5 games?(this is more or less done but has not been extensively bug tested) (y/n)")
+            if EnableHTML == ("y"):
+                EnableHTML = "yes"
+                properanswer = 1
+            if EnableHTML == ("n"):
+                EnableHTML = "no"
+                properanswer = 1
         GetInstallLocation()
         SettingsWrite = open("info/settings" , 'w')
         SteamID = SteamID.replace(SteamID , SteamIDnum)
         InstallLocation = InstallLocation.replace(InstallLocation , SteamLocal)
-        FullSettings = ('%s , "%s" , %s , %s'%(SteamID , InstallLocation , Cleanout , Proton))
+        FullSettings = ('%s , "%s" , %s , %s , %s'%(SteamID , InstallLocation , Cleanout , Proton , EnableHTML))
         SettingsWrite.write(FullSettings)
     if DefaultCleanout == 'y':
         DefaultCleanout = Cleanout
@@ -202,7 +211,7 @@ def getsettings():
         InstallLocation = SteamLocal
     if open('info/Dirs.txt','r').read() == '':
         NoDirs()
-    return SteamID , InstallLocation , DefaultCleanout , Proton
+    return SteamID , InstallLocation , DefaultCleanout , Proton , EnableHTML
 def Cleanout():
     global ReplaceVDF
     if OS == "Windows":
@@ -340,13 +349,14 @@ def getfiles(scandir):
                     ExeFile = (os.path.join(Root , file))
                     InBlacklist(ExeFile)
                 if file == "index.html":
-                    if OldRoot in os.path.join(Root , file):
-                        pass
-                    else:
-                        _ , GameName , _ = Root.rsplit("\\",2)
-                        OldRoot = GameName
-                        HTMLFILE = (os.path.join(Root , file))
-                        InBlacklist(HTMLFILE)
+                    if EnableHTML == "yes":
+                        if OldRoot in os.path.join(Root , file):
+                            pass
+                        else:
+                            _ , GameName , _ = Root.rsplit("\\",2)
+                            OldRoot = GameName
+                            HTMLFILE = (os.path.join(Root , file))
+                            InBlacklist(HTMLFILE)
             if OS == "Linux":
                 CheckFile = os.path.join(Root , file)
                 ExeCheck = os.access(CheckFile, os.X_OK)
@@ -354,13 +364,14 @@ def getfiles(scandir):
                     ExecFile = (os.path.join(Root , file))
                     InBlacklist(ExecFile)
                 if file == "index.html":
-                    if OldRoot in os.path.join(Root , file):
-                        pass
-                    else:
-                        _ , GameName , Maybethis = Root.rsplit("/",2)
-                        OldRoot = Maybethis
-                        HTMLFILE = (os.path.join(Root , file))
-                        InBlacklist(HTMLFILE)
+                    if EnableHTML == "yes":
+                        if OldRoot in os.path.join(Root , file):
+                            pass
+                        else:
+                            _ , GameName , Maybethis = Root.rsplit("/",2)
+                            OldRoot = Maybethis
+                            HTMLFILE = (os.path.join(Root , file))
+                            InBlacklist(HTMLFILE)
                 if Proton == "yes":
                     if file.endswith(".exe"):
                         ExeFile = (os.path.join(Root , file))
@@ -369,8 +380,9 @@ def getfiles(scandir):
                     pass
             if OS == "Darwin":# in macOS .app files are treated as folders for NO REASON!
                 if file == 'index.html':
-                    HTMLFILE = (os.path.join(Root , file))
-                    InBlacklist(HTMLFILE)
+                    if EnableHTML == "yes":
+                        HTMLFILE = (os.path.join(Root , file))
+                        InBlacklist(HTMLFILE)
                 if ".app" in Root:
                     NoRepeasts = 1
                     for i in SkipPath.split("\n"):
@@ -481,9 +493,9 @@ def ClearCLI():
         os.system('cls')
 def GUI():
     getsettings()
-    def WriteSettings(SteamID , InstallLocation , DefaultCleanout , Proton):
+    def WriteSettings(SteamID , InstallLocation , DefaultCleanout , Proton , EnableHTML):
         SettingsFile = open('info/settings','w')
-        SettingsFile.write('%s , %s , %s , %s'%(SteamID , InstallLocation , DefaultCleanout , Proton))
+        SettingsFile.write('%s , %s , %s , %s , %s'%(SteamID , InstallLocation , DefaultCleanout , Proton , EnableHTML))
         return
     def getDir(NumedList , DirToRM , AddNum):
         _ , RMDIR = NumedList.split('%s) '%DirToRM)
@@ -570,10 +582,10 @@ def GUI():
     Layer1 = 1
     while Layer1 == 1:
         ClearCLI()
-        WhichSetting = input('What would you like to do?\n\n(1)Enable/disable shortcut cleaning\n\n(2)Enable/Disable Proton shortcuts(.exe games on linux)\n\n(3)Manage folders to scan\n\n(4)Add shortcuts(will quit after done adding)\n\n(5)exit\n')
+        WhichSetting = input('What would you like to do?\n\n(1)Enable/disable shortcut cleaning\n\n(2)Enable/Disable Proton shortcuts(.exe games on linux)\n\n(3)Enable/Disable HTML games(almost done but not exstensively bug tested)\n\n(4)Manage folders to scan\n\n(5)Add shortcuts(will quit after done adding)\n\n(6)exit\n')
         ReadSettings = open('info/settings','r')
         ReadSettings.seek(0)
-        SteamID , InstallLocation , DefaultCleanout , Proton = ReadSettings.read().split(' , ')
+        SteamID , InstallLocation , DefaultCleanout , Proton , EnableHTML = ReadSettings.read().split(' , ')
         ValidOptions = ('1','2','3','4','5')
         for i in ValidOptions:
             if WhichSetting == i:
@@ -596,7 +608,7 @@ def GUI():
                             if ChangeCleanout == 'n':
                                 Layer2 = 0
                                 pass
-                        WriteSettings(SteamID , InstallLocation , DefaultCleanout , Proton)
+                        WriteSettings(SteamID , InstallLocation , DefaultCleanout , Proton , EnableHTML)
                     if WhichSetting == '2':
                         if OS != 'Linux':
                             input('This is a linux option only(press enter to continue)')
@@ -616,16 +628,33 @@ def GUI():
                                     Layer2 = 0
                                 if ChangeProton == 'n':
                                     Layer2 = 0
-                            WriteSettings(SteamID , InstallLocation , DefaultCleanout , Proton)
+                            WriteSettings(SteamID , InstallLocation , DefaultCleanout , Proton , EnableHTML)
                     if WhichSetting == '3':
+                        if EnableHTML == 'yes':
+                            ChangeHTML = input('HTML5 games will be added to steam\n\nWould you like to change that?(y/n)')
+                        elif EnableHTML == 'no':
+                            ChangeHTML = input('HTML5 games will not be added to steam\n\nWould you like to change that?(y/n)')
+                        if ChangeHTML == 'y' or 'n':
+                            ClearCLI()
+                            if ChangeHTML == 'y':
+                                if EnableHTML == 'yes':
+                                    EnableHTML = 'no'
+                                elif EnableHTML == 'no':
+                                    EnableHTML = 'yes'
+                                Layer2 = 0
+                            if ChangeHTML == 'n':
+                                Layer2 = 0
+                                pass
+                        WriteSettings(SteamID , InstallLocation , DefaultCleanout , Proton , EnableHTML)
+                    if WhichSetting == '4':
                         DirManager()
                         Layer2 = 0
-                    if WhichSetting == '4':
+                    if WhichSetting == '5':
                         Layer2 = 0
                         Layer1 = 0
                         ClearCLI()
                         run()
-                    if WhichSetting == '5':
+                    if WhichSetting == '6':
                         Layer1 = 0
                         Layer2 = 0         
 def run():

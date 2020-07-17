@@ -228,7 +228,8 @@ def Cleanout():
                     if file == 'shortcuts.vdf':
                         ReplaceVDF = os.path.join(Root , file)
         if DefaultCleanout == 'yes':
-            os.popen('rm "%s/shortcuts.vdf"'%(ReplaceVDF))
+            if os.path.exists("%s/shortcuts.vdf"%ReplaceVDF):
+                os.popen('rm "%s/shortcuts.vdf"'%(ReplaceVDF))
             os.system('cp "%s" "%s"'%(BaseVDF , ReplaceVDF))
     if OS == "Darwin":
         BaseVDF = "info/shortcuts.vdf"

@@ -5,6 +5,7 @@ import os , platform , string , time , getpass
 #For all of the "_"'s in the script that is an unused variable and pylint doesn't care so that's what I used
 UserName = getpass.getuser()
 SkipPath = '         '
+emptyport = 8000
 OS = platform.system()# for whatever reason when I ported this to macOS catalina platform.system returned Darwin so macOS = Darwin in python
 
 Blacklist = open("info/blacklist.txt" , 'r')
@@ -23,8 +24,8 @@ def split_path(path):
             name , _ = (name.split('.', 1))
     if OS == "Linux":
         start, name = path.rsplit("/", 1)
-        if path.endswith("index.html"):
-            AddHTMLGame(path)
+        if Path.endswith("index.html"):
+            return(AddHTMLGame(path))
         if "." in name:
             name , _ = (name.split('.', 1))
     if OS == "Darwin":
@@ -356,8 +357,8 @@ def getfiles(scandir):
                     if OldRoot in os.path.join(Root , file):
                         pass
                     else:
-                        _ , GameName , _ = Root.rsplit("/",2)
-                        OldRoot = GameName
+                        _ , GameName , Maybethis = Root.rsplit("/",2)
+                        OldRoot = Maybethis
                         HTMLFILE = (os.path.join(Root , file))
                         InBlacklist(HTMLFILE)
                 if Proton == "yes":
@@ -429,10 +430,12 @@ def AddShortcut(File):
             Run = ('"%s/shortcuts.vdf" %s "" %s 0 1 1 %s 0 "Non-Steam-Game"'%(ReplaceVDF , split_path(File) , LaunchOptions , inVRLibrary))
             os.system("python3 shortcuts.py %s"%Run)
 def AddHTMLGame(gamedir):
+    global emptyport
     if OS == 'Windows':
+        emptyport += 1
         HTMLServerLaunch1 = "'C:\\Windows\\System32\\cmd.exe' /c start /b "
-        HTMLServerLaunch2 = 'python -m http.server -d '
-        HTMLGameLaunch = ' & start /max http://127.0.0.1:8000'
+        HTMLServerLaunch2 = 'python -m http.server %d -d '%emptyport
+        HTMLGameLaunch = ' & start /max http://127.0.0.1:%d'%emptyport
         name , _ = gamedir.split(".")
         S , name , _ = name.rsplit("\\",2)
         start = os.path.join(S , name)
@@ -442,26 +445,26 @@ def AddHTMLGame(gamedir):
             FullHTML = ("%s%s%s%s"%(HTMLServerLaunch1 , HTMLServerLaunch2 , start , HTMLGameLaunch))
         return ('"%s" "%s" "%s" "%s"'%(name , FullHTML , start , gamedir))
     if OS == 'Linux':
-        HTMLServerLaunch1 = "'bash' open "
-        HTMLServerLaunch2 = 'python3 -m http.server -d '
-        HTMLGameLaunch = ' & open http://127.0.0.1:8000'
+        emptyport += 1
+        HTMLServerLaunch = 'python3 -m http.server %d -d '%emptyport
+        HTMLGameLaunch = ' & sensible-browser http://0.0.0.0:%d'%emptyport
         _ , name , _ = gamedir.rsplit("/",2)
         start , _= gamedir.rsplit("/", 1)
         if " " in start:
-            FullHTML = ("%s%s'%s'%s"%(HTMLServerLaunch1 , HTMLServerLaunch2 , start , HTMLGameLaunch))
+            FullHTML = ("%s'%s'%s"%(HTMLServerLaunch , start , HTMLGameLaunch))
         else:
-            FullHTML = ("%s%s%s%s"%(HTMLServerLaunch1 , HTMLServerLaunch2 , start , HTMLGameLaunch))
+            FullHTML = ("%s%s%s"%(HTMLServerLaunch , start , HTMLGameLaunch))
         return ('"%s" "%s" "%s" "%s"'%(name , FullHTML , start , gamedir))
     if OS == 'Darwin':
-        HTMLServerLaunch1 = "'/System/Applications/Utilities/Terminal.app' && "
-        HTMLServerLaunch2 = 'python3 -m http.server -d '
-        HTMLGameLaunch = ' & open http://127.0.0.1:8000'
+        emptyport += 1
+        HTMLServerLaunch2 = 'python3 -m http.server %d -d '%emptyport
+        HTMLGameLaunch = ' & open http://127.0.0.1:%d'%emptyport
         _ , name , _ = gamedir.rsplit("/",2)
         start , _= gamedir.rsplit("/", 1)
         if " " in start:
-            FullHTML = ("%s%s'%s'%s"%(HTMLServerLaunch1 , HTMLServerLaunch2 , start , HTMLGameLaunch))
+            FullHTML = ("%s'%s'%s"%(HTMLServerLaunch , start , HTMLGameLaunch))
         else:
-            FullHTML = ("%s%s%s%s"%(HTMLServerLaunch1 , HTMLServerLaunch2 , start , HTMLGameLaunch))
+            FullHTML = ("%s%s%s"%(HTMLServerLaunch , start , HTMLGameLaunch))
         return ('"%s" "%s" "%s" "%s"'%(name , FullHTML , start , gamedir))
 def ClearCLI():
     if OS == "Linux" or "Darwin":

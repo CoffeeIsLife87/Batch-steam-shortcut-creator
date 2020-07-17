@@ -17,9 +17,7 @@ def split_path(path):
     Path = path
     if OS == "Windows":
         if path.endswith("index.html"):
-            name , _ = Path.split(".")
-            S , name , _ = name.rsplit("\\",2)
-            start = os.path.join(S , name)
+            return (AddHTMLGame(path))
         else:
             start, name = path.rsplit("\\", 1)
             name , _ = (name.split('.', 1))
@@ -427,6 +425,19 @@ def AddShortcut(File):
         if OS == "Darwin":
             Run = ('"%s/shortcuts.vdf" %s "" %s 0 1 1 %s 0 "Non-Steam-Game"'%(ReplaceVDF , split_path(File) , LaunchOptions , inVRLibrary))
             os.system("python3 shortcuts.py %s"%Run)
+def AddHTMLGame(gamedir):
+    if OS == 'Windows':
+        HTMLServerLaunch1 = "'C:\\Windows\\System32\\cmd.exe' /c start /b "
+        HTMLServerLaunch2 = 'python -m http.server -d '
+        HTMLGameLaunch = ' & start /max http://127.0.0.1:8000'
+        name , _ = gamedir.split(".")
+        S , name , _ = name.rsplit("\\",2)
+        start = os.path.join(S , name)
+        if " " in start:
+            FullHTML = ("%s%s'%s'%s"%(HTMLServerLaunch1 , HTMLServerLaunch2 , start , HTMLGameLaunch))
+        else:
+            FullHTML = ("%s%s%s%s"%(HTMLServerLaunch1 , HTMLServerLaunch2 , start , HTMLGameLaunch))
+        return ('"%s" "%s" "%s" "%s"'%(name , FullHTML , start , gamedir))
 def ClearCLI():
     if OS == "Linux" or "Darwin":
         os.system('clear')

@@ -4,6 +4,10 @@
 
 make sure you click "add python to path" when installing for windows
 
+* http.server (for launching html games from steam)
+
+this can be installed using  **pip install shttp**
+
 * [steam](https://store.steampowered.com/)
       (duh)
 
@@ -45,9 +49,7 @@ fixed not being able to add a game/program that contained an "&" in the path/nam
 
 more QA/testing
 
-Mac OS support? (anybody want that? make an issue and I will work on it)
-
-itch has HTML games so I should probably check on those
+itch has HTML games so I should probably check on those(in progress)
 
 ## known issues ##
 

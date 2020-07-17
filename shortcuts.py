@@ -181,7 +181,10 @@ def inputPreperation(args, lastEntryInfo):
     
     # Strings
     var_appName         =       args[2]
-    var_unquotedPath    = '"' + args[3] + '"'
+    if 'http.server' in args[3]:# this portion will allow me to add quotes where they need to be and skip where they don't which, in turn , allows me to run HTML5 games from steam
+        var_unquotedPath    = args[3].replace("'",'"')
+    else:
+        var_unquotedPath    = '"' + args[3] + '"'
     var_startDir        = '"' + args[4] + '"'
     var_iconPath        = '"' + args[5] + '"'
     var_shortcutPath    = '"' + args[6] + '"' # quoted? what is this?

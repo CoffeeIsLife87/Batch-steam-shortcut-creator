@@ -237,7 +237,8 @@ def Cleanout():
                     if file == 'shortcuts.vdf':
                         ReplaceVDF = os.path.join(Root , file)
         if DefaultCleanout == 'yes':
-            os.popen('rm "%s/shortcuts.vdf"'%(ReplaceVDF))
+            if os.path.exists("%s/shortcuts.vdf"%ReplaceVDF):
+                os.popen('rm "%s/shortcuts.vdf"'%(ReplaceVDF))
             os.system('cp "%s" "%s"'%(BaseVDF , ReplaceVDF))
     if OS == "Darwin":
         BaseVDF = "info/shortcuts.vdf"
@@ -459,7 +460,7 @@ def AddHTMLGame(gamedir):
     if OS == 'Linux':
         emptyport += 1
         HTMLServerLaunch = 'python3 -m http.server %d -d '%emptyport
-        HTMLGameLaunch = ' & sensible-browser http://0.0.0.0:%d'%emptyport
+        HTMLGameLaunch = ' & xdg-open http://0.0.0.0:%d'%emptyport
         _ , name , _ = gamedir.rsplit("/",2)
         start , _= gamedir.rsplit("/", 1)
         if " " in start:

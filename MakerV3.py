@@ -1,4 +1,4 @@
-import os , platform , string , time , getpass 
+import os , platform , string , time , getpass , stat
 
 #----------------------------------------------------------
 #variables
@@ -456,16 +456,24 @@ def AddHTMLGame(gamedir):
             FullHTML = ("%s%s%s"%(HTMLServerLaunch , start , HTMLGameLaunch))
         return ('"%s" "%s" "%s" "%s"'%(name , FullHTML , start , gamedir))
     if OS == 'Darwin':
+        def MakeSHscript(name , FullHTML , start , gamedir):
+            shfile = '%s/%s.sh'%(start,name)
+            WriteSH = open(shfile,'w')
+            SHContents = FullHTML
+            WriteSH.write('#!/bin/sh\n%s'%SHContents)
+            st = os.stat(shfile)
+            os.chmod(shfile,st.st_mode|stat.S_IEXEC)
+            return ('"%s" "%s" "%s" "%s"'%(name , shfile , start , gamedir))
         emptyport += 1
-        HTMLServerLaunch2 = 'python3 -m http.server %d -d '%emptyport
-        HTMLGameLaunch = ' & open http://127.0.0.1:%d'%emptyport
+        HTMLServerLaunch = "python3 -m http.server %d -d "%emptyport
+        HTMLGameLaunch = ' & open http://127.0.0.1:%d\n$SHELL'%emptyport
         _ , name , _ = gamedir.rsplit("/",2)
         start , _= gamedir.rsplit("/", 1)
         if " " in start:
             FullHTML = ("%s'%s'%s"%(HTMLServerLaunch , start , HTMLGameLaunch))
         else:
             FullHTML = ("%s%s%s"%(HTMLServerLaunch , start , HTMLGameLaunch))
-        return ('"%s" "%s" "%s" "%s"'%(name , FullHTML , start , gamedir))
+        return(MakeSHscript(name , FullHTML , start , gamedir))
 def ClearCLI():
     if OS == "Linux" or "Darwin":
         os.system('clear')

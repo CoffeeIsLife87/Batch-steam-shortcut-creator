@@ -448,7 +448,7 @@ def AddHTMLGame(gamedir):
     if OS == 'Linux':
         emptyport += 1
         HTMLServerLaunch = 'python3 -m http.server %d -d '%emptyport
-        HTMLGameLaunch = ' & sensible-browser http://0.0.0.0:%d'%emptyport
+        HTMLGameLaunch = ' & xdg-open http://0.0.0.0:%d'%emptyport
         _ , name , _ = gamedir.rsplit("/",2)
         start , _= gamedir.rsplit("/", 1)
         if " " in start:

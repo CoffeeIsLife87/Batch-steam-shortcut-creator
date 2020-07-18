@@ -57,4 +57,4 @@ There are no icons for shortcuts on linux
 
 ## other ##
 
-I use [shortcut manager](https://github.com/CorporalQuesadilla/Steam-Shortcut-Manager) for setting the shortcuts
+I use a modified version of [shortcut manager](https://github.com/CorporalQuesadilla/Steam-Shortcut-Manager) for setting the shortcuts

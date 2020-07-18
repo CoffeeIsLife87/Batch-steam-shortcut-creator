@@ -6,7 +6,15 @@ make sure you click "add python to path" when installing for windows
 
 * http.server (for launching html games from steam)
 
-this can be installed using  **pip install shttp**(on windows) or **pip3 install --user shttp** (on linux. --user is not required unless you are on fedora)
+this can be installed using  
+''' 
+pip install shttp 
+''' 
+(on windows) or 
+''' 
+pip3 install --user shttp 
+'''
+(on linux. --user is not required unless you are on fedora)
 
 * [steam](https://store.steampowered.com/)
       (duh)

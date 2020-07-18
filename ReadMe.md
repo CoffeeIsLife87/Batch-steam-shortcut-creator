@@ -6,7 +6,7 @@ make sure you click "add python to path" when installing for windows
 
 * http.server (for launching html games from steam)
 
-this can be installed using  **pip install shttp**
+this can be installed using  **pip install shttp**(on windows) or **pip3 install --user shttp** (on linux. --user is not required unless you are on fedora)
 
 * [steam](https://store.steampowered.com/)
       (duh)
@@ -24,6 +24,8 @@ this can be installed using  **pip install shttp**
 * enjoy! :)
 
 ## anouncements ##
+
+HTML5/webGL games launch and are playable now
 
 Fixed double shortcuts for games with 64bit and 32bit variants
 
@@ -48,8 +50,6 @@ fixed not being able to add a game/program that contained an "&" in the path/nam
 ## To Be Done ##
 
 more QA/testing
-
-itch has HTML games so I should probably check on those(in progress)
 
 ## known issues ##
 

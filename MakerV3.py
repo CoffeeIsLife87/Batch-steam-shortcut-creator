@@ -161,21 +161,34 @@ def GetInstallLocation():
 def LookForItchDirs(path):
     def CheckItchLogs():# I learned recently that itch has a log file, and from that I can pull install locations
         def PullInfo(logfile):
+            if OS == 'Windows' or 'Linux':
+                PlatformDependantChar = '•'
+            if OS == 'Darwin':
+                PlatformDependantChar = '>'
             F = open(logfile , 'r')
             LogContents = F.read()
             if 'Scanning install location ' in LogContents:
                 CheckEveryLine = LogContents.split('\n')
                 for line in CheckEveryLine:
-                    if '"level":30,"msg":"• Scanning install location ' in line:
-                        _ , PathAndSome = line.split('"level":30,"msg":"• Scanning install location ')
+                    if ('"level":30,"msg":"%s Scanning install location '%PlatformDependantChar) in line:
+                        _ , PathAndSome = line.split('"level":30,"msg":"%s Scanning install location '%PlatformDependantChar)
                         CleanPath , _ = PathAndSome.split('...","name":')
                         if os.path.exists(CleanPath):
                             AddToItchDirList(CleanPath)
+            else:
+                input('check your paths?\ncheck the log?\nsomething broke?')
         if OS == 'Windows':
             if os.path.exists('C:\\Users\\%s\\AppData\\Roaming\\itch\\logs'%UserName):
-                print('log file folder exists')
+                pass
         if OS == 'Linux':
             Path1 = '/home/%s/.config/itch/logs'%UserName
+            if os.path.exists(Path1):
+                for _ , _ , LogChecks in os.walk(Path1):
+                    for file in LogChecks:
+                        if file == 'itch.txt':
+                            PullInfo('%s/%s'%(Path1 , file))
+        if OS == 'Darwin':
+            Path1 = '/Users/%s/Library/Application Support/itch/logs'%UserName
             if os.path.exists(Path1):
                 for _ , _ , LogChecks in os.walk(Path1):
                     for file in LogChecks:
@@ -231,7 +244,7 @@ def LookForItchDirs(path):
             return(ItchDirList)
         except:
             pass
-    if OS == 'Linux':
+    if OS == 'Linux' or 'Darwin':
         CheckItchLogs()
         try:
             return(ItchDirList)
@@ -713,7 +726,7 @@ def GUI():
                                                     ProperAnswer = 0
                                                 else:
                                                     pass
-                                if OS == 'Linux':
+                                if OS == 'Linux' or 'Darwin':
                                     LookForItchDirs('/')
                                     try:
                                         if ' , ' in ItchDirList:

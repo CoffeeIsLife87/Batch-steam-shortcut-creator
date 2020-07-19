@@ -159,6 +159,13 @@ def GetInstallLocation():
                     continue
     return SteamIDnum , SteamLocal
 def LookForItchDirs(path):
+    def CheckItchLogs():# I learned recently that itch has a log file, from that I can pull install locations
+        if OS == 'Windows':
+            if os.path.exists('C:\\Users\\%s\\AppData\\Roaming\\itch\\logs'%UserName):
+                print('log file folder exists')
+        if OS == 'Linux':
+            if os.path.exists('%s/home/.config/itch/logs'%UserName):
+                print('correct path for linux')
     def AddToItchDirList(add):
         global ItchDirList
         try:
@@ -209,38 +216,41 @@ def LookForItchDirs(path):
         except:
             return('no itch folders have been found')
     if OS == 'Linux':
-        for Root , Dirs , _ in os.walk('/'):
-            for dir in Dirs:
-                if dir == 'downloads':
-                    for Root2 , Level2Dirs , _ in os.walk('%s/%s'%(Root , dir)):
-                        for FolderName in Level2Dirs:
-                            DashInDirName = 0
-                            for _ in FolderName.split('-'):
-                                DashInDirName += 1
-                            if DashInDirName == 3:
-                                for _ , _ , files2 in os.walk('%s/%s'%(Root2 , FolderName)):
-                                    OCJson = 0
-                                    OLJson = 0
-                                    for file2 in files2:
-                                        if file2 == 'operate-context.json':
-                                            OCJson = 1
-                                        elif file2 == 'operate-log.json':
-                                            OLJson = 1
-                                        if OCJson + OLJson == 2:
-                                            AddToItchDirList(Root)
-                elif dir == '.itch':
-                    for _ , _ , Files2 in os.walk('%s/%s'%(Root , dir)):
-                        for file2 in Files2:
-                            if file2 == 'receipt.json.gz':
-                                ItchDir , _ = Root.rsplit("/",1)
-                                for _ , Level3Dirs , _ in os.walk(ItchDir):
-                                    for Dir3 in Level3Dirs:
-                                        if Dir3 == 'downloads':
-                                            AddToItchDirList(ItchDir)
-        try:
-            return(ItchDirList)
-        except:
-            return('No itch folders could be found')
+        CheckItchLogs
+        return('this feature is not supported on linux at the moment')
+       # To Be Done
+       #for Root , Dirs , _ in os.walk('/'):
+       #    for dir in Dirs:
+       #        if dir == 'downloads':
+       #            for Root2 , Level2Dirs , _ in os.walk('%s/%s'%(Root , dir)):
+       #                for FolderName in Level2Dirs:
+       #                    DashInDirName = 0
+       #                    for _ in FolderName.split('-'):
+       #                        DashInDirName += 1
+       #                    if DashInDirName == 3:
+       #                        for _ , _ , files2 in os.walk('%s/%s'%(Root2 , FolderName)):
+       #                            OCJson = 0
+       #                            OLJson = 0
+       #                            for file2 in files2:
+       #                                if file2 == 'operate-context.json':
+       #                                    OCJson = 1
+       #                                elif file2 == 'operate-log.json':
+       #                                    OLJson = 1
+       #                                if OCJson + OLJson == 2:
+       #                                    AddToItchDirList(Root)
+       #        elif dir == '.itch':
+       #            for _ , _ , Files2 in os.walk('%s/%s'%(Root , dir)):
+       #                for file2 in Files2:
+       #                    if file2 == 'receipt.json.gz':
+       #                        ItchDir , _ = Root.rsplit("/",1)
+       #                        for _ , Level3Dirs , _ in os.walk(ItchDir):
+       #                            for Dir3 in Level3Dirs:
+       #                                if Dir3 == 'downloads':
+       #                                    AddToItchDirList(ItchDir)
+       #try:
+       #    return(ItchDirList)
+       #except:
+       #    return('No itch folders could be found')
 def getsettings():
     global SteamID , InstallLocation , DefaultCleanout , Proton , EnableHTML
     #settings are layed out like "SteamID , Steam Install Location , cleanout by default , Enable Proton(for running windows games on linux through steam)"

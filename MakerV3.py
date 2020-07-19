@@ -158,6 +158,89 @@ def GetInstallLocation():
                     SteamIDnum = dir
                     continue
     return SteamIDnum , SteamLocal
+def LookForItchDirs(path):
+    def AddToItchDirList(add):
+        global ItchDirList
+        try:
+            ItchDirList = ItchDirList #this does not break anything as it is in a try/except statement. this makes sure not to wipe the variable when there is something in it
+        except:
+            ItchDirList = ''
+        if ItchDirList == '':
+            ItchDirList = '%s'%add
+        if add in ItchDirList:
+            pass
+        else:
+            if ItchDirList != '':
+                ItchDirList = ('%s , %s'%(ItchDirList , add))
+    # There are 2 ways to determine wether or not a folder is an itch.io folder
+    # A. all of the folders in the 'downloads' folder will have 3 dashes in the title, in each of the folders with 3 dashes there will be 2 files every time; 'operate-context.json' and 'operate-log.json'
+    # B. every app has a .itch folder with a reciept, so if there is a 'receipt.json.gz' file in the .itch folder then the enclosing folder is an itch folder
+    if OS == 'Windows':
+        for Root , Dirs , _ in os.walk('%s\\'%path):
+            for dir in Dirs:
+                if dir == 'downloads':
+                    for Root2 , Level2Dirs , _ in os.walk('%s\\%s'%(Root , dir)):
+                        for FolderName in Level2Dirs:
+                            DashInDirName = 0
+                            for _ in FolderName.split('-'):
+                                DashInDirName += 1
+                            if DashInDirName == 3:
+                                for _ , _ , files2 in os.walk('%s\\%s'%(Root2 , FolderName)):
+                                    OCJson = 0
+                                    OLJson = 0
+                                    for file2 in files2:
+                                        if file2 == 'operate-context.json':
+                                            OCJson = 1
+                                        elif file2 == 'operate-log.json':
+                                            OLJson = 1
+                                        if OCJson + OLJson == 2:
+                                            AddToItchDirList(Root)
+                elif dir == '.itch':
+                    for _ , _ , Files2 in os.walk('%s\\%s'%(Root , dir)):
+                        for file2 in Files2:
+                            if file2 == 'receipt.json.gz':
+                                ItchDir , _ = Root.rsplit("\\",1)
+                                for _ , Level3Dirs , _ in os.walk(ItchDir):
+                                    for Dir3 in Level3Dirs:
+                                        if Dir3 == 'downloads':
+                                            AddToItchDirList(ItchDir)
+        try:
+            return(ItchDirList)
+        except:
+            return('no itch folders have been found')
+    if OS == 'Linux':
+        for Root , Dirs , _ in os.walk('/'):
+            for dir in Dirs:
+                if dir == 'downloads':
+                    for Root2 , Level2Dirs , _ in os.walk('%s/%s'%(Root , dir)):
+                        for FolderName in Level2Dirs:
+                            DashInDirName = 0
+                            for _ in FolderName.split('-'):
+                                DashInDirName += 1
+                            if DashInDirName == 3:
+                                for _ , _ , files2 in os.walk('%s/%s'%(Root2 , FolderName)):
+                                    OCJson = 0
+                                    OLJson = 0
+                                    for file2 in files2:
+                                        if file2 == 'operate-context.json':
+                                            OCJson = 1
+                                        elif file2 == 'operate-log.json':
+                                            OLJson = 1
+                                        if OCJson + OLJson == 2:
+                                            AddToItchDirList(Root)
+                elif dir == '.itch':
+                    for _ , _ , Files2 in os.walk('%s/%s'%(Root , dir)):
+                        for file2 in Files2:
+                            if file2 == 'receipt.json.gz':
+                                ItchDir , _ = Root.rsplit("/",1)
+                                for _ , Level3Dirs , _ in os.walk(ItchDir):
+                                    for Dir3 in Level3Dirs:
+                                        if Dir3 == 'downloads':
+                                            AddToItchDirList(ItchDir)
+        try:
+            return(ItchDirList)
+        except:
+            return('No itch folders could be found')
 def getsettings():
     global SteamID , InstallLocation , DefaultCleanout , Proton , EnableHTML
     #settings are layed out like "SteamID , Steam Install Location , cleanout by default , Enable Proton(for running windows games on linux through steam)"
@@ -354,8 +437,8 @@ def getfiles(scandir):
                         if OldRoot in os.path.join(Root , file):
                             pass
                         else:
-                            _ , GameName , _ = Root.rsplit("\\",2)
-                            OldRoot = GameName
+                            _ , GameName , NextOldRoot = Root.rsplit("\\",2)
+                            OldRoot = NextOldRoot
                             HTMLFILE = (os.path.join(Root , file))
                             InBlacklist(HTMLFILE)
             if OS == "Linux":
@@ -538,8 +621,8 @@ def GUI():
                 DirList = DirFileContents
             print(DirList)
             print('-------------------------------------------')
-            WhatToDo = input('What would you like to do?\n(1)Remove a folder\n\n(2)Add a folder\n\n(3)go back')
-            if WhatToDo == '1' or '2' or '3':
+            WhatToDo = input('What would you like to do?\n(1)Remove a folder\n\n(2)Add a folder\n\n(3)scan for itch.io folders\n\n(4)go back')
+            if WhatToDo == '1' or '2' or '3' or '4':
                 ReadDirFile.seek(0)
                 DirFileContents = ReadDirFile.read()
                 ClearCLI()
@@ -579,6 +662,42 @@ def GUI():
                     except:
                        pass
                 if WhatToDo == '3':
+                    Layer2 = 1
+                    while Layer2 == 1:
+                        YesNo = input('are you sure you would like to scan? this can take quite a while if you are using a hard drive or have a lot of storage(y/n)')
+                        if YesNo == 'y' or 'n':
+                            if YesNo == 'y':
+                                if OS == 'Windows':
+                                    DriveLetters = ['%s:' % d for d in string.ascii_uppercase if os.path.exists('%s:' % d)]
+                                    for i in DriveLetters:
+                                        LookForItchDirs(i)
+                                    for item in ItchDirList.split(' , '):
+                                        if item.casefold() in DirFileContents.casefold():
+                                            pass
+                                        else:
+                                            ProperAnswer = 1
+                                            while ProperAnswer == 1:
+                                                AddItem = input('would you like to add "%s" to your list of folders to scan?(y/n)'%item)
+                                                if AddItem == 'y':
+                                                    input('added "%s" to your list of folders(press enter to continue)'%item)
+                                                    ClearCLI()
+                                                    if DirFileContents == '':
+                                                        WriteNewDirs(item)
+                                                    else:
+                                                        WriteNewDirs('%s , %s'%(DirFileContents , item))
+                                                    ProperAnswer = 0
+                                                elif AddItem == 'n':
+                                                    input('won\'t add "%s" to your list of folders(press enter to continue)'%item)
+                                                    ClearCLI()
+                                                    ProperAnswer = 0
+                                                else:
+                                                    pass
+                                if OS == 'Linux':
+                                        LookForItchDirs('/')
+                            Layer2 = 0
+                            if YesNo == 'n':
+                                Layer2 = 0
+                if WhatToDo == '4':
                     Layer3 = 0
     Layer1 = 1
     while Layer1 == 1:
@@ -587,7 +706,7 @@ def GUI():
         ReadSettings = open('info/settings','r')
         ReadSettings.seek(0)
         SteamID , InstallLocation , DefaultCleanout , Proton , EnableHTML = ReadSettings.read().split(' , ')
-        ValidOptions = ('1','2','3','4','5')
+        ValidOptions = ('1','2','3','4','5','6')
         for i in ValidOptions:
             if WhichSetting == i:
                 Layer2 = 1

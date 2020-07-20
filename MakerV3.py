@@ -309,7 +309,7 @@ def getsettings():
                     properanswer2 = 1
         properanswer = 0
         while properanswer == 0:
-            EnableHTML = input("would you like to enable HTML5 games?(this is more or less done but has not been extensively bug tested) (y/n)")
+            EnableHTML = input("\nwould you like to enable HTML5 games?(this is more or less done but has not been extensively bug tested) (y/n)")
             if EnableHTML == ("y"):
                 EnableHTML = "yes"
                 properanswer = 1

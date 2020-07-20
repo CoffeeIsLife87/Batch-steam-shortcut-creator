@@ -305,7 +305,6 @@ def LookForEpicDirs():
                             epicgamesfolder , _ , _ = Root.rsplit('\\' , 2)
                             AddToEpicDirList(epicgamesfolder)
     try:
-        input(EpicDirList)
         return(EpicDirList)
     except:
         pass
@@ -760,23 +759,23 @@ def GUI():
                                                         ProperAnswer = 0
                                                     else:
                                                         pass
-                                    else:
-                                        if item.casefold() in DirFileContents.casefold():
+                                    elif ' , ' not in ItchDirList:
+                                        if ItchDirList.casefold() in DirFileContents.casefold():
                                             pass
                                         else:
                                             ProperAnswer = 1
                                             while ProperAnswer == 1:
-                                                AddItem = input('would you like to add "%s" to your list of folders to scan?(y/n)'%item)
+                                                AddItem = input('would you like to add "%s" to your list of folders to scan?(y/n)'%ItchDirList)
                                                 if AddItem == 'y':
-                                                    input('added "%s" to your list of folders(press enter to continue)'%item)
+                                                    input('added "%s" to your list of folders(press enter to continue)'%ItchDirList)
                                                     ClearCLI()
                                                     if DirFileContents == '':
-                                                        WriteNewDirs(item)
+                                                        WriteNewDirs(ItchDirList)
                                                     else:
-                                                        WriteNewDirs('%s , %s'%(DirFileContents , item))
+                                                        WriteNewDirs('%s , %s'%(DirFileContents , ItchDirList))
                                                     ProperAnswer = 0
                                                 elif AddItem == 'n':
-                                                    input('won\'t add "%s" to your list of folders(press enter to continue)'%item)
+                                                    input('won\'t add "%s" to your list of folders(press enter to continue)'%ItchDirList)
                                                     ClearCLI()
                                                     ProperAnswer = 0
                                                 else:
@@ -806,23 +805,23 @@ def GUI():
                                                             ProperAnswer = 0
                                                         else:
                                                             pass
-                                        else:
+                                        elif ' , ' not in ItchDirList:
                                             if ItchDirList.casefold() in DirFileContents.casefold():
                                                 pass
                                             else:
                                                 ProperAnswer = 1
                                                 while ProperAnswer == 1:
-                                                    AddItem = input('would you like to add "%s" to your list of folders to scan?(y/n)'%item)
+                                                    AddItem = input('would you like to add "%s" to your list of folders to scan?(y/n)'%ItchDirList)
                                                     if AddItem == 'y':
-                                                        input('added "%s" to your list of folders(press enter to continue)'%item)
+                                                        input('added "%s" to your list of folders(press enter to continue)'%ItchDirList)
                                                         ClearCLI()
                                                         if DirFileContents == '':
-                                                            WriteNewDirs(item)
+                                                            WriteNewDirs(ItchDirList)
                                                         else:
-                                                            WriteNewDirs('%s , %s'%(DirFileContents , item))
+                                                            WriteNewDirs('%s , %s'%(DirFileContents , ItchDirList))
                                                         ProperAnswer = 0
                                                     elif AddItem == 'n':
-                                                        input('won\'t add "%s" to your list of folders(press enter to continue)'%item)
+                                                        input('won\'t add "%s" to your list of folders(press enter to continue)'%ItchDirList)
                                                         ClearCLI()
                                                         ProperAnswer = 0
                                                     else:
@@ -854,23 +853,23 @@ def GUI():
                                                             ProperAnswer = 0
                                                         else:
                                                             pass
-                                        else:
+                                        elif ' , ' not in ItchDirList:
                                             if ItchDirList.casefold() in DirFileContents.casefold():
                                                 pass
                                             else:
                                                 ProperAnswer = 1
                                                 while ProperAnswer == 1:
-                                                    AddItem = input('would you like to add "%s" to your list of folders to scan?(y/n)'%item)
+                                                    AddItem = input('would you like to add "%s" to your list of folders to scan?(y/n)'%ItchDirList)
                                                     if AddItem == 'y':
-                                                        input('added "%s" to your list of folders(press enter to continue)'%item)
+                                                        input('added "%s" to your list of folders(press enter to continue)'%ItchDirList)
                                                         ClearCLI()
                                                         if DirFileContents == '':
-                                                            WriteNewDirs(item)
+                                                            WriteNewDirs(ItchDirList)
                                                         else:
-                                                            WriteNewDirs('%s , %s'%(DirFileContents , item))
+                                                            WriteNewDirs('%s , %s'%(DirFileContents , ItchDirList))
                                                         ProperAnswer = 0
                                                     elif AddItem == 'n':
-                                                        input('won\'t add "%s" to your list of folders(press enter to continue)'%item)
+                                                        input('won\'t add "%s" to your list of folders(press enter to continue)'%ItchDirList)
                                                         ClearCLI()
                                                         ProperAnswer = 0
                                                     else:
@@ -892,44 +891,47 @@ def GUI():
                             if YesNo == 'y':
                                 if OS == 'Windows':
                                     LookForEpicDirs()
+                                    print(EpicDirList)
                                     if ' , ' in EpicDirList:
-                                        for item in EpicDirList.split(' , '):
-                                            if item.casefold() in DirFileContents.casefold():
+                                        for EpicFolder in EpicDirList.split(' , '):
+                                            if EpicFolder.casefold() in DirFileContents.casefold():
                                                 pass
                                             else:
                                                 ProperAnswer = 1
                                                 while ProperAnswer == 1:
-                                                    AddItem = input('would you like to add "%s" to your list of folders to scan?(y/n)'%item)
+                                                    ClearCLI()
+                                                    AddItem = input('\nwould you like to add "%s" to your list of folders to scan?(y/n)'%EpicFolder)
                                                     if AddItem == 'y':
-                                                        input('added "%s" to your list of folders(press enter to continue)'%item)
+                                                        input('added "%s" to your list of folders(press enter to continue)'%EpicFolder)
                                                         ClearCLI()
                                                         if DirFileContents == '':
-                                                            WriteNewDirs(item)
+                                                            WriteNewDirs(EpicFolder)
                                                         else:
-                                                            WriteNewDirs('%s , %s'%(DirFileContents , item))
+                                                            WriteNewDirs('%s , %s'%(DirFileContents , EpicFolder))
                                                         ProperAnswer = 0
                                                     elif AddItem == 'n':
                                                         ClearCLI()
                                                         ProperAnswer = 0
                                                     else:
                                                         pass
-                                    else:
-                                        if item.casefold() in DirFileContents.casefold():
+                                    elif ' , ' not in EpicDirList:
+                                        if EpicDirList.casefold() in DirFileContents.casefold():
                                             pass
                                         else:
                                             ProperAnswer = 1
                                             while ProperAnswer == 1:
-                                                AddItem = input('would you like to add "%s" to your list of folders to scan?(y/n)'%item)
+                                                ClearCLI()
+                                                AddItem = input('would you like to add "%s" to your list of folders to scan?(y/n)'%EpicDirList)
                                                 if AddItem == 'y':
-                                                    input('added "%s" to your list of folders(press enter to continue)'%item)
+                                                    input('added "%s" to your list of folders(press enter to continue)'%EpicDirList)
                                                     ClearCLI()
                                                     if DirFileContents == '':
-                                                        WriteNewDirs(item)
+                                                        WriteNewDirs(EpicDirList)
                                                     else:
-                                                        WriteNewDirs('%s , %s'%(DirFileContents , item))
+                                                        WriteNewDirs('%s , %s'%(DirFileContents , EpicDirList))
                                                     ProperAnswer = 0
                                                 elif AddItem == 'n':
-                                                    input('won\'t add "%s" to your list of folders(press enter to continue)'%item)
+                                                    input('won\'t add "%s" to your list of folders(press enter to continue)'%EpicDirList)
                                                     ClearCLI()
                                                     ProperAnswer = 0
                                                 else:

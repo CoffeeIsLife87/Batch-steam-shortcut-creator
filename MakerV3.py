@@ -158,14 +158,16 @@ def GetInstallLocation():
                     SteamIDnum = dir
                     continue
     return SteamIDnum , SteamLocal
-def LookForItchDirs(path):
+def LookForItchDirs():
     def CheckItchLogs():# I learned recently that itch has a log file, and from that I can pull install locations
         def PullInfo(logfile):
-            if OS == 'Windows' or 'Linux':
+            if OS == 'Windows':
+                PlatformDependantChar = '∙'
+            if OS == 'Linux':
                 PlatformDependantChar = '•'
             if OS == 'Darwin':
                 PlatformDependantChar = '>'
-            F = open(logfile , 'r')
+            F = open(logfile , 'r' , encoding="utf8")
             LogContents = F.read()
             if 'Scanning install location ' in LogContents:
                 CheckEveryLine = LogContents.split('\n')
@@ -173,13 +175,20 @@ def LookForItchDirs(path):
                     if ('"level":30,"msg":"%s Scanning install location '%PlatformDependantChar) in line:
                         _ , PathAndSome = line.split('"level":30,"msg":"%s Scanning install location '%PlatformDependantChar)
                         CleanPath , _ = PathAndSome.split('...","name":')
+                        if OS == 'Windows':
+                            if '\\\\' in CleanPath:
+                                CleanPath = CleanPath.replace('\\\\','\\')
                         if os.path.exists(CleanPath):
                             AddToItchDirList(CleanPath)
             else:
                 input('check your paths?\ncheck the log?\nsomething broke?')
         if OS == 'Windows':
-            if os.path.exists('C:\\Users\\%s\\AppData\\Roaming\\itch\\logs'%UserName):
-                pass
+            Path1 = 'C:\\Users\\%s\\AppData\\Roaming\\itch\\logs'%UserName
+            if os.path.exists(Path1):
+                for _ , _ , LogChecks in os.walk(Path1):
+                    for file in LogChecks:
+                        if file == 'itch.txt':
+                            PullInfo('%s\\%s'%(Path1 , file))
         if OS == 'Linux':
             Path1 = '/home/%s/.config/itch/logs'%UserName
             if os.path.exists(Path1):
@@ -212,39 +221,55 @@ def LookForItchDirs(path):
     # B. every app has a .itch folder with a reciept, so if there is a 'receipt.json.gz' file in the .itch folder then the enclosing folder is an itch folder
     # alternitively you can read the log file and pull the paths from there
     if OS == 'Windows':
-        for Root , Dirs , _ in os.walk('%s\\'%path):
-            for dir in Dirs:
-                if dir == 'downloads':
-                    for Root2 , Level2Dirs , _ in os.walk('%s\\%s'%(Root , dir)):
-                        for FolderName in Level2Dirs:
-                            DashInDirName = 0
-                            for _ in FolderName.split('-'):
-                                DashInDirName += 1
-                            if DashInDirName == 3:
-                                for _ , _ , files2 in os.walk('%s\\%s'%(Root2 , FolderName)):
-                                    OCJson = 0
-                                    OLJson = 0
-                                    for file2 in files2:
-                                        if file2 == 'operate-context.json':
-                                            OCJson = 1
-                                        elif file2 == 'operate-log.json':
-                                            OLJson = 1
-                                        if OCJson + OLJson == 2:
-                                            AddToItchDirList(Root)
-                elif dir == '.itch':
-                    for _ , _ , Files2 in os.walk('%s\\%s'%(Root , dir)):
-                        for file2 in Files2:
-                            if file2 == 'receipt.json.gz':
-                                ItchDir , _ = Root.rsplit("\\",1)
-                                for _ , Level3Dirs , _ in os.walk(ItchDir):
-                                    for Dir3 in Level3Dirs:
-                                        if Dir3 == 'downloads':
-                                            AddToItchDirList(ItchDir)
+        CheckItchLogs()
+        try:
+            return(ItchDirList)
+        except:
+            UseFallback = input('No paths found in log file. the fallback involves scanning drives, this can take a while, would you like to continue?(y/n)')
+            if UseFallback == 'y':
+                DriveLetters = ['%s:' % d for d in string.ascii_uppercase if os.path.exists('%s:' % d)]
+                for i in DriveLetters:
+                    for Root , Dirs , _ in os.walk('%s\\'%i):
+                        for dir in Dirs:
+                            if dir == 'downloads':
+                                for Root2 , Level2Dirs , _ in os.walk('%s\\%s'%(Root , dir)):
+                                    for FolderName in Level2Dirs:
+                                        DashInDirName = 0
+                                        for _ in FolderName.split('-'):
+                                            DashInDirName += 1
+                                        if DashInDirName == 3:
+                                            for _ , _ , files2 in os.walk('%s\\%s'%(Root2 , FolderName)):
+                                                OCJson = 0
+                                                OLJson = 0
+                                                for file2 in files2:
+                                                    if file2 == 'operate-context.json':
+                                                        OCJson = 1
+                                                    elif file2 == 'operate-log.json':
+                                                        OLJson = 1
+                                                    if OCJson + OLJson == 2:
+                                                        AddToItchDirList(Root)
+                            elif dir == '.itch':
+                                for _ , _ , Files2 in os.walk('%s\\%s'%(Root , dir)):
+                                    for file2 in Files2:
+                                        if file2 == 'receipt.json.gz':
+                                            ItchDir , _ = Root.rsplit("\\",1)
+                                            for _ , Level3Dirs , _ in os.walk(ItchDir):
+                                                for Dir3 in Level3Dirs:
+                                                    if Dir3 == 'downloads':
+                                                        AddToItchDirList(ItchDir)
+                    try:
+                        return(ItchDirList)
+                    except:
+                        pass
+            else:
+                pass
+    if OS == 'Linux':
+        CheckItchLogs()
         try:
             return(ItchDirList)
         except:
             pass
-    if OS == 'Linux' or 'Darwin':
+    if OS == 'Darwin':
         CheckItchLogs()
         try:
             return(ItchDirList)
@@ -580,7 +605,9 @@ def AddHTMLGame(gamedir):
             FullHTML = ("%s%s%s"%(HTMLServerLaunch , start , HTMLGameLaunch))
         return(MakeSHscript(name , FullHTML , start , gamedir))
 def ClearCLI():
-    if OS == "Linux" or "Darwin":
+    if OS == "Linux":
+        os.system('clear')
+    if OS == "Darwin":
         os.system('clear')
     if OS == "Windows":
         os.system('cls')
@@ -673,16 +700,11 @@ def GUI():
                 if WhatToDo == '3':
                     Layer2 = 1
                     while Layer2 == 1:
-                        if OS == 'Windows':
-                            YesNo = input('are you sure you would like to scan? this can take quite a while if you are using a hard drive or have a lot of storage(y/n)')
-                        if OS == 'Linux' or 'Darwin':
-                            YesNo = 'y'
+                        YesNo = 'y'
                         if YesNo == 'y' or 'n':
                             if YesNo == 'y':
                                 if OS == 'Windows':
-                                    DriveLetters = ['%s:' % d for d in string.ascii_uppercase if os.path.exists('%s:' % d)]
-                                    for i in DriveLetters:
-                                        LookForItchDirs(i)
+                                    LookForItchDirs()
                                     if ' , ' in ItchDirList:
                                         for item in ItchDirList.split(' , '):
                                             if item.casefold() in DirFileContents.casefold():
@@ -700,7 +722,6 @@ def GUI():
                                                             WriteNewDirs('%s , %s'%(DirFileContents , item))
                                                         ProperAnswer = 0
                                                     elif AddItem == 'n':
-                                                        input('won\'t add "%s" to your list of folders(press enter to continue)'%item)
                                                         ClearCLI()
                                                         ProperAnswer = 0
                                                     else:
@@ -726,8 +747,56 @@ def GUI():
                                                     ProperAnswer = 0
                                                 else:
                                                     pass
-                                if OS == 'Linux' or 'Darwin':
-                                    LookForItchDirs('/')
+                                if OS == 'Linux':
+                                    LookForItchDirs()
+                                    try:
+                                        if ' , ' in ItchDirList:
+                                            for item in ItchDirList.split(' , '):
+                                                if item.casefold() in DirFileContents.casefold():
+                                                    pass
+                                                else:
+                                                    ProperAnswer = 1
+                                                    while ProperAnswer == 1:
+                                                        AddItem = input('would you like to add "%s" to your list of folders to scan?(y/n)'%item)
+                                                        if AddItem == 'y':
+                                                            input('added "%s" to your list of folders(press enter to continue)'%item)
+                                                            ClearCLI()
+                                                            if DirFileContents == '':
+                                                                WriteNewDirs(item)
+                                                            else:
+                                                                WriteNewDirs('%s , %s'%(DirFileContents , item))
+                                                            ProperAnswer = 0
+                                                        elif AddItem == 'n':
+                                                            input('won\'t add "%s" to your list of folders(press enter to continue)'%item)
+                                                            ClearCLI()
+                                                            ProperAnswer = 0
+                                                        else:
+                                                            pass
+                                        else:
+                                            if ItchDirList.casefold() in DirFileContents.casefold():
+                                                pass
+                                            else:
+                                                ProperAnswer = 1
+                                                while ProperAnswer == 1:
+                                                    AddItem = input('would you like to add "%s" to your list of folders to scan?(y/n)'%item)
+                                                    if AddItem == 'y':
+                                                        input('added "%s" to your list of folders(press enter to continue)'%item)
+                                                        ClearCLI()
+                                                        if DirFileContents == '':
+                                                            WriteNewDirs(item)
+                                                        else:
+                                                            WriteNewDirs('%s , %s'%(DirFileContents , item))
+                                                        ProperAnswer = 0
+                                                    elif AddItem == 'n':
+                                                        input('won\'t add "%s" to your list of folders(press enter to continue)'%item)
+                                                        ClearCLI()
+                                                        ProperAnswer = 0
+                                                    else:
+                                                        pass
+                                    except:
+                                        input('It appears that the log file is empty or has no paths\nTry installing or uninstalling a game or app and scan again')
+                                if OS == 'Darwin':
+                                    LookForItchDirs()
                                     try:
                                         if ' , ' in ItchDirList:
                                             for item in ItchDirList.split(' , '):

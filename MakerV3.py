@@ -275,6 +275,39 @@ def LookForItchDirs():
             return(ItchDirList)
         except:
             pass
+def LookForEpicDirs():
+    def AddToEpicDirList(add):
+        global EpicDirList
+        try:
+            EpicDirList = EpicDirList #this does not break anything as it is in a try/except statement. this makes sure not to wipe the variable when there is something in it
+        except:
+            EpicDirList = ''
+        if EpicDirList == '':
+            EpicDirList = '%s'%add
+        if add in EpicDirList:
+            pass
+        else:
+            if EpicDirList != '':
+                EpicDirList = ('%s , %s'%(EpicDirList , add))
+    DriveLetters = ['%s:' % d for d in string.ascii_uppercase if os.path.exists('%s:' % d)]
+    for i in DriveLetters:
+        for Root , _ , _ in os.walk('%s\\'%i):
+            if Root.endswith('.egstore'):
+                for _ , _ , files2 in os.walk(Root):
+                    mancpn = 0
+                    manifest = 0
+                    for file2 in files2:
+                        if file2.endswith('.mancpn'):
+                            mancpn = 1
+                        elif file2.endswith('.manifest'):
+                            manifest = 1
+                        if mancpn + manifest == 2:
+                            epicgamesfolder , _ , _ = Root.rsplit('\\' , 2)
+                            AddToEpicDirList(epicgamesfolder)
+    try:
+        return(EpicDirList)
+    except:
+        pass
 def getsettings():
     global SteamID , InstallLocation , DefaultCleanout , Proton , EnableHTML
     #settings are layed out like "SteamID , Steam Install Location , cleanout by default , Enable Proton(for running windows games on linux through steam)"
@@ -657,8 +690,8 @@ def GUI():
                 DirList = DirFileContents
             print(DirList)
             print('-------------------------------------------')
-            WhatToDo = input('What would you like to do?\n(1)Remove a folder\n\n(2)Add a folder\n\n(3)scan for itch.io folders\n\n(4)go back')
-            if WhatToDo == '1' or '2' or '3' or '4':
+            WhatToDo = input('What would you like to do?\n(1)Remove a folder\n\n(2)Add a folder\n\n(3)scan for itch.io folders\n\n(4)scan for epic games folders\n\n(5)go back')
+            if WhatToDo == '1' or '2' or '3' or '4' or '5':
                 ReadDirFile.seek(0)
                 DirFileContents = ReadDirFile.read()
                 ClearCLI()
@@ -726,23 +759,23 @@ def GUI():
                                                         ProperAnswer = 0
                                                     else:
                                                         pass
-                                    else:
-                                        if item.casefold() in DirFileContents.casefold():
+                                    elif ' , ' not in ItchDirList:
+                                        if ItchDirList.casefold() in DirFileContents.casefold():
                                             pass
                                         else:
                                             ProperAnswer = 1
                                             while ProperAnswer == 1:
-                                                AddItem = input('would you like to add "%s" to your list of folders to scan?(y/n)'%item)
+                                                AddItem = input('would you like to add "%s" to your list of folders to scan?(y/n)'%ItchDirList)
                                                 if AddItem == 'y':
-                                                    input('added "%s" to your list of folders(press enter to continue)'%item)
+                                                    input('added "%s" to your list of folders(press enter to continue)'%ItchDirList)
                                                     ClearCLI()
                                                     if DirFileContents == '':
-                                                        WriteNewDirs(item)
+                                                        WriteNewDirs(ItchDirList)
                                                     else:
-                                                        WriteNewDirs('%s , %s'%(DirFileContents , item))
+                                                        WriteNewDirs('%s , %s'%(DirFileContents , ItchDirList))
                                                     ProperAnswer = 0
                                                 elif AddItem == 'n':
-                                                    input('won\'t add "%s" to your list of folders(press enter to continue)'%item)
+                                                    input('won\'t add "%s" to your list of folders(press enter to continue)'%ItchDirList)
                                                     ClearCLI()
                                                     ProperAnswer = 0
                                                 else:
@@ -772,23 +805,23 @@ def GUI():
                                                             ProperAnswer = 0
                                                         else:
                                                             pass
-                                        else:
+                                        elif ' , ' not in ItchDirList:
                                             if ItchDirList.casefold() in DirFileContents.casefold():
                                                 pass
                                             else:
                                                 ProperAnswer = 1
                                                 while ProperAnswer == 1:
-                                                    AddItem = input('would you like to add "%s" to your list of folders to scan?(y/n)'%item)
+                                                    AddItem = input('would you like to add "%s" to your list of folders to scan?(y/n)'%ItchDirList)
                                                     if AddItem == 'y':
-                                                        input('added "%s" to your list of folders(press enter to continue)'%item)
+                                                        input('added "%s" to your list of folders(press enter to continue)'%ItchDirList)
                                                         ClearCLI()
                                                         if DirFileContents == '':
-                                                            WriteNewDirs(item)
+                                                            WriteNewDirs(ItchDirList)
                                                         else:
-                                                            WriteNewDirs('%s , %s'%(DirFileContents , item))
+                                                            WriteNewDirs('%s , %s'%(DirFileContents , ItchDirList))
                                                         ProperAnswer = 0
                                                     elif AddItem == 'n':
-                                                        input('won\'t add "%s" to your list of folders(press enter to continue)'%item)
+                                                        input('won\'t add "%s" to your list of folders(press enter to continue)'%ItchDirList)
                                                         ClearCLI()
                                                         ProperAnswer = 0
                                                     else:
@@ -820,23 +853,23 @@ def GUI():
                                                             ProperAnswer = 0
                                                         else:
                                                             pass
-                                        else:
+                                        elif ' , ' not in ItchDirList:
                                             if ItchDirList.casefold() in DirFileContents.casefold():
                                                 pass
                                             else:
                                                 ProperAnswer = 1
                                                 while ProperAnswer == 1:
-                                                    AddItem = input('would you like to add "%s" to your list of folders to scan?(y/n)'%item)
+                                                    AddItem = input('would you like to add "%s" to your list of folders to scan?(y/n)'%ItchDirList)
                                                     if AddItem == 'y':
-                                                        input('added "%s" to your list of folders(press enter to continue)'%item)
+                                                        input('added "%s" to your list of folders(press enter to continue)'%ItchDirList)
                                                         ClearCLI()
                                                         if DirFileContents == '':
-                                                            WriteNewDirs(item)
+                                                            WriteNewDirs(ItchDirList)
                                                         else:
-                                                            WriteNewDirs('%s , %s'%(DirFileContents , item))
+                                                            WriteNewDirs('%s , %s'%(DirFileContents , ItchDirList))
                                                         ProperAnswer = 0
                                                     elif AddItem == 'n':
-                                                        input('won\'t add "%s" to your list of folders(press enter to continue)'%item)
+                                                        input('won\'t add "%s" to your list of folders(press enter to continue)'%ItchDirList)
                                                         ClearCLI()
                                                         ProperAnswer = 0
                                                     else:
@@ -847,6 +880,66 @@ def GUI():
                             if YesNo == 'n':
                                 Layer2 = 0
                 if WhatToDo == '4':
+                    Layer2 = 1
+                    while Layer2 == 1:
+                        if OS == 'Windows':
+                            YesNo = input('Are you sure you would like to scan?\nthis CAN take a long time but it might not depending on storage type and capacity(y/n)')
+                        else:
+                            input('this is a windows option only(might be ported for proton support but that would be complitcated)')
+                            YesNo = 'n'
+                        if YesNo == 'y' or 'n':
+                            if YesNo == 'y':
+                                if OS == 'Windows':
+                                    LookForEpicDirs()
+                                    print(EpicDirList)
+                                    if ' , ' in EpicDirList:
+                                        for EpicFolder in EpicDirList.split(' , '):
+                                            if EpicFolder.casefold() in DirFileContents.casefold():
+                                                pass
+                                            else:
+                                                ProperAnswer = 1
+                                                while ProperAnswer == 1:
+                                                    ClearCLI()
+                                                    AddItem = input('\nwould you like to add "%s" to your list of folders to scan?(y/n)'%EpicFolder)
+                                                    if AddItem == 'y':
+                                                        input('added "%s" to your list of folders(press enter to continue)'%EpicFolder)
+                                                        ClearCLI()
+                                                        if DirFileContents == '':
+                                                            WriteNewDirs(EpicFolder)
+                                                        else:
+                                                            WriteNewDirs('%s , %s'%(DirFileContents , EpicFolder))
+                                                        ProperAnswer = 0
+                                                    elif AddItem == 'n':
+                                                        ClearCLI()
+                                                        ProperAnswer = 0
+                                                    else:
+                                                        pass
+                                    elif ' , ' not in EpicDirList:
+                                        if EpicDirList.casefold() in DirFileContents.casefold():
+                                            pass
+                                        else:
+                                            ProperAnswer = 1
+                                            while ProperAnswer == 1:
+                                                ClearCLI()
+                                                AddItem = input('would you like to add "%s" to your list of folders to scan?(y/n)'%EpicDirList)
+                                                if AddItem == 'y':
+                                                    input('added "%s" to your list of folders(press enter to continue)'%EpicDirList)
+                                                    ClearCLI()
+                                                    if DirFileContents == '':
+                                                        WriteNewDirs(EpicDirList)
+                                                    else:
+                                                        WriteNewDirs('%s , %s'%(DirFileContents , EpicDirList))
+                                                    ProperAnswer = 0
+                                                elif AddItem == 'n':
+                                                    input('won\'t add "%s" to your list of folders(press enter to continue)'%EpicDirList)
+                                                    ClearCLI()
+                                                    ProperAnswer = 0
+                                                else:
+                                                    pass
+                            Layer2 = 0
+                            if YesNo == 'n':
+                                Layer2 = 0
+                if WhatToDo == '5':
                     Layer3 = 0
     Layer1 = 1
     while Layer1 == 1:

@@ -25,6 +25,8 @@ this can be installed using  ``` pip install shttp ``` (on windows) or ``` pip3 
 
 ## anouncements ##
 
+now finds itch.io folder (cross platform) and epic games folders (windows only for now)
+
 HTML5/webGL games launch and are playable now
 
 Fixed double shortcuts for games with 64bit and 32bit variants
@@ -54,6 +56,8 @@ more QA/testing
 ## known issues ##
 
 There are no icons for shortcuts on linux
+
+missing file error on ubuntu when looking for shortcuts.vdf the first time (works perfectly the second so it is functional)
 
 ## other ##
 
